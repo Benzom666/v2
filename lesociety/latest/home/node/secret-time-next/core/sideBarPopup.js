@@ -217,18 +217,17 @@ function sideBarPopup({ isOpen, toggle, count }) {
                 <div style={{ fontSize: "12px", color: "white", marginBottom: "8px" }}>Add tokens to get started</div>
                 <Link href="/membership">
                   <a onClick={toggle} style={{
-                    background: "linear-gradient(90deg, #f24462, #4a90e2)",
-                    padding: "12px 20px",
+                    background: "linear-gradient(#191c21, #191c21) padding-box, linear-gradient(90deg, #f24462, #4a90e2) border-box",
+                    border: "2px solid transparent",
+                    borderRadius: "8px",
+                    padding: "12px 40px",
                     color: "white",
                     fontSize: "14px",
                     fontWeight: "bold",
                     textAlign: "center",
                     textDecoration: "none",
                     display: "inline-block",
-                    border: "2px solid transparent",
-                    backgroundClip: "padding-box",
-                    borderRadius: "8px",
-                    position: "relative"
+                    minWidth: "200px"
                   }}>
                     Top Up Tokens
                   </a>
