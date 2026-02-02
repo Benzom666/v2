@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(if:*)",
+      "Bash(then rm -rf .git)",
+      "Bash(else echo \"No .git directory found\")",
+      "Bash(fi)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(find:*)"
+    ]
+  }
+}
