@@ -19,6 +19,7 @@ import Loader from "@/modules/Loader/Loader";
 import io from "socket.io-client";
 
 import "styles/style.scss";
+import "styles/membership.scss";
 import { removeCookie } from "utils/cookie";
 import LanscapeDecline from "@/core/LanscapeDecline";
 import { socketURL } from "utils/Utilities";
