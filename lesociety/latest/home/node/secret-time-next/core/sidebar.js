@@ -164,7 +164,7 @@ export default function SideBar({ isActive, count }) {
             </div>
           </div>
           {/* Current Plan Section */}
-          <div style={{ padding: "20px 25px", textAlign: "center" }}>
+          <div className="user-card-sidebar" style={{ padding: "20px 25px", textAlign: "center", backgroundColor: "#0b0b0b" }}>
             <div style={{ marginBottom: "16px", textAlign: "left" }}>
               <div style={{ fontSize: "12px", color: "#AFABAB", marginBottom: "4px" }}>Current Plan</div>
               <div style={{ fontSize: "14px", color: "white" }}><span style={{ fontWeight: "bold" }}>The Test Drive:</span> Limited Access</div>
