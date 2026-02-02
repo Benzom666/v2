@@ -20,8 +20,10 @@ try {
 }
 
 // Check if we have all the keys that we wanted
+// MONGO_URI is optional if MONGO_USER, MONGO_PASS, MONGO_HOST are provided
+const hasMongoComponents = process.env.MONGO_USER && process.env.MONGO_PASS && process.env.MONGO_HOST;
 const requiredKeys = {
-  MONGO_URI: { required: true },
+  MONGO_URI: { required: !hasMongoComponents },
   APP_URL: { required: true },
   // CLOUD_CONVERT_KEY: { required: true },
 };

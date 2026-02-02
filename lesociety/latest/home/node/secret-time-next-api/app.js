@@ -60,13 +60,17 @@ if (process.env !== "PRODUCTION") {
 
 mongoose.Promise = global.Promise;
 
+// Build connection URI to handle special characters
+const mongoUri = process.env.MONGO_URI || (() => {
+    const user = process.env.MONGO_USER || 'ronyroyrox_db_user';
+    const pass = encodeURIComponent(process.env.MONGO_PASS || 'Dgreatreset1!');
+    const host = process.env.MONGO_HOST || 'lesociety.lalld11.mongodb.net';
+    const dbName = process.env.DB_NAME || 'lesociety';
+    return `mongodb+srv://${user}:${pass}@${host}/${dbName}?retryWrites=true&w=majority`;
+})();
+
 mongoose
-    .connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-    })
+    .connect(mongoUri)
     .then(() => winstonLog.info("connection successful"))
     .catch((err) => winstonLog.info(err));
 mongoose.set("debug", true);
