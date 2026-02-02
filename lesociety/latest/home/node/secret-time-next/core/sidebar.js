@@ -224,6 +224,34 @@ export default function SideBar({ isActive, count }) {
               <SubHeading title="Stay ahead of the crowd" />
             </div>
           )}
+          {/* Current Plan Section */}
+          <div style={{ padding: "20px 25px", textAlign: "center" }}>
+            <div style={{ marginBottom: "20px", textAlign: "left" }}>
+              <div style={{ fontSize: "12px", color: "#AFABAB", marginBottom: "4px" }}>Current Plan</div>
+              <div style={{ fontSize: "14px", color: "white" }}>The Test Drive: Limited Access</div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginBottom: "20px" }}>
+              <img src="/images/sidebar/interested-locked.svg" alt="Interested" style={{ width: "110px", height: "auto" }} />
+              <img src="/images/sidebar/superinterested-locked.svg" alt="Super Interested" style={{ width: "110px", height: "auto" }} />
+            </div>
+            <div style={{ fontSize: "12px", color: "white", marginBottom: "8px" }}>Add tokens to get started</div>
+            <Link href="/membership">
+              <a style={{
+                backgroundColor: "#191c21",
+                border: "1px solid #293036",
+                borderRadius: "8px",
+                padding: "12px 20px",
+                color: "white",
+                fontSize: "14px",
+                fontWeight: "bold",
+                textAlign: "center",
+                textDecoration: "none",
+                display: "inline-block"
+              }}>
+                Top Up Tokens
+              </a>
+            </Link>
+          </div>
           <div className="user-card-sidebar sidebar-nav-link">
             <div className="sidebar_nav_links">
               <ul>
