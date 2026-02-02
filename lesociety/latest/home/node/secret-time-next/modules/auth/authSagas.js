@@ -19,55 +19,51 @@ export function* login(action) {
       cancel: take("ROUTE/CHANGE"),
     });
     if (response.success) {
+      // API returns data wrapped in { data: { data: { user info } } }
+      const userData = response.success.data.data.data || response.success.data.data;
+      
       yield put({
         type: AUTHENTICATE,
-        payload: response.success.data.data,
+        payload: userData,
       });
       //  showToast(response.success.data.message, 'success')
       action.loader(false);
-
-      if (
-        response.success.data.data.step_completed === 1 ||
-        response.success.data.data.step_completed === 2 ||
-        response.success.data.data.step_completed === 3
-      ) {
-        Router.push({
-          pathname: "/auth/profile",
-        });
-      } else {
-        if (
-          response.success?.data?.data?.status === 2 &&
-          response.success?.data?.data?.verified_screen_shown === false
-        ) {
-          Router.push({
-            pathname: "/user/verified",
-          });
-        } else if (
-          response.success?.data?.data?.status === 2 &&
-          response.success?.data?.data?.verified_screen_shown === true
-        ) {
-          Router.push({
-            pathname: "/user/user-list",
-          });
-        } else if (response.success.data.data.status === 3) {
-          Router.push({
-            pathname: "/auth/block",
-          });
-        } else if (response.success.data.data.request_change_fired) {
-          Router.push({
-            pathname: "/auth/verify-profile",
-          });
-        }
-        // else if (!response.success.data.data.tag_desc_verified) {
-        //   Router.push({
-        //     pathname: "/auth/verify-profile-done",
-        //   });
-        // }
-        else {
-          Router.push({
-            pathname: "/auth/profile",
-          });
-        }
+      
+      console.log('=== LOGIN DEBUG ===', {
+        status: userData.status,
+        step_completed: userData.step_completed,
+        verified_screen_shown: userData.verified_screen_shown
+      });
+      
+      // If user is blocked
+      if (userData.status === 3) {
+        console.log('Redirecting to: /auth/block');
+        Router.replace("/auth/block");
+      }
+      // If verified user with completed profile - go straight to user list
+      else if (userData.status === 2 && userData.verified_screen_shown === true && userData.step_completed === 4) {
+        console.log('Redirecting to: /user/user-list');
+        Router.replace("/user/user-list");
+      }
+      // If verified user who hasn't seen verified screen
+      else if (userData.status === 2 && userData.verified_screen_shown === false) {
+        console.log('Redirecting to: /user/verified');
+        Router.replace("/user/verified");
+      }
+      // If admin requested changes
+      else if (userData.request_change_fired) {
+        console.log('Redirecting to: /auth/verify-profile');
+        Router.replace("/auth/verify-profile");
+      }
+      // If profile is incomplete (step 1, 2, or 3), go to profile page
+      else if (userData.step_completed === 1 || userData.step_completed === 2 || userData.step_completed === 3) {
+        console.log('Redirecting to: /auth/profile (incomplete)');
+        Router.replace("/auth/profile");
+      }
+      // Default: go to profile page
+      else {
+        console.log('Redirecting to: /auth/profile (default)', userData);
+        Router.replace("/auth/profile");
       }
       yield put(reset("LoginForm"));
     }
