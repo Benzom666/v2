@@ -5,21 +5,14 @@ import { CustomIcon } from "core/icon";
 import { getCookie } from "./cookie";
 import { loadFromLocalStorage } from "./sessionStorage";
 
-export const socketURL = "https://api.lesociety.com/";
-export const apiURL = "https://api.lesociety.com/";
-
-// export const socketURL = "https://staging-api.nsmatka.com/";
-// export const apiURL = "https://staging-api.nsmatka.com";
-
-/*export const socketURL =
+export const socketURL =
   process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_PROD_SOCKET_URL
-    : process.env.NEXT_PUBLIC_PROD_SOCKET_URL;
+    : process.env.NEXT_PUBLIC_DEV_SOCKET_URL;
 export const apiURL =
   process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_PROD_API_URL
-    : process.env.NEXT_PUBLIC_PROD_API_URL;
-    */
+    : process.env.NEXT_PUBLIC_DEV_API_URL;
 
 // export const apiRequest = async (args = {}) => {
 //   let token = "";

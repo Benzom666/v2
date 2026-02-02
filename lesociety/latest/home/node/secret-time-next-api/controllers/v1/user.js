@@ -761,7 +761,7 @@ exports.login = (req, res) => {
             user.last_logged_in = currentTime;
 
             res.status(200).json(
-                helper.successResponse({ token, ...user._doc }, 200, "Logged in successfully!")
+                helper.successResponse({ data: { token, ...user._doc } }, 200, "Logged in successfully!")
             );
         });
     });
