@@ -33,7 +33,7 @@ import MessageModal from "@/core/MessageModal";
 import io from "socket.io-client";
 import { AUTHENTICATE_UPDATE } from "../actionConstants";
 import PaywallModal from "@/core/PaywallModal";
-import { usePaywall } from "@/hooks/usePaywall";
+import { usePaywall } from "../../../hooks/usePaywall";
 
 export const socket = io(socketURL, {
   autoConnect: true,

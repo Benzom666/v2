@@ -36,7 +36,7 @@ import { logout } from "@/modules/auth/authActions";
 import moment from "moment";
 import StarIcon from "../assets/request star.png";
 import PaywallModal from "@/core/PaywallModal";
-import { usePaywall } from "@/hooks/usePaywall";
+import { usePaywall } from "../hooks/usePaywall";
 
 // const socket = io.connect(socketURL);
 
