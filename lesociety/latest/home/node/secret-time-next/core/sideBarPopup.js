@@ -6,7 +6,7 @@ import Image from "next/image";
 import SubHeading from "./SubHeading";
 import H5 from "./H5";
 import { HiBadgeCheck } from "react-icons/hi";
-import { FiChevronRight } from "react-icons/fi";
+import { FiChevronRight, FiSearch, FiBell, FiMessageSquare, FiHeart, FiSettings } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { deAuthenticateAction, logout } from "../modules/auth/authActions";
 import { useRouter } from "next/router";
@@ -19,8 +19,10 @@ import useWindowSize from "utils/useWindowSize";
 import { apiRequest } from "utils/Utilities";
 import io from "socket.io-client";
 import { socket } from "pages/user/user-list";
+import PricingMenuModal from "./PricingMenuModal";
 
 function sideBarPopup({ isOpen, toggle, count }) {
+  const [showPricingModal, setShowPricingModal] = useState(false);
   const width = useWindowSize();
   const user = useSelector((state) => state.authReducer.user);
   const dispatch = useDispatch();
@@ -122,8 +124,13 @@ function sideBarPopup({ isOpen, toggle, count }) {
     : "";
 
   return (
-    <div
-      className={classNames(
+    <>
+      <PricingMenuModal 
+        isOpen={showPricingModal} 
+        onClose={() => setShowPricingModal(false)} 
+      />
+      <div
+        className={classNames(
         `modal fade ${
           isOpen ? "show d-block modal-open modal-open-1" : "d-none"
         }`,
@@ -204,7 +211,8 @@ function sideBarPopup({ isOpen, toggle, count }) {
                   </Link>
                 </div>
               </div>
-              {/* Current Plan Section */}
+              {/* Current Plan Section - Men Only */}
+              {user?.gender === "male" && (
               <div className="user-card-sidebar" style={{ padding: "20px 25px", textAlign: "center", backgroundColor: "#0b0b0b", marginBottom: "8px" }}>
                 <div style={{ marginBottom: "16px", textAlign: "left" }}>
                   <div style={{ fontSize: "12px", color: "#AFABAB", marginBottom: "4px" }}>Current Plan</div>
@@ -215,24 +223,24 @@ function sideBarPopup({ isOpen, toggle, count }) {
                   <img src="/images/sidebar/superinterested-locked.svg" alt="Super Interested" style={{ width: "110px", height: "auto" }} />
                 </div>
                 <div style={{ fontSize: "12px", color: "white", marginBottom: "8px" }}>Add tokens to get started</div>
-                <Link href="/membership">
-                  <a onClick={toggle} style={{
-                    background: "linear-gradient(#191c21, #191c21) padding-box, linear-gradient(90deg, #f24462, #4a90e2) border-box",
-                    border: "2px solid transparent",
-                    borderRadius: "8px",
-                    padding: "12px 40px",
-                    color: "white",
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    textDecoration: "none",
-                    display: "inline-block",
-                    minWidth: "200px"
-                  }}>
-                    Top Up Tokens
-                  </a>
-                </Link>
+                <a onClick={() => setShowPricingModal(true)} style={{
+                  background: "linear-gradient(#191c21, #191c21) padding-box, linear-gradient(90deg, #f24462, #4a90e2) border-box",
+                  border: "2px solid transparent",
+                  borderRadius: "8px",
+                  padding: "12px 40px",
+                  color: "white",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  textDecoration: "none",
+                  display: "inline-block",
+                  minWidth: "200px",
+                  cursor: "pointer"
+                }}>
+                  Top Up Tokens
+                </a>
               </div>
+              )}
               <div className="verification_card_header text-center mb-3">
                 <div className="d-flex align-items-center mb-0 header_btn_wrap">
                   <button
@@ -290,6 +298,89 @@ function sideBarPopup({ isOpen, toggle, count }) {
                   <SubHeading title="Stay ahead of the crowd" />
                 </div>
               )}
+              {/* Women's Navigation Menu */}
+              {user?.gender === "female" && (
+              <div className="user-card-sidebar" style={{ backgroundColor: "#0b0b0b", marginBottom: "8px" }}>
+                <div className="sidebar_nav_links_women">
+                  <ul>
+                    <li>
+                      <Link href="/search">
+                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
+                          <span className="d-flex align-items-center">
+                            <FiSearch size={20} style={{ marginRight: "12px" }} />
+                            Search
+                          </span>
+                          <FiChevronRight size={18} />
+                        </a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/notifications">
+                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
+                          <span className="d-flex align-items-center">
+                            <FiBell size={20} style={{ marginRight: "12px" }} />
+                            Notifications
+                            {count > 0 && <span style={{
+                              backgroundColor: "#f24462",
+                              color: "white",
+                              borderRadius: "10px",
+                              padding: "2px 8px",
+                              fontSize: "12px",
+                              marginLeft: "8px"
+                            }}>{count}</span>}
+                          </span>
+                          <FiChevronRight size={18} />
+                        </a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/messages">
+                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
+                          <span className="d-flex align-items-center">
+                            <FiMessageSquare size={20} style={{ marginRight: "12px" }} />
+                            Messages
+                          </span>
+                          <FiChevronRight size={18} />
+                        </a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/matches">
+                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
+                          <span className="d-flex align-items-center">
+                            <FiHeart size={20} style={{ marginRight: "12px" }} />
+                            Matches
+                          </span>
+                          <FiChevronRight size={18} />
+                        </a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/favorites">
+                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
+                          <span className="d-flex align-items-center">
+                            <FiHeart size={20} style={{ marginRight: "12px" }} />
+                            Favorites
+                          </span>
+                          <FiChevronRight size={18} />
+                        </a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/settings">
+                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
+                          <span className="d-flex align-items-center">
+                            <FiSettings size={20} style={{ marginRight: "12px" }} />
+                            Settings
+                          </span>
+                          <FiChevronRight size={18} />
+                        </a>
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              )}
               <div className="user-card-sidebar">
                 <div
                   className="sidebar_nav_links "
@@ -343,6 +434,7 @@ function sideBarPopup({ isOpen, toggle, count }) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
