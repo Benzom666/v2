@@ -964,7 +964,7 @@ const Messages = (props) => {
                                   )}
                                 </div>
                               ) : (
-                                "No Conversation"
+                                ""
                               )
                             ) : mobile ? (
                               <div className="message-content-side">
@@ -976,13 +976,33 @@ const Messages = (props) => {
                                 )}
                               </div>
                             ) : (
-                              "No Conversation"
+                              ""
                             )}
                           </ul>
                         </div>
                       </TabPanel>
                       <TabPanel>
                         <div className="user-list-wrap">
+                          {user?.gender === "female" && (
+                            <NewInterests
+                              interestCount={requestedConversationLength}
+                              activeDatesCount={activeDatesCount}
+                            />
+                          )}
+                          {user?.gender === "male" && (
+                            <PendingRequests
+                              requests={conversations
+                                ?.filter((c) => c.status == 0)
+                                ?.map((c) => ({
+                                  id: c?._id,
+                                  profileImage: c?.user?.images?.[0],
+                                  userName: c?.user?.user_name,
+                                  isSuperInterested: c?.isSuperInterested,
+                                }))}
+                              ignoredCount={0}
+                              rejectedCount={0}
+                            />
+                          )}
                           <ul>
                             {loading
                               ? ""
@@ -999,7 +1019,7 @@ const Messages = (props) => {
                                     )}
                                   </div>
                                 ) : (
-                                  "No Requests"
+                                  ""
                                 ))}
                           </ul>
                         </div>
@@ -1259,8 +1279,9 @@ const Messages = (props) => {
                         ((selectedTabIndex == 0 && conversationLength == 0) ||
                           (selectedTabIndex == 1 &&
                             requestedConversationLength == 0)) && (
-                          <NoConversationShowView
-                            selectedTabIndex={selectedTabIndex}
+                          <EmptyState
+                            gender={user?.gender}
+                            activeDatesCount={activeDatesCount}
                           />
                         )
                       )}
