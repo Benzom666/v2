@@ -227,6 +227,32 @@ const UserCardListForMessage = ({
                             }
                           }, 5000);
 
+                          const isSuper =
+                            conversation?.isSuperInterested ??
+                            conversation?.message?.isSuperInterested ??
+                            conversation?.message?.is_super_interested ??
+                            false;
+                          const totalHours = 48;
+                          const createdAt =
+                            conversation?.message?.sent_time ||
+                            conversation?.message?.createdAt ||
+                            conversation?.createdAt;
+                          let remainingHours = 32;
+                          let progressPercent = 70;
+                          if (createdAt) {
+                            const elapsed =
+                              (Date.now() - new Date(createdAt).getTime()) /
+                              (1000 * 60 * 60);
+                            remainingHours = Math.max(
+                              Math.ceil(totalHours - elapsed),
+                              0
+                            );
+                            progressPercent = Math.min(
+                              Math.max((elapsed / totalHours) * 100, 8),
+                              100
+                            );
+                          }
+
                           return pageLoading ? (
                             <SkeletonUserCardListForMessage
                               conversation={conversation}
@@ -247,7 +273,7 @@ const UserCardListForMessage = ({
                                 Super
                               </div> */}
                               <div className="request__message__super__text">
-                                {conversation?.isSuperInterested && (
+                                {isSuper && (
                                   <div className="super">
                                     <CustomIcon.RequestSuperText
                                       color={"white"}
@@ -263,12 +289,12 @@ const UserCardListForMessage = ({
                               </div>
                               <div
                                 className={`superinterested__icon__div ${
-                                  conversation?.isSuperInterested
+                                  isSuper
                                     ? "superinterested__margin"
                                     : ""
                                 }`}
                               >
-                                {conversation?.isSuperInterested && (
+                                {isSuper && (
                                   <div className="superinterested__icon">
                                     <Image
                                       src={StarIcon}
@@ -292,6 +318,17 @@ const UserCardListForMessage = ({
                                     "{showText(conversation?.message?.message)}"
                                   </span>
                                 </figure>
+                                <div className="request-expiry">
+                                  <div className="request-expiry-text">
+                                    Request expires in {remainingHours} hours
+                                  </div>
+                                  <div className="request-expiry-track">
+                                    <span
+                                      className="request-expiry-fill"
+                                      style={{ width: `${progressPercent}%` }}
+                                    />
+                                  </div>
+                                </div>
                               </div>
                               <div className="d-flex align-items-center my-4 header_btn_wrap">
                                 <a
