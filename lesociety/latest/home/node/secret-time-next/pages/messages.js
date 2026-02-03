@@ -82,7 +82,12 @@ const Messages = (props) => {
   const [activeDatesCount, setActiveDatesCount] = useState(0);
   
   // Paywall integration for women
-  const { paywallConfig, showLadiesChatPaywall, closePaywall } = usePaywall();
+  const {
+    paywallConfig,
+    showLadiesChatPaywall,
+    showMenFirstDatePaywall,
+    closePaywall
+  } = usePaywall();
 
   useEffect(() => {
     socket.auth = { user: user };
@@ -455,6 +460,27 @@ const Messages = (props) => {
 
   const sendMessage = async (e) => {
     // e.preventDefault();
+    const isMale = user?.gender === "male";
+    const isFemale = user?.gender === "female";
+    const interestedTokens = user?.interested_tokens || 0;
+    const superInterestedTokens = user?.super_interested_tokens || 0;
+    const chatTokens = user?.chat_tokens || 0;
+    const remainingChats = user?.remaining_chats || 0;
+
+    if (isMale && interestedTokens === 0 && superInterestedTokens === 0) {
+      showMenFirstDatePaywall(
+        currentChat?.user?.full_name ||
+          currentChat?.user?.name ||
+          currentChat?.user?.username ||
+          "Someone"
+      );
+      return;
+    }
+
+    if (isFemale && chatTokens === 0 && remainingChats === 0) {
+      showLadiesChatPaywall();
+      return;
+    }
 
     const data = {
       chatRoomId: currentChat?.message?.room_id ?? currentChat?._id,
@@ -731,6 +757,13 @@ const Messages = (props) => {
         }
       }}
     >
+      <PaywallModal
+        isOpen={paywallConfig.isOpen}
+        onClose={closePaywall}
+        type={paywallConfig.type}
+        expiresIn={paywallConfig.expiresIn}
+        userName={paywallConfig.userName}
+      />
       {mobile ? (
         <MessageMobileHeader />
       ) : (
