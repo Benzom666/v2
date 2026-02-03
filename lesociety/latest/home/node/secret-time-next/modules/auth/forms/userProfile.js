@@ -32,6 +32,8 @@ import ImageSlider from "./ImageSlider";
 import MessageModal from "@/core/MessageModal";
 import io from "socket.io-client";
 import { AUTHENTICATE_UPDATE } from "../actionConstants";
+import PaywallModal from "@/core/PaywallModal";
+import { usePaywall } from "@/hooks/usePaywall";
 
 export const socket = io(socketURL, {
   autoConnect: true,
@@ -52,6 +54,9 @@ function UserProfile({ preview, editHandle }) {
   const [alreadyMessaged, setAlreadyMessaged] = useState(false);
   const [messageLoading, setMessageLoading] = useState(false);
   const [conversations, setConversations] = useState([]);
+  
+  // Paywall integration
+  const { paywallConfig, showMenFirstDatePaywall, closePaywall } = usePaywall();
 
   const [viewFullPage, setViewFullPage] = useState(false);
   const [slideShowIndex, setSlideShowIndex] = useState(0);
@@ -464,6 +469,14 @@ function UserProfile({ preview, editHandle }) {
     getUpdatedUserDetails();
   }, []);
 
+  // Trigger paywall for men when viewing profiles with dates
+  useEffect(() => {
+    if (userDetail && userDates?.length > 0 && user?.gender === 'male') {
+      // Show paywall if male user has no tokens
+      showMenFirstDatePaywall(userDetail?.name || 'Someone', 48);
+    }
+  }, [userDetail, userDates]);
+
   // useEffect(() => {
   //   if (router?.query?.edit && user?.step_completed === 4) {
   //     router.push({
@@ -619,15 +632,23 @@ function UserProfile({ preview, editHandle }) {
     return <SkeletonUserProfile preview={preview} />;
   } else {
     return (
-      <div className="inner-page">
-        {!preview && (
-          <HeaderLoggedIn
-            fixed={width < 767}
-            count={count}
-            setCount={setCount}
-            unReadedConversationLength={unReadedConversationLength}
-          />
-        )}
+      <>
+        <PaywallModal
+          isOpen={paywallConfig.isOpen}
+          onClose={closePaywall}
+          type={paywallConfig.type}
+          expiresIn={paywallConfig.expiresIn}
+          userName={paywallConfig.userName}
+        />
+        <div className="inner-page">
+          {!preview && (
+            <HeaderLoggedIn
+              fixed={width < 767}
+              count={count}
+              setCount={setCount}
+              unReadedConversationLength={unReadedConversationLength}
+            />
+          )}
         <div className="inner-part-page">
           <div
             className={`top-spase pb-0 pt-5-lg-4 pb-5-lg-4 ${

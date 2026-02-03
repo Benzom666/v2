@@ -35,6 +35,8 @@ import MessageSend2 from "assets/message_send2.png";
 import { logout } from "@/modules/auth/authActions";
 import moment from "moment";
 import StarIcon from "../assets/request star.png";
+import PaywallModal from "@/core/PaywallModal";
+import { usePaywall } from "@/hooks/usePaywall";
 
 // const socket = io.connect(socketURL);
 
@@ -74,6 +76,9 @@ const Messages = (props) => {
 
   // for notification
   const [count, setCount] = useState(0);
+  
+  // Paywall integration for women
+  const { paywallConfig, showLadiesChatPaywall, closePaywall } = usePaywall();
 
   useEffect(() => {
     socket.auth = { user: user };
