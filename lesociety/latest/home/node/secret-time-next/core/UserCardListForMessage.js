@@ -232,7 +232,7 @@ const UserCardListForMessage = ({
                             conversation?.message?.isSuperInterested ??
                             conversation?.message?.is_super_interested ??
                             false;
-                          const totalHours = 48;
+                          const totalHours = 32;
                           const createdAt =
                             conversation?.message?.sent_time ||
                             conversation?.message?.createdAt ||
