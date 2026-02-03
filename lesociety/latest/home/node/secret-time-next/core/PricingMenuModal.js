@@ -22,6 +22,24 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
   const total = calculateTotal();
   const canCheckout = total >= MIN_PURCHASE;
 
+  const handleCheckout = () => {
+    if (!canCheckout) return;
+    
+    // Dummy payment - always succeeds for testing
+    console.log('Processing payment:', {
+      interestedCount,
+      superInterestedCount,
+      total,
+      timestamp: new Date().toISOString()
+    });
+    
+    // TODO: Navigate to post-payment success screen
+    alert(`Payment Successful! $${total} processed.\nInterested: ${interestedCount} x $2 = $${interestedCount * 2}\nSuper Interested: ${superInterestedCount} x $4 = $${superInterestedCount * 4}`);
+    
+    // Close modal after payment
+    onClose();
+  };
+
   const handleIncrement = (type) => {
     if (type === 'interested') {
       setInterestedCount(prev => prev + 1);
@@ -102,7 +120,11 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
 
         {/* Footer */}
         <MinPurchase>*Min purchase of ${MIN_PURCHASE}</MinPurchase>
-        <CheckoutButton disabled={!canCheckout} canCheckout={canCheckout}>
+        <CheckoutButton 
+          disabled={!canCheckout} 
+          canCheckout={canCheckout}
+          onClick={handleCheckout}
+        >
           (${total}) Proceed to Checkout
         </CheckoutButton>
       </ModalContent>
