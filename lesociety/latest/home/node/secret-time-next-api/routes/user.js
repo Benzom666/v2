@@ -156,6 +156,20 @@ router.post(
 );
 
 router.post(
+    "/update-tokens",
+    validateApi,
+    validation.validate("update-tokens"),
+    userController.updateTokens
+);
+
+router.post(
+    "/update-popup-preferences",
+    validateApi,
+    validation.validate("update-popup-preferences"),
+    userController.updatePopupPreferences
+);
+
+router.post(
     "/save-aspiration",
     validateApi,
     validation.validate("save-aspiration"),

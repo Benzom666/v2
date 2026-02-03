@@ -77,8 +77,15 @@ const UserSchema = new Schema({
     blocked_users_by_self: { type: Array, default: [], unique: true }, // list of blocked users by login user itself
     blocked_by_others: { type: Array, default: [], unique: true }, // list of other users who blocked login user
 
+    interested_tokens: { type: Number, default: 0 },
+    super_interested_tokens: { type: Number, default: 0 },
+    chat_tokens: { type: Number, default: 0 },
+    remaining_chats: { type: Number, default: 15 },
+
     date_warning_popup: { type: Boolean, default: false },
     image_warning_popup: { type: Boolean, default: false },
+    create_date_popup_dismissed: { type: Boolean, default: false },
+    date_live_popup_dismissed: { type: Boolean, default: false },
 
     categatoryName: String,
     categatoryId: { type: Schema.Types.ObjectId, ref: "categories" },

@@ -1430,6 +1430,94 @@ exports.updateStatus = async (req, res) => {
     }
 };
 
+/**
+ * Update user tokens/chats
+ * Accepts increments for interested, super interested, and chat tokens
+ */
+exports.updateTokens = async (req, res) => {
+    try {
+        const {
+            interested_tokens = 0,
+            super_interested_tokens = 0,
+            chat_tokens = 0,
+        } = req.body;
+
+        const inc = {};
+        if (Number(interested_tokens)) inc.interested_tokens = Number(interested_tokens);
+        if (Number(super_interested_tokens))
+            inc.super_interested_tokens = Number(super_interested_tokens);
+        if (Number(chat_tokens)) inc.chat_tokens = Number(chat_tokens);
+
+        if (Object.keys(inc).length === 0) {
+            return res
+                .status(400)
+                .json(helper.errorResponse([], 400, "No token updates provided."));
+        }
+
+        const user = await User.findOneAndUpdate(
+            { _id: req.datajwt.userdata._id },
+            { $inc: inc, updated_at: new Date() },
+            { new: true }
+        );
+
+        return res
+            .status(200)
+            .json(
+                helper.successResponse(
+                    { user: helper.userResponse(user) },
+                    200,
+                    "Tokens updated successfully!"
+                )
+            );
+    } catch (error) {
+        return res
+            .status(400)
+            .json(helper.errorResponse({ error: error.message }, 400, "Failed to update tokens."));
+    }
+};
+
+/**
+ * Update popup preferences
+ */
+exports.updatePopupPreferences = async (req, res) => {
+    try {
+        const { create_date_popup_dismissed, date_live_popup_dismissed } = req.body;
+        const update = {};
+
+        if (typeof create_date_popup_dismissed === "boolean") {
+            update.create_date_popup_dismissed = create_date_popup_dismissed;
+        }
+        if (typeof date_live_popup_dismissed === "boolean") {
+            update.date_live_popup_dismissed = date_live_popup_dismissed;
+        }
+
+        if (Object.keys(update).length === 0) {
+            return res
+                .status(400)
+                .json(helper.errorResponse([], 400, "No popup preferences provided."));
+        }
+
+        const user = await User.findOneAndUpdate(
+            { _id: req.datajwt.userdata._id },
+            { ...update, updated_at: new Date() },
+            { new: true }
+        );
+
+        return res
+            .status(200)
+            .json(
+                helper.successResponse(
+                    { user: helper.userResponse(user) },
+                    200,
+                    "Popup preferences updated."
+                )
+            );
+    } catch (error) {
+        return res.status(400).json(
+            helper.errorResponse({ error: error.message }, 400, "Failed to update popup preferences.")
+        );
+    }
+};
 exports.requestInfo = async (req, res) => {
     try {
         const { email, message } = req.body;

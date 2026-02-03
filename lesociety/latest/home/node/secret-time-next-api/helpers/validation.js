@@ -182,6 +182,36 @@ exports.validate = (method) => {
                 validationResponse,
             ];
         }
+        case "update-tokens": {
+            return [
+                check("interested_tokens")
+                    .optional()
+                    .isNumeric()
+                    .withMessage("interested_tokens must be a number"),
+                check("super_interested_tokens")
+                    .optional()
+                    .isNumeric()
+                    .withMessage("super_interested_tokens must be a number"),
+                check("chat_tokens")
+                    .optional()
+                    .isNumeric()
+                    .withMessage("chat_tokens must be a number"),
+                validationResponse,
+            ];
+        }
+        case "update-popup-preferences": {
+            return [
+                check("create_date_popup_dismissed")
+                    .optional()
+                    .isBoolean()
+                    .withMessage("create_date_popup_dismissed must be boolean"),
+                check("date_live_popup_dismissed")
+                    .optional()
+                    .isBoolean()
+                    .withMessage("date_live_popup_dismissed must be boolean"),
+                validationResponse,
+            ];
+        }
         case "default-message": {
             return [
                 check("messageType")
