@@ -37,6 +37,9 @@ import moment from "moment";
 import StarIcon from "../assets/request star.png";
 import PaywallModal from "@/core/PaywallModal";
 import { usePaywall } from "../hooks/usePaywall";
+import EmptyState from "../components/inbox/EmptyState";
+import PendingRequests from "../components/inbox/PendingRequests";
+import NewInterests from "../components/inbox/NewInterests";
 
 // const socket = io.connect(socketURL);
 
