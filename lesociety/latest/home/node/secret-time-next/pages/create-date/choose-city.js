@@ -80,6 +80,16 @@ const ChooseCity = (props) => {
           dispatch(initialize("CreateStepFour", ""));
         }
         if (draftedDate) {
+          const shouldResume =
+            router?.query?.resume === "true" || router?.query?.drafted === "true";
+          if (!shouldResume) {
+            setDraftDateLoading(false);
+            dispatch(initialize("CreateStepOne", ""));
+            dispatch(initialize("CreateStepTwo", ""));
+            dispatch(initialize("CreateStepThree", ""));
+            dispatch(initialize("CreateStepFour", ""));
+            return;
+          }
           const category = dateCategory.find(
             (item) =>
               item?.label === draftedDate?.standard_class_date ||

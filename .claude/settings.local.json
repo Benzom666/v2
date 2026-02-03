@@ -28,7 +28,8 @@
       "Bash(command:*)",
       "Bash(pkill:*)",
       "Bash(PORT=3002 npm run dev:*)",
-      "Bash(NODE_OPTIONS=--openssl-legacy-provider PORT=3002 npm run dev)"
+      "Bash(NODE_OPTIONS=--openssl-legacy-provider PORT=3002 npm run dev)",
+      "Bash(ip:*)"
     ]
   }
 }
