@@ -39,7 +39,7 @@ const PromoModals = ({ isOpen, onClose, type = "success" }) => {
             </OfferSection>
 
             <CTASection>
-              <CreateDateButton onClick={() => router.push("/create-date/choose-city")}>
+              <CreateDateButton onClick={() => router.push("/create-date/choose-city?showIntro=true")}>
                 CREATE NEW DATE
               </CreateDateButton>
               <DisclaimerText>
@@ -73,7 +73,7 @@ const PromoModals = ({ isOpen, onClose, type = "success" }) => {
             </OfferSection>
 
             <CTASection>
-              <CreateDateButton onClick={() => router.push("/create-date/choose-city")}>
+              <CreateDateButton onClick={() => router.push("/create-date/choose-city?showIntro=true")}>
                 CREATE NEW DATE
               </CreateDateButton>
             </CTASection>
@@ -134,7 +134,7 @@ const PromoModals = ({ isOpen, onClose, type = "success" }) => {
             </OfferSection>
 
             <CTASection>
-              <CreateDateButton onClick={() => router.push("/create-date/choose-city")}>
+              <CreateDateButton onClick={() => router.push("/create-date/choose-city?showIntro=true")}>
                 CREATE NEW DATE
               </CreateDateButton>
             </CTASection>

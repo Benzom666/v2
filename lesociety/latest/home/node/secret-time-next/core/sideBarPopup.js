@@ -412,7 +412,9 @@ function sideBarPopup({ isOpen, toggle, count }) {
                   {/* <SubHeading title="Stay ahead of the crowd" /> */}
                   <div className="d-flex align-items-center mb-0 mt-1 header_btn_wrap">
                     <button
-                      onClick={() => router.push("/create-date/choose-city")}
+                    onClick={() =>
+                      router.push("/create-date/choose-city?showIntro=true")
+                    }
                       type="button"
                       className="create-date"
                     >

@@ -9,7 +9,7 @@ const EmptyState = ({ gender = 'male', activeDatesCount = 0 }) => {
   const isMale = gender === 'male';
 
   const handleCreateDate = () => {
-    router.push('/create-date');
+    router.push('/create-date/choose-city?showIntro=true');
   };
 
   return (
@@ -38,11 +38,33 @@ const EmptyState = ({ gender = 'male', activeDatesCount = 0 }) => {
         <>
           <SectionHeader>New Interests</SectionHeader>
           <InterestBox>
-            <InterestText>You have no new interests</InterestText>
-            <InterestCount>0</InterestCount>
-            <InterestSubtext>
-              {activeDatesCount} active {activeDatesCount === 1 ? 'date' : 'dates'} is live on gallery
-            </InterestSubtext>
+            <InterestCopy>
+              <InterestText>You have no new interests</InterestText>
+              <InterestSubtext>
+                {activeDatesCount} active{" "}
+                {activeDatesCount === 1 ? "date" : "dates"}{" "}
+                {activeDatesCount === 1 ? "is" : "are"} live on gallery
+              </InterestSubtext>
+            </InterestCopy>
+            <InterestRing>
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="40" r="34" className="ring-bg" />
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="34"
+                  className="ring-progress"
+                  strokeDasharray="0 214"
+                />
+                <defs>
+                  <linearGradient id="interest-ring-empty" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#f24462" />
+                    <stop offset="100%" stopColor="#4a90e2" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span className="ring-value">0</span>
+            </InterestRing>
           </InterestBox>
           
           <EmptyIllustration>
@@ -54,9 +76,11 @@ const EmptyState = ({ gender = 'male', activeDatesCount = 0 }) => {
             Visibility build Interests. Stay active!
           </EmptyMessage>
           
-          <CreateDateButton onClick={handleCreateDate}>
-            CREATE NEW DATE
-          </CreateDateButton>
+          {activeDatesCount === 0 && (
+            <CreateDateButton onClick={handleCreateDate}>
+              CREATE NEW DATE
+            </CreateDateButton>
+          )}
         </>
       )}
     </EmptyStateContainer>
@@ -111,6 +135,16 @@ const InterestBox = styled.div`
   margin-bottom: 32px;
   width: 100%;
   max-width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+`;
+
+const InterestCopy = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const InterestText = styled.div`
@@ -121,19 +155,47 @@ const InterestText = styled.div`
   margin-bottom: 12px;
 `;
 
-const InterestCount = styled.div`
-  font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-  font-size: 48px;
-  font-weight: 300;
-  color: #ffffff;
-  margin-bottom: 8px;
-`;
-
 const InterestSubtext = styled.div`
   font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
   font-size: 13px;
   font-weight: 400;
   color: #888888;
+`;
+
+const InterestRing = styled.div`
+  position: relative;
+  width: 70px;
+  height: 70px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ring-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.12);
+    stroke-width: 6;
+  }
+
+  .ring-progress {
+    fill: none;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke: url(#interest-ring-empty);
+  }
+
+  .ring-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+  }
 `;
 
 const EmptyIllustration = styled.div`

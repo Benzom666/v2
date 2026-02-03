@@ -9,6 +9,8 @@ import superInterestedIcon from "../assets/superinterested.svg";
 import { useDispatch } from "react-redux";
 import { updateUserTokens, updateUserChats } from "../modules/auth/authActions";
 import { useSelector } from "react-redux";
+import { apiRequest } from "utils/Utilities";
+import { AUTHENTICATE_UPDATE } from "../modules/auth/actionConstants";
 
 const PricingMenuModal = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
@@ -48,7 +50,7 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
   const minPurchase = isFemale ? MIN_PURCHASE_WOMEN : MIN_PURCHASE_MEN;
   const canCheckout = total >= minPurchase;
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!canCheckout) return;
 
     // Dummy payment - always succeeds for testing
@@ -67,7 +69,22 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
         total
       });
       
-      // Update Redux store with new chat tokens
+      try {
+        const res = await apiRequest({
+          method: "POST",
+          url: "user/update-tokens",
+          data: {
+            chat_tokens: totalChats,
+          },
+        });
+        if (res?.data?.data?.user) {
+          dispatch({ type: AUTHENTICATE_UPDATE, payload: res.data.data.user });
+        }
+      } catch (err) {
+        console.log("Failed to update chat tokens", err);
+      }
+
+      // Update Redux store with new chat tokens (optimistic)
       dispatch(updateUserChats(totalChats));
       
       alert(`Payment Successful! $${total.toFixed(2)} processed.\n\nYou received:\n• ${aLaCarteCount} A La' Carte chats\n• ${queensBundleCount} Queens Bundle (${queensBundleCount * QUEENS_BUNDLE_CHATS} chats)\n\nTotal: ${totalChats} new conversations!\n\nYour sidebar will now show your updated chat balance!`);
@@ -78,14 +95,27 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
         total
       });
       
-      // Update Redux store with new token counts
+      try {
+        const res = await apiRequest({
+          method: "POST",
+          url: "user/update-tokens",
+          data: {
+            interested_tokens: interestedCount,
+            super_interested_tokens: superInterestedCount,
+          },
+        });
+        if (res?.data?.data?.user) {
+          dispatch({ type: AUTHENTICATE_UPDATE, payload: res.data.data.user });
+        }
+      } catch (err) {
+        console.log("Failed to update tokens", err);
+      }
+
+      // Update Redux store with new token counts (optimistic)
       dispatch(updateUserTokens(interestedCount, superInterestedCount));
       
       alert(`Payment Successful! $${total} processed.\n\nYou received:\n• ${interestedCount} Interested tokens\n• ${superInterestedCount} Super Interested tokens\n\nYour sidebar will now show your updated token balance!`);
     }
-
-    // TODO: Call API to update user tokens/chats on backend
-    // await apiRequest({ method: 'POST', url: 'user/update-tokens', data: { ... } });
 
     // Reset counts and close modal
     setInterestedCount(0);
@@ -139,7 +169,7 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
         {isFemale ? (
           <>
             {/* Women's Pricing: A La' Carte */}
-            <PricingCard>
+            <PricingCard active={aLaCarteCount > 0}>
               <CardHeader>
                 <TitleSection>
                   <div style={{ fontFamily: 'HipsterScriptW00-Regular, cursive, sans-serif', fontSize: '48px', color: '#ffffff', lineHeight: '1' }}>
@@ -166,7 +196,7 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
             </PricingCard>
 
             {/* Women's Pricing: Queens Bundle */}
-            <PricingCard highlighted>
+            <PricingCard highlighted active={queensBundleCount > 0}>
               <CardHeader>
                 <TitleSection>
                   <div style={{ fontFamily: 'HipsterScriptW00-Regular, cursive, sans-serif', fontSize: '48px', color: '#ffffff', lineHeight: '1' }}>
@@ -197,7 +227,7 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
         ) : (
           <>
             {/* Men's Pricing: Interested */}
-            <PricingCard>
+            <PricingCard active={interestedCount > 0}>
               <CardHeader>
                 <TitleSection>
                   <Image src={interestedIcon} alt="Interested" width={165} height={70} />
@@ -222,7 +252,7 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
             </PricingCard>
 
             {/* Men's Pricing: Super Interested */}
-            <PricingCard highlighted>
+            <PricingCard highlighted active={superInterestedCount > 0}>
               <CardHeader>
                 <TitleSection>
                   <Image src={superInterestedIcon} alt="Super Interested" width={165} height={70} />
@@ -317,12 +347,14 @@ const CloseButton = styled.button`
 
 const PricingCard = styled.div`
   background: #000000;
-  border: 2px solid ${props => props.highlighted ? '#F24462' : 'rgba(255, 255, 255, 0.2)'};
+  border: 2px solid ${props =>
+    props.active || props.highlighted ? '#F24462' : 'rgba(255, 255, 255, 0.2)'};
   border-radius: 24px;
   padding: 24px 20px 24px;
   margin-bottom: 16px;
   position: relative;
-  box-shadow: ${props => props.highlighted ? '0 0 20px rgba(242, 68, 98, 0.2)' : 'none'};
+  box-shadow: ${props =>
+    props.active || props.highlighted ? '0 0 20px rgba(242, 68, 98, 0.2)' : 'none'};
   transition: all 0.3s ease;
   overflow: hidden;
 

@@ -322,7 +322,7 @@ const CompleteProfile = (props) => {
                 now by posting your first date!
             </label> */}
       {/* <div className="secret-input type-submit" style={{ marginTop: '75px' }}>
-                <button onClick={() => user?.gender === "male" ? router.push('/user/user-list') : router.push("/create-date/choose-city")} className={`next ${!user?.email_verified ? 'disable' : ''}`} disabled={!user?.email_verified}>
+                <button onClick={() => user?.gender === "male" ? router.push('/user/user-list') : router.push("/create-date/choose-city?showIntro=true")} className={`next ${!user?.email_verified ? 'disable' : ''}`} disabled={!user?.email_verified}>
                     {user?.gender === "male" ? 'GO TO GALLERY' : 'CREATE NEW DATE'}
                 </button>
             </div> */}

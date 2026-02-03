@@ -6,7 +6,7 @@ const NewInterests = ({ interestCount = 0, activeDatesCount = 0 }) => {
   const router = useRouter();
 
   const handleCreateDate = () => {
-    router.push('/create-date');
+    router.push('/create-date/choose-city?showIntro=true');
   };
 
   return (
@@ -14,13 +14,36 @@ const NewInterests = ({ interestCount = 0, activeDatesCount = 0 }) => {
       <SectionTitle>New Interests</SectionTitle>
       
       <InterestCard>
-        <InterestText>
-          {interestCount === 0 ? 'You have no new interests' : `You have ${interestCount} new interest${interestCount !== 1 ? 's' : ''}`}
-        </InterestText>
-        <InterestCount>{interestCount}</InterestCount>
-        <InterestSubtext>
-          {activeDatesCount} active {activeDatesCount === 1 ? 'date' : 'dates'} is live on gallery
-        </InterestSubtext>
+        <InterestCopy>
+          <InterestText>
+            {interestCount === 0
+              ? "You have no new interests"
+              : `You have ${interestCount} new interest${interestCount !== 1 ? "s" : ""}`}
+          </InterestText>
+          <InterestSubtext>
+            {activeDatesCount} active {activeDatesCount === 1 ? "date" : "dates"}{" "}
+            {activeDatesCount === 1 ? "is" : "are"} live on gallery
+          </InterestSubtext>
+        </InterestCopy>
+        <InterestRing>
+          <svg viewBox="0 0 80 80" aria-hidden="true">
+            <circle cx="40" cy="40" r="34" className="ring-bg" />
+            <circle
+              cx="40"
+              cy="40"
+              r="34"
+              className="ring-progress"
+              strokeDasharray="214 214"
+            />
+            <defs>
+              <linearGradient id="interest-ring" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#f24462" />
+                <stop offset="100%" stopColor="#4a90e2" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span className="ring-value">{interestCount}</span>
+        </InterestRing>
       </InterestCard>
 
       {activeDatesCount === 0 && (
@@ -54,7 +77,16 @@ const InterestCard = styled.div`
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+const InterestCopy = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 `;
 
 const InterestText = styled.div`
@@ -65,19 +97,47 @@ const InterestText = styled.div`
   margin-bottom: 8px;
 `;
 
-const InterestCount = styled.div`
-  font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-  font-size: 40px;
-  font-weight: 300;
-  color: #ffffff;
-  margin-bottom: 4px;
-`;
-
 const InterestSubtext = styled.div`
   font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
   font-size: 12px;
   font-weight: 400;
   color: #888888;
+`;
+
+const InterestRing = styled.div`
+  position: relative;
+  width: 64px;
+  height: 64px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ring-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.12);
+    stroke-width: 6;
+  }
+
+  .ring-progress {
+    fill: none;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke: url(#interest-ring);
+  }
+
+  .ring-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+  }
 `;
 
 const CreateButton = styled.button`

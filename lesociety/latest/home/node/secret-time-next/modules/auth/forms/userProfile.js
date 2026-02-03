@@ -1182,7 +1182,7 @@ function UserProfile({ preview, editHandle }) {
                                             type="button"
                                             onClick={() =>
                                               router.push(
-                                                "/create-date/choose-city"
+                                                "/create-date/choose-city?showIntro=true"
                                               )
                                             }
                                             className={
@@ -1212,7 +1212,7 @@ function UserProfile({ preview, editHandle }) {
                                             type="button"
                                             onClick={() =>
                                               router.push(
-                                                "/create-date/choose-city"
+                                                "/create-date/choose-city?showIntro=true"
                                               )
                                             }
                                             className={

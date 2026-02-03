@@ -27,7 +27,7 @@ const DatePopup = ({ modalIsOpen, closeModal }) => {
                 <H5>What are you waiting for?</H5>
                 <SubHeading title="Post your own date and start earning now" />
                 <div className="d-flex align-items-center my-4 header_btn_wrap">
-                    <Link href="/create-date/choose-city"><a className="create-date">Create New Date</a></Link>
+                    <Link href="/create-date/choose-city?showIntro=true"><a className="create-date">Create New Date</a></Link>
                 </div>
             </div>
         </Modal>

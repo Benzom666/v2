@@ -3,7 +3,21 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 const PendingRequests = ({ requests = [], ignoredCount = 0, rejectedCount = 0 }) => {
-  if (requests.length === 0) return null;
+  if (requests.length === 0) {
+    return (
+      <Section>
+        <SectionTitle>Pending Requests</SectionTitle>
+        <QuietCard>
+          <h4>All Quiet For Now</h4>
+          <p>You have no new requests today. Find your next connection in the gallery.</p>
+        </QuietCard>
+        <StatusRow>
+          <StatusItem>(0) Ignored (Refunded after 48h)</StatusItem>
+          <StatusItem>(0) Rejected (No refund)</StatusItem>
+        </StatusRow>
+      </Section>
+    );
+  }
 
   return (
     <Section>
@@ -96,4 +110,25 @@ const StatusItem = styled.div`
   font-size: 12px;
   font-weight: 400;
   color: #888888;
+`;
+
+const QuietCard = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  text-align: center;
+
+  h4 {
+    font-size: 16px;
+    color: #ffffff;
+    margin: 0 0 6px;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 12px;
+    color: #b0b0b0;
+    margin: 0;
+  }
 `;

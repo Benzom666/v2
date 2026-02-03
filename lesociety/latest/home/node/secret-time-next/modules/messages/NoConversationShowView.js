@@ -1,5 +1,5 @@
 import React from "react";
-import NoImage from "assets/img/no-image.png";
+import NoImage from "assets/nochat.png";
 import SubHeading from "@/core/SubHeading";
 import Link from "next/link";
 import Image from "next/image";
@@ -35,7 +35,7 @@ function NoConversationShowView({ request, selectedTabIndex }) {
           href={
             user?.gender === "male"
               ? "/user/user-list"
-              : "/create-date/choose-city"
+              : "/create-date/choose-city?showIntro=true"
           }
         >
           <a className="create-date">
@@ -78,7 +78,7 @@ function NoConversationShowView({ request, selectedTabIndex }) {
             href={
               user?.gender === "male"
                 ? "/user/user-list"
-                : "/create-date/choose-city"
+                : "/create-date/choose-city?showIntro=true"
             }
           >
             <a className="create-date">

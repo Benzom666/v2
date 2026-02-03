@@ -53,16 +53,15 @@ const PaywallModal = ({
   if (type === "men_first_date" && !isFemale) {
     return (
       <ModalOverlay onClick={onClose}>
-        <ModalContent onClick={(e) => e.stopPropagation()}>
+        <SlideUpContent onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={onClose}>×</CloseButton>
           
           <Title>
-            She's Offering A First<br />Date! Don't Miss It.
+            She's Offering A First Date! Don't Miss It.
           </Title>
           
           <Subtitle>
-            She's real, verified, and driven —<br />
-            her goals deserve men who value them.
+            She's real, verified, and driven — her goals deserve men who value them.
           </Subtitle>
           
           <Offer>
@@ -85,7 +84,7 @@ const PaywallModal = ({
             This plan is only available for a limited time. No hidden fees or strings<br />
             attached you can cancel anytime.
           </FooterText>
-        </ModalContent>
+        </SlideUpContent>
       </ModalOverlay>
     );
   }
@@ -113,7 +112,7 @@ const PaywallModal = ({
           </Offer>
           
           <TimerSection>
-            <TimerText>This interest expires in {formatTimeLeft()}</TimerText>
+            <TimerText>This Interest expires in {formatTimeLeft()}</TimerText>
             <ProgressBar>
               <ProgressFill progress={getProgressPercentage()} />
             </ProgressBar>
@@ -147,7 +146,7 @@ const ModalOverlay = styled.div`
   backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   z-index: 10000;
   animation: fadeIn 0.3s ease;
 

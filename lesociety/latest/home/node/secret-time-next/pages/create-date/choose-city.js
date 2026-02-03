@@ -19,6 +19,8 @@ import { components } from "react-select";
 import Loader from "@/modules/Loader/Loader";
 import { logout } from "@/modules/auth/authActions";
 import CreateDateHeader from "@/core/CreateDateHeader";
+import CreateDateGateModal from "@/core/CreateDateGateModal";
+import { AUTHENTICATE_UPDATE } from "@/modules/auth/actionConstants";
 
 const ChooseCity = (props) => {
   const [locationOptions, setLocation] = useState([]);
@@ -27,6 +29,10 @@ const ChooseCity = (props) => {
   const [loadingLive, setLoadingLive] = useState(false);
   const [confirmPopup, setConfirmPopup] = useState(false);
   const [draftDateLoading, setDraftDateLoading] = useState(false);
+  const [activeDatesCount, setActiveDatesCount] = useState(0);
+  const [showIntroModal, setShowIntroModal] = useState(false);
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
   const dispatch = useDispatch();
   const state = useSelector((state) => state.form.ChooseCity?.values);
   const user = useSelector((state) => state.authReducer.user);
@@ -65,6 +71,13 @@ const ChooseCity = (props) => {
         dispatch(initialize("CreateStepTwo", ""));
         dispatch(initialize("CreateStepThree", ""));
         dispatch(initialize("CreateStepFour", ""));
+        setActiveDatesCount(0);
+        if (
+          router?.query?.showIntro === "true" &&
+          !user?.create_date_popup_dismissed
+        ) {
+          setShowIntroModal(true);
+        }
       }
 
       if (res.data.data?.dates) {
@@ -78,6 +91,20 @@ const ChooseCity = (props) => {
           dispatch(initialize("CreateStepTwo", ""));
           dispatch(initialize("CreateStepThree", ""));
           dispatch(initialize("CreateStepFour", ""));
+          const activeCount = res.data.data?.dates?.filter(
+            (item) => item?.date_status === true
+          )?.length || 0;
+          setActiveDatesCount(activeCount);
+          if (router?.query?.showIntro === "true" && activeCount >= 4) {
+            setShowLimitModal(true);
+          }
+          if (
+            router?.query?.showIntro === "true" &&
+            !user?.create_date_popup_dismissed &&
+            activeCount < 4
+          ) {
+            setShowIntroModal(true);
+          }
         }
         if (draftedDate) {
           const shouldResume =
@@ -88,6 +115,20 @@ const ChooseCity = (props) => {
             dispatch(initialize("CreateStepTwo", ""));
             dispatch(initialize("CreateStepThree", ""));
             dispatch(initialize("CreateStepFour", ""));
+            const activeCount = res.data.data?.dates?.filter(
+              (item) => item?.date_status === true
+            )?.length || 0;
+            setActiveDatesCount(activeCount);
+            if (router?.query?.showIntro === "true" && activeCount >= 4) {
+              setShowLimitModal(true);
+            }
+            if (
+              router?.query?.showIntro === "true" &&
+              !user?.create_date_popup_dismissed &&
+              activeCount < 4
+            ) {
+              setShowIntroModal(true);
+            }
             return;
           }
           const category = dateCategory.find(
@@ -207,6 +248,32 @@ const ChooseCity = (props) => {
     }
   }, []);
 
+  const handleIntroProceed = async () => {
+    if (dontShowAgain) {
+      try {
+        const res = await apiRequest({
+          method: "POST",
+          url: "user/update-popup-preferences",
+          data: { create_date_popup_dismissed: true },
+        });
+        if (res?.data?.data?.user) {
+          dispatch({
+            type: AUTHENTICATE_UPDATE,
+            payload: res.data.data.user,
+          });
+        }
+      } catch (err) {
+        console.log("Failed to update popup preference", err);
+      }
+    }
+    setShowIntroModal(false);
+  };
+
+  const handleLimitClose = () => {
+    setShowLimitModal(false);
+    router.back();
+  };
+
   const handleIcon = () => {
     setLoadingLive(true);
     navigator.geolocation.getCurrentPosition(
@@ -262,6 +329,19 @@ const ChooseCity = (props) => {
             {!confirmPopup ? (
               <div className="auth-section choose-city new-city">
                 <form onSubmit={handleSubmit}>
+                  <CreateDateGateModal
+                    isOpen={showIntroModal}
+                    variant="intro"
+                    onClose={() => setShowIntroModal(false)}
+                    onProceed={handleIntroProceed}
+                    checked={dontShowAgain}
+                    onToggleChecked={() => setDontShowAgain(!dontShowAgain)}
+                  />
+                  <CreateDateGateModal
+                    isOpen={showLimitModal}
+                    variant="limit"
+                    onClose={handleLimitClose}
+                  />
                   <CreateDateHeader
                     activeStep={0}
                     onBack={previousPage}

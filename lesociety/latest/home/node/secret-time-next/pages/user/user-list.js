@@ -38,6 +38,8 @@ import ImageShow from "@/modules/ImageShow";
 import Loader from "@/modules/Loader/Loader";
 import StarIcon from "../../assets/Star.png";
 import StarBlankIcon from "../../assets/Star_blank.png";
+import DateLiveModal from "@/core/DateLiveModal";
+import { AUTHENTICATE_UPDATE } from "@/modules/auth/actionConstants";
 
 export const socket = io(socketURL, {
   reconnection: true,
@@ -71,6 +73,8 @@ function UserList(props) {
   const [currentLocationLoading, setCurrentLocationLoading] = useState(false);
 
   const [show, setShow] = useState(false);
+  const [showDateLiveModal, setShowDateLiveModal] = useState(false);
+  const [dontShowLiveAgain, setDontShowLiveAgain] = useState(false);
 
   // for notification
   const [count, setCount] = useState(0);
@@ -130,6 +134,37 @@ function UserList(props) {
       });
     }
   }, [user?.location]);
+
+  useEffect(() => {
+    if (
+      router?.query?.posted &&
+      user?.gender === "female" &&
+      !user?.date_live_popup_dismissed
+    ) {
+      setShowDateLiveModal(true);
+    }
+  }, [router?.query?.posted, user?.gender, user?.date_live_popup_dismissed]);
+
+  const handleCloseDateLiveModal = async () => {
+    if (dontShowLiveAgain) {
+      try {
+        const res = await apiRequest({
+          method: "POST",
+          url: "user/update-popup-preferences",
+          data: { date_live_popup_dismissed: true },
+        });
+        if (res?.data?.data?.user) {
+          dispatch({
+            type: AUTHENTICATE_UPDATE,
+            payload: res.data.data.user,
+          });
+        }
+      } catch (err) {
+        console.log("Failed to update popup preference", err);
+      }
+    }
+    setShowDateLiveModal(false);
+  };
 
   useEffect(() => {
     getConversations();
@@ -425,6 +460,12 @@ function UserList(props) {
         count={count}
         setCount={setCount}
         setLogoutLoading={setLogoutLoading}
+      />
+      <DateLiveModal
+        isOpen={showDateLiveModal}
+        onClose={handleCloseDateLiveModal}
+        checked={dontShowLiveAgain}
+        onToggleChecked={() => setDontShowLiveAgain(!dontShowLiveAgain)}
       />
       {/* <div
         className={classNames(

@@ -67,7 +67,7 @@ const CompleteProfile = (props) => {
                 now by posting your first date!
             </label> */}
       <div className="secret-input type-submit">
-        <a href="/create-date/choose-city" className="next disable">
+        <a href="/create-date/choose-city?showIntro=true" className="next disable">
           CREATE NEW DATE
         </a>
         {/* <a className="later-my-profile">Later, take me to My profile</a> */}

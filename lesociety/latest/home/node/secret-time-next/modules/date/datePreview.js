@@ -147,6 +147,7 @@ const DatePreview = (props) => {
           query: {
             city: cityState?.enter_city?.name,
             country: cityState.enter_country?.value,
+            posted: true,
             province: cityState?.enter_city?.province[0]?.short_code?.split(
               "-"
             )[1]

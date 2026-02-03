@@ -147,7 +147,7 @@ const Verfied = (props) => {
                     onClick={() =>
                       user?.gender === "male"
                         ? router.push("/user/user-list")
-                        : router.push("/create-date/choose-city")
+                        : router.push("/create-date/choose-city?showIntro=true")
                     }
                     className={`next ${!user?.email_verified ? "disable" : ""}`}
                     disabled={!user?.email_verified}

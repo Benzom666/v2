@@ -79,6 +79,7 @@ const Messages = (props) => {
 
   // for notification
   const [count, setCount] = useState(0);
+  const [activeDatesCount, setActiveDatesCount] = useState(0);
   
   // Paywall integration for women
   const { paywallConfig, showLadiesChatPaywall, closePaywall } = usePaywall();
@@ -113,6 +114,28 @@ const Messages = (props) => {
   useEffect(() => {
     getConversations();
   }, [user]);
+
+  useEffect(() => {
+    const fetchActiveDates = async () => {
+      try {
+        if (!user?.user_name) return;
+        const res = await apiRequest({
+          url: "date",
+          params: {
+            user_name: user?.user_name,
+            current_page: 1,
+            per_page: 10000,
+          },
+        });
+        const dates = res?.data?.data?.dates || [];
+        const activeCount = dates.filter((d) => d?.date_status === true).length;
+        setActiveDatesCount(activeCount);
+      } catch (err) {
+        console.log("Failed to fetch active dates count", err);
+      }
+    };
+    fetchActiveDates();
+  }, [user?.user_name]);
 
   useEffect(
     () => {
@@ -765,6 +788,26 @@ const Messages = (props) => {
                       )}
                       <TabPanel>
                         <div className="user-list-wrap">
+                          {mobile && user?.gender === "female" && (
+                            <NewInterests
+                              interestCount={requestedConversationLength}
+                              activeDatesCount={activeDatesCount}
+                            />
+                          )}
+                          {mobile && user?.gender === "male" && (
+                            <PendingRequests
+                              requests={conversations
+                                ?.filter((c) => c.status == 0)
+                                ?.map((c) => ({
+                                  id: c?._id,
+                                  profileImage: c?.user?.images?.[0],
+                                  userName: c?.user?.user_name,
+                                  isSuperInterested: c?.isSuperInterested,
+                                }))}
+                              ignoredCount={0}
+                              rejectedCount={0}
+                            />
+                          )}
                           <ul>
                             {loading ? (
                               mobile ? (
@@ -914,7 +957,10 @@ const Messages = (props) => {
                               ) : mobile ? (
                                 <div className="message-content-side">
                                   {conversationLength == 0 && (
-                                    <NoConversationShowView />
+                                    <EmptyState
+                                      gender={user?.gender}
+                                      activeDatesCount={activeDatesCount}
+                                    />
                                   )}
                                 </div>
                               ) : (
@@ -923,7 +969,10 @@ const Messages = (props) => {
                             ) : mobile ? (
                               <div className="message-content-side">
                                 {conversationLength == 0 && (
-                                  <NoConversationShowView />
+                                  <EmptyState
+                                    gender={user?.gender}
+                                    activeDatesCount={activeDatesCount}
+                                  />
                                 )}
                               </div>
                             ) : (
