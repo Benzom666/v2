@@ -14,6 +14,8 @@ import { IoIosArrowBack } from "react-icons/io";
 import MessageSend from "assets/Send.svg";
 import MessageSend2 from "assets/message_send2.png";
 import { logout } from "@/modules/auth/authActions";
+import PaywallModal from "@/core/PaywallModal";
+import { usePaywall } from "../hooks/usePaywall";
 // const socket = io.connect(socketURL);
 
 function ChatMessages({ ...props }) {
@@ -27,6 +29,12 @@ function ChatMessages({ ...props }) {
   const router = useRouter();
   const scrollRef = useRef();
   const [chatLoading, setChatLoading] = useState(false);
+  const {
+    paywallConfig,
+    showLadiesChatPaywall,
+    showMenFirstDatePaywall,
+    closePaywall,
+  } = usePaywall();
 
   const dispatch = useDispatch();
 
@@ -414,6 +422,27 @@ function ChatMessages({ ...props }) {
   };
   const sendMessage = async (e) => {
     e.preventDefault();
+    const isMale = user?.gender === "male";
+    const isFemale = user?.gender === "female";
+    const interestedTokens = user?.interested_tokens || 0;
+    const superInterestedTokens = user?.super_interested_tokens || 0;
+    const chatTokens = user?.chat_tokens || 0;
+    const remainingChats = user?.remaining_chats || 0;
+
+    if (isMale && interestedTokens === 0 && superInterestedTokens === 0) {
+      showMenFirstDatePaywall(
+        currentChat?.user?.full_name ||
+          currentChat?.user?.name ||
+          currentChat?.user?.username ||
+          "Someone"
+      );
+      return;
+    }
+
+    if (isFemale && chatTokens === 0 && remainingChats === 0) {
+      showLadiesChatPaywall();
+      return;
+    }
 
     const data = {
       chatRoomId: currentChat?.message?.room_id ?? currentChat?._id,
@@ -455,6 +484,13 @@ function ChatMessages({ ...props }) {
         }
       }}
     >
+      <PaywallModal
+        isOpen={paywallConfig.isOpen}
+        onClose={closePaywall}
+        type={paywallConfig.type}
+        expiresIn={paywallConfig.expiresIn}
+        userName={paywallConfig.userName}
+      />
       <div className="inner-part-page">
         <div className="">
           <div className="message h-100">
