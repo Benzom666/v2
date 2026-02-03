@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
+import starBadgeIcon from '../../assets/request star.png';
 
 const PendingRequests = ({ requests = [], ignoredCount = 0, rejectedCount = 0 }) => {
   if (requests.length === 0) {
@@ -27,7 +28,11 @@ const PendingRequests = ({ requests = [], ignoredCount = 0, rejectedCount = 0 })
         {requests.map((request, index) => (
           <RequestCircle key={request.id || index} onClick={() => window.location.href = `/user/user-profile/${request.userName}`}>
             <ProfileImage src={request.profileImage} alt={request.name} />
-            {request.isSuperInterested && <StarBadge>⭐</StarBadge>}
+            {request.isSuperInterested && (
+              <StarBadge>
+                <Image src={starBadgeIcon} alt="Super Interested" width={14} height={14} />
+              </StarBadge>
+            )}
           </RequestCircle>
         ))}
       </RequestsRow>
@@ -96,7 +101,6 @@ const StarBadge = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
 `;
 
 const StatusRow = styled.div`

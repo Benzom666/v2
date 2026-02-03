@@ -4,7 +4,7 @@ import EmptyState from './EmptyState';
 import PendingRequests from './PendingRequests';
 import NewInterests from './NewInterests';
 import Image from 'next/image';
-import StarIcon from '../../assets/request star.png';
+import starBadgeIcon from '../../assets/request star.png';
 
 /**
  * New Inbox View Component
@@ -76,9 +76,9 @@ const InboxView = ({
                   <ConversationHeader>
                     <UserName>
                       {c?.isSuperInterested && (
-                        <StarIcon>
-                          <Image src={StarIcon} height={16} width={16} alt="Super Interested" />
-                        </StarIcon>
+                        <StarBadge>
+                          <Image src={starBadgeIcon} height={16} width={16} alt="Super Interested" />
+                        </StarBadge>
                       )}
                       <span className={c?.isSuperInterested ? 'super-interested' : ''}>
                         {c?.user?.user_name || 'Unknown User'}
@@ -200,6 +200,16 @@ const UserName = styled.div`
   .super-interested {
     color: #F24462;
   }
+`;
+
+const StarBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(242, 68, 98, 0.2);
 `;
 
 const Timestamp = styled.span`
