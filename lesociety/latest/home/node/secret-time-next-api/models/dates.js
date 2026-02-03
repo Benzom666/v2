@@ -15,6 +15,7 @@ const DatesSchema = new Schema({
   executive_class_dates:{ type: String },
   date_length: { type: String, },
   price:{ type: Number },
+  image_index: { type: Number, default: 0 },
   date_details :{ type: String },
   user_name: { type: String, required: true },
   verification_docs: { type: String },

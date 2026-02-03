@@ -10,16 +10,30 @@ const UserCardDetail = ({
   timeState,
   priceState,
   dateDescription,
+  imageSrc,
+  showSwap,
+  onSwap,
 }) => {
   const Icon = dateSuggestion?.search_type?.icon;
   const myLoader = ({ src, width, quality }) => {
     return `${src}?w=${width}&q=${quality || 50}`;
   };
+  const resolvedImage =
+    imageSrc || (user?.images?.length > 0 && user?.images[0]) || UserImg;
   return (
     <div className="date_card_wrap">
       <figure className="user_img_date">
+        {showSwap && (
+          <button
+            type="button"
+            className="swap-image-btn"
+            onClick={onSwap}
+          >
+            Swap image
+          </button>
+        )}
         <Image
-          src={(user?.images?.length > 0 && user?.images[0]) || UserImg}
+          src={resolvedImage}
           loader={myLoader}
           priority={true}
           alt="user image"
@@ -27,7 +41,7 @@ const UserCardDetail = ({
           height={500}
           className="date-preview-img"
           placeholder="blur"
-          blurDataURL={(user?.images?.length > 0 && user?.images[0]) || UserImg}
+          blurDataURL={resolvedImage}
         />
         {/* <ImageShow
           src={(user?.images?.length > 0 && user?.images[0]) || UserImg}

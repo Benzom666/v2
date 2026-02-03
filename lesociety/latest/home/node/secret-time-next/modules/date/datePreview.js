@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { reduxForm, reset } from "redux-form";
+import { reduxForm, reset, change } from "redux-form";
 import { useSelector, useDispatch } from "react-redux";
 import validate from "modules/auth/forms/validate/validate";
-import useWindowSize from "utils/useWindowSize";
-import { IoIosClose } from "react-icons/io";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import UserCardDetail from "@/core/UserCardDetail";
 import ConfirmDate from "./../../modules/date/confirmDate";
 import { apiRequest } from "utils/Utilities";
 import SkeletonDatesPreview from "../skeleton/Dates/SkeletonDatesPreview";
+import CreateDateHeader from "@/core/CreateDateHeader";
 
 const DatePreview = (props) => {
   const { handleSubmit, invalid, pristine, submitting, onClose } = props;
-  const { width } = useWindowSize();
   const dispatch = useDispatch();
   const router = useRouter();
   const user = useSelector((state) => state?.authReducer.user);
@@ -34,6 +32,7 @@ const DatePreview = (props) => {
   const [confirmPopup, setConfirmPopup] = useState(false);
   const [loader, setLoader] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
+  const [eligibleImages, setEligibleImages] = useState([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -44,6 +43,83 @@ const DatePreview = (props) => {
   }, []);
 
   const toggle = () => setConfirmPopup(!confirmPopup);
+
+  useEffect(() => {
+    const fetchUsedImages = async () => {
+      try {
+        if (!user?.user_name) {
+          return;
+        }
+        const res = await apiRequest({
+          url: "date",
+          params: {
+            user_name: user?.user_name,
+            current_page: 1,
+            per_page: 10000,
+          },
+        });
+        const dates = res?.data?.data?.dates || [];
+        const usedIndices = dates
+          .filter((date) => date?.date_status === true)
+          .map((date) =>
+            typeof date?.image_index === "number" ? date.image_index : 0
+          );
+        const images = user?.images || [];
+        let available = images
+          .map((url, idx) => ({ url, idx }))
+          .filter((img) => !usedIndices.includes(img.idx));
+        if (!available.length && images.length) {
+          available = images.map((url, idx) => ({ url, idx }));
+        }
+        setEligibleImages(available);
+        const currentIndex =
+          typeof dateSuggestion?.image_index === "number"
+            ? dateSuggestion.image_index
+            : available[0]?.idx;
+        const initial =
+          available.find((img) => img.idx === currentIndex) || available[0];
+        if (initial) {
+          dispatch(change("CreateStepOne", "image_index", initial.idx));
+        }
+      } catch (e) {
+        console.log("Failed to load images", e);
+      }
+    };
+    fetchUsedImages();
+  }, [user?.user_name, user?.images]);
+
+  const handleSwapImage = () => {
+    if (eligibleImages.length < 2) {
+      return;
+    }
+    const currentIndex =
+      typeof dateSuggestion?.image_index === "number"
+        ? dateSuggestion.image_index
+        : eligibleImages[0]?.idx;
+    const currentPos = eligibleImages.findIndex(
+      (img) => img.idx === currentIndex
+    );
+    const nextPos =
+      currentPos === -1
+        ? 0
+        : (currentPos + 1) % eligibleImages.length;
+    const next = eligibleImages[nextPos];
+    if (next) {
+      dispatch(change("CreateStepOne", "image_index", next.idx));
+      if (dateSuggestion?.dateId) {
+        apiRequest({
+          method: "POST",
+          url: `/date/update`,
+          data: {
+            date_id: dateSuggestion?.dateId,
+            image_index: next.idx,
+          },
+        }).catch((err) => {
+          console.log("Failed to update image index", err);
+        });
+      }
+    }
+  };
 
   const previousPage = () => {
     router.asPath.includes("drafted")
@@ -137,154 +213,22 @@ const DatePreview = (props) => {
     <>
       {!confirmPopup ? (
         <>
-          <div
-            onClick={toggle}
-            className="w-15 d-none d-sm-block cursor-pointer text-end pe-5"
-          >
-            <IoIosClose
-              className="mouse-point"
-              size={33}
-              //style={{ color: " rgba(255, 255, 255, 0.5)" }}
-              onClick={toggle}
-            />
-          </div>
+          <CreateDateHeader
+            activeStep={5}
+            onBack={previousPage}
+            onClose={toggle}
+            showBack={true}
+            showClose={true}
+          />
           <div className="inner_container">
-            <div className=" d-md-none justify-content-between align-items-center login-text mb-0 d-flex">
-              <a onClick={previousPage}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="feather feather-chevron-left"
-                >
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-              </a>
-              <h6 className="m-0 text-white-50">CREATE A NEW DATE</h6>
-              <div onClick={toggle} className="w-15 cursor-pointer">
-                <IoIosClose
-                  className="mouse-point"
-                  size={33}
-                  style={{ color: " rgba(255, 255, 255, 0.5)" }}
-                  onClick={toggle}
-                />
+            <div className="create-date-intro">
+              <h2>You're almost done!</h2>
+              <div className="intro-subtitle">
+                Take a moment to review your date.
               </div>
-            </div>
-            {/* {width < 768 && <h6 className="m-3 text-center">Date Preview</h6>} */}
-            {width < 430 ? (
-              <div
-                className="step-wraps"
-                //  style={{ marginLeft: '16px' }}
-              >
-                <ul>
-                  <li className="complete active">
-                    <span></span>
-                  </li>
-                  <li className=" complete active">
-                    <span></span>
-                  </li>
-                  <li className="complete active">
-                    <span></span>
-                  </li>
-                  <li className=" complete active">
-                    <span></span>
-                  </li>
-                  <li className=" complete active">
-                    <span></span>
-                  </li>
-                  <li className="complete active">
-                    <span></span>
-                  </li>
-                </ul>
+              <div className="intro-note">
+                Your description can only be edited. Everything else is locked.
               </div>
-            ) : null}
-          </div>
-          <div
-            className={`${
-              width > 767 ? "date-Preview-text" : "date-suggetion-text mt-4"
-            } `}
-          >
-            <div className="inner_container preview-date-header">
-              <div className="d-flex justify-content-center flex-column">
-                {width > 767 && (
-                  <>
-                    <div
-                      className="d-flex justify-content-center"
-                      //style={{ margin:"0 auto",paddingLeft:"25px" }}
-                    >
-                      <h6
-                        className="m-0 text-white"
-                        style={{ fontWeight: "400px", fontSize: "16px" }}
-                      >
-                        CREATE A NEW DATE
-                      </h6>
-                      <div onClick={toggle} className="w-0 cursor-pointer">
-                        {/* <IoIosClose
-                          className="desk-close-first mouse-point"
-                          size={33}
-                          onClick={toggle}
-                        /> */}
-                      </div>
-                    </div>
-                    <div className="step-wraps steps_wraps_previewdate">
-                      <ul style={{ margin: "0 auto" }}>
-                        <li className=" complete active">
-                          <span></span>
-                        </li>
-                        <li className="complete active">
-                          <span></span>
-                        </li>
-                        <li className=" complete active">
-                          <span></span>
-                        </li>
-                        <li className="complete active">
-                          <span></span>
-                        </li>
-                        <li className=" complete active">
-                          <span></span>
-                        </li>
-                        <li className="complete active">
-                          <span></span>
-                        </li>
-                      </ul>
-                    </div>
-                    {/* <h6>Date Preview</h6>} */}
-                  </>
-                )}
-                {width > 767 && (
-                  <>
-                    <div className="city-suggestion-text">
-                      <h6>Date Preview</h6>
-                      <p>
-                        Please review all the details of your date before posting. You will only have an opportunity to edit your description in the future. 
-                      </p>
-                    </div>
-                  </>
-                )}
-                {/* {width > 767 && 
-                (
-                  <IoIosClose
-                    className="desk-close-icon-new"
-                    size={32}
-                    onClick={toggle}
-                  />
-                )} */}
-              </div>
-              {width < 768 && (
-                <>
-                  <h6 className="m-3 text-center">Date Preview</h6>
-                  <p className="text-suggestion-city">
-                    Please check all the details of your date before posting.
-                    You will have a chance to edit it in the future
-                  </p>
-                </>
-              )}
             </div>
           </div>
           <form
@@ -299,6 +243,13 @@ const DatePreview = (props) => {
                 timeState={timeState}
                 priceState={priceState}
                 dateDescription={dateDescription}
+                imageSrc={
+                  eligibleImages.find(
+                    (img) => img.idx === dateSuggestion?.image_index
+                  )?.url
+                }
+                showSwap={eligibleImages.length >= 2}
+                onSwap={handleSwapImage}
               />
               {!confirmPopup && (
                 <div className="bottom-mobile register-bottom">
@@ -310,7 +261,6 @@ const DatePreview = (props) => {
                         </Link>
                       </button>
                     )}
-
                     <button
                       type="button"
                       className="next"
@@ -321,9 +271,7 @@ const DatePreview = (props) => {
                       ) : (
                         <>
                           <a className="forgot-passwrd">
-                            {router?.query?.new_edit
-                              ? "Update Date"
-                              : "Post Date"}
+                            {router?.query?.new_edit ? "Update Date" : "Post Date"}
                           </a>
                         </>
                       )}

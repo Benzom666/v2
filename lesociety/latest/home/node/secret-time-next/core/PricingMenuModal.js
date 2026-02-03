@@ -7,7 +7,7 @@ import arrow2 from "../assets/arrow2.svg";
 import interestedIcon from "../assets/interested.svg";
 import superInterestedIcon from "../assets/superinterested.svg";
 import { useDispatch } from "react-redux";
-import { updateUserTokens } from "../modules/auth/authActions";
+import { updateUserTokens, updateUserChats } from "../modules/auth/authActions";
 import { useSelector } from "react-redux";
 
 const PricingMenuModal = ({ isOpen, onClose }) => {
@@ -66,7 +66,11 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
         totalChats,
         total
       });
-      alert(`Payment Successful! $${total} processed.\n\nYou received:\n• ${aLaCarteCount} A La' Carte chats\n• ${queensBundleCount} Queens Bundle (${queensBundleCount * QUEENS_BUNDLE_CHATS} chats)\n\nTotal: ${totalChats} new chats!`);
+      
+      // Update Redux store with new chat tokens
+      dispatch(updateUserChats(totalChats));
+      
+      alert(`Payment Successful! $${total.toFixed(2)} processed.\n\nYou received:\n• ${aLaCarteCount} A La' Carte chats\n• ${queensBundleCount} Queens Bundle (${queensBundleCount * QUEENS_BUNDLE_CHATS} chats)\n\nTotal: ${totalChats} new conversations!\n\nYour sidebar will now show your updated chat balance!`);
     } else {
       console.log('Men purchase:', {
         interestedCount,

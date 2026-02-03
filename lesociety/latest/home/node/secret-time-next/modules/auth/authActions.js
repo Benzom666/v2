@@ -11,6 +11,7 @@ import {
   SET_GENDER,
   CHANGE_IMAGE_WARNING_POPUP,
   UPDATE_USER_TOKENS,
+  UPDATE_USER_CHATS,
 } from "./actionConstants";
 
 import { reset, initialize } from "redux-form";
@@ -151,6 +152,15 @@ export const updateUserTokens = (interestedTokens, superInterestedTokens) => {
     payload: {
       interested_tokens: interestedTokens,
       super_interested_tokens: superInterestedTokens,
+    },
+  };
+};
+
+export const updateUserChats = (chatCount) => {
+  return {
+    type: UPDATE_USER_CHATS,
+    payload: {
+      chat_tokens: chatCount,
     },
   };
 };

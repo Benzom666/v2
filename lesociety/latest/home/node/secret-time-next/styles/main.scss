@@ -1931,6 +1931,372 @@ $GradientColor-second: rgba(#191919, 0.8);
 }
 
 .create-date-wrap {
+  .create-date-header-wrap {
+    padding: 10px 0 0;
+  }
+
+  .create-date-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 420px;
+    margin: 0 auto 10px;
+    padding: 0 12px;
+  }
+
+  .cdh-title {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+  }
+
+  .cdh-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+
+    &:disabled {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .create-date-progress {
+    max-width: 420px;
+    margin: 0 auto 20px;
+    padding: 0 18px;
+  }
+
+  .create-date-progress-track {
+    position: relative;
+    height: 4px;
+    background: #1b1b1b;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .create-date-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #5a4dff 0%, #f24462 100%);
+    transition: width 0.4s ease;
+  }
+
+  .create-date-progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: capitalize;
+    gap: 6px;
+  }
+
+  .create-date-step {
+    flex: 1;
+    text-align: center;
+  }
+
+  .create-date-step.active {
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .create-date-intro {
+    text-align: center;
+    padding: 22px 0 18px;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .intro-subtitle {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.75);
+      margin-bottom: 10px;
+    }
+
+    .intro-note {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.4;
+    }
+  }
+
+  .location-field-wrap {
+    max-width: 340px;
+    margin: 0 auto;
+
+    .secret-input label,
+    .secret-input .subLabel {
+      display: none;
+    }
+
+    .dropdwon-wrapper {
+      position: relative;
+
+      .location-diduct-icon {
+        right: 12px;
+        left: auto;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    .secret-input .form-control,
+    .secret-input .react-select__control {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      min-height: 48px;
+      color: #d6d6d6;
+    }
+  }
+
+  .experience-section {
+    padding: 10px 0 0;
+  }
+
+  .experience-group {
+    margin-bottom: 18px;
+  }
+
+  .experience-group-title {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .experience-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .experience-card {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #0f0f0f;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    padding: 0;
+    appearance: none;
+  }
+
+  .experience-card.is-selected {
+    border-color: #f24462;
+    box-shadow: 0 0 0 1px rgba(242, 68, 98, 0.35);
+  }
+
+  .experience-card.is-selected::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 8px;
+    height: 2px;
+    background: rgba(242, 68, 98, 0.7);
+    z-index: 2;
+  }
+
+  .experience-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .experience-card-image {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    display: block;
+  }
+
+  .experience-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 85%);
+  }
+
+  .experience-card-content {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 2;
+    color: #fff;
+  }
+
+  .experience-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .experience-card-desc {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.3;
+  }
+
+  .experience-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    z-index: 2;
+  }
+
+  .experience-grid.single {
+    grid-template-columns: 1fr;
+  }
+
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .price-card {
+    border-radius: 14px;
+    border: 1px solid #2a2a2a;
+    background: #111;
+    color: #fff;
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    width: 100%;
+    appearance: none;
+  }
+
+  .price-card.is-selected {
+    border-color: #f24462;
+    box-shadow: 0 0 0 1px rgba(242, 68, 98, 0.35);
+  }
+
+  .duration-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .duration-card {
+    border-radius: 14px;
+    border: 1px solid #2a2a2a;
+    background: #111;
+    padding: 14px 16px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    appearance: none;
+  }
+
+  .duration-card.is-selected {
+    border-color: #f24462;
+    box-shadow: 0 0 0 1px rgba(242, 68, 98, 0.35);
+  }
+
+  .duration-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .duration-desc {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .description-field {
+    .form-control {
+      background: #101010;
+      border: 1px solid #2a2a2a;
+      color: #fff;
+      min-height: 140px;
+    }
+  }
+
+  .swap-image-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+    z-index: 3;
+    cursor: pointer;
+  }
+
+  @media only screen and (min-width: 900px) {
+    .create-date-header,
+    .create-date-progress {
+      max-width: 960px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    .inner_container {
+      max-width: 920px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    .location-field-wrap {
+      max-width: 520px;
+    }
+
+    .experience-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .experience-card-image {
+      height: 160px;
+    }
+
+    .price-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .duration-list {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .description-field .form-control {
+      min-height: 190px;
+    }
+  }
   .step-wraps {
     // margin: 15px  50px;
     width: 100%;

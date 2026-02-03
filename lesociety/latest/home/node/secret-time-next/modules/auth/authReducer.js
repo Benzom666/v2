@@ -8,6 +8,7 @@ import {
   SET_GENDER,
   CHANGE_IMAGE_WARNING_POPUP,
   UPDATE_USER_TOKENS,
+  UPDATE_USER_CHATS,
 } from "./actionConstants";
 import { getCookie, setCookie, removeCookie } from "../../utils/cookie";
 import {
@@ -137,6 +138,17 @@ const authReducer = (state = initialState, action) => {
       };
       saveToLocalStorage(updatedTokenState);
       return updatedTokenState;
+
+    case UPDATE_USER_CHATS:
+      const updatedChatState = {
+        ...state,
+        user: { 
+          ...state.user, 
+          chat_tokens: (state.user.chat_tokens || 0) + action.payload.chat_tokens,
+        },
+      };
+      saveToLocalStorage(updatedChatState);
+      return updatedChatState;
 
     default:
       return { ...state };

@@ -140,6 +140,7 @@ exports.dateResponse = (date) => ({
     executive_class_dates: date.executive_class_dates,
     date_length: date.date_length,
     price: date.price,
+    image_index: date.image_index,
     date_details: date.date_details,
     user_name: date.user_name,
     verification_docs: date.verification_docs,

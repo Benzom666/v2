@@ -1,40 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
 import { Field, reduxForm } from "redux-form";
 import { useSelector } from "react-redux";
-import { Inputs } from "core";
 import { FiArrowRight } from "react-icons/fi";
 import validate from "modules/auth/forms/validate/validate";
-import { IoIosClose } from "react-icons/io";
-import useWindowSize from "utils/useWindowSize";
-import PriceSelection from "core/priceSelection";
-import ConfirmDate from "./../../modules/date/confirmDate";
+import CreateDateHeader from "@/core/CreateDateHeader";
 
-const education_plan = [
+const durationOptions = [
   {
     id: "1",
-    name: "Lets get straight to the point",
-    price: "1/2H",
+    title: "1-2 hours",
+    description: "A quick drink or coffee.",
+    value: "1-2 hours",
   },
   {
     id: "2",
-    name: "This should be fair enough",
-    price: "1H",
+    title: "2-3 hours",
+    description: "Dinner and a relaxed evening.",
+    value: "2-3 hours",
   },
   {
     id: "3",
-    name: "He will be spending a lot",
-    price: "2H",
+    title: "3-4 hours",
+    description: "Dinner + drinks or a show.",
+    value: "3-4 hours",
   },
   {
     id: "4",
-    name: "He deserves the change",
-    price: "3H",
+    title: "Full evening (4+ hours)",
+    description: "Let the night unfold beautifully.",
+    value: "Full evening (4+ hours)",
   },
-  // {
-  //   id: "5",
-  //   name: "This is necessary for my date",
-  //   price: "4H",
-  // },
+  {
+    id: "5",
+    title: "Flexible – lets see where it take us",
+    description: "",
+    value: "Flexible – lets see where it take us",
+  },
 ];
 
 const CreateStepThree = (props) => {
@@ -49,7 +50,6 @@ const CreateStepThree = (props) => {
     confirmPopup
   } = props;
   const state = useSelector((state) => state.form.CreateStepThree);
-  const { width } = useWindowSize();
   // const [confirmPopup, setConfirmPopup] = useState(false);
 
   // const toggle = () => {
@@ -57,91 +57,21 @@ const CreateStepThree = (props) => {
   // };
   return (
     <>
-    {!confirmPopup ? <>
-      <div className="inner_container">
-        <div className="d-flex d-md-none justify-content-between align-items-center login-text mb-0">
-          <a onClick={previousPage}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="feather feather-chevron-left"
-            >
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </a>
-          <h6 className="m-0 text-white-50 text-uppercase">
-            Create a New Date
-          </h6>
-
-          <div onClick={onClose} className="w-15 cursor-pointer">
-            <IoIosClose
-              className="mouse-point"
-              style={{ color: " rgba(255, 255, 255, 0.5)" }}
-              size={33}
-              onClick={onClose}
-            />
-          </div>
-        </div>
-        {width > 767 && (
-          <div
-            className="d-flex justify-content-center"
-            //style={{ marginLeft: "22px" }}
-          >
-            <h3 className="text-center text-uppercase">Create a New Date</h3>
-            {/* <div onClick={toggle} className="w-15 cursor-pointer">
-              <IoIosClose
-                className="desk-close-first mouse-point"
-                size={33}
-                onClick={toggle}
-              />
-            </div> */}
-          </div>
-        )}
-        <div
-          className="step-wraps"
-          //  style={{ marginLeft: '10px' }}
-        >
-          <ul>
-            <li className="complete active">
-              <span></span>
-            </li>
-            <li className="complete active">
-              <span></span>
-            </li>
-            <li className=" complete active">
-              <span></span>
-            </li>
-            <li className="active">
-              <span></span>
-            </li>
-            <li>
-              <span></span>
-            </li>
-            <li>
-              <span></span>
-            </li>
-          </ul>
-        </div>
-      </div>
+      {!confirmPopup ? (
         <>
-          {" "}
-          <div className="date-suggetion-text">
-            <div
-              className="inner_container"
-              // style={{ paddingRight: "20px", paddingLeft: "20px" }}
-            >
-              <h6>Set date duration.</h6>
-              <p>
-                What is the approximate length of time you’re willing to spend
-                on this particular date experience.
-              </p>
+          <CreateDateHeader
+            activeStep={3}
+            onBack={previousPage}
+            onClose={onClose}
+            showBack={true}
+            showClose={true}
+          />
+          <div className="inner_container">
+            <div className="create-date-intro">
+              <h2>How long do you want this date to last?</h2>
+              <div className="intro-subtitle">
+                Be upfront — great dates start with perfect timing.
+              </div>
             </div>
           </div>
           <div className="date-class-section choose-gender">
@@ -149,27 +79,41 @@ const CreateStepThree = (props) => {
               onSubmit={handleSubmit}
               className="inner_container"
               style={{
-                paddingRight: "30px",
-                paddingLeft: "30px",
+                paddingRight: "20px",
+                paddingLeft: "20px",
                 paddingTop: "0px",
               }}
             >
-              <div className="mb-5">
-                <div className="auth-radio inner-radio">
-                  <Field
-                    // label="Level of education"
-                    name="education"
-                    options={education_plan}
-                    value={education_plan}
-                    component={PriceSelection}
-                    onlyLabel={true}
-                  />
-                </div>
+              <div className="mb-4">
+                <Field
+                  name="education"
+                  component={({ input }) => (
+                    <div className="duration-list">
+                      {durationOptions.map((option) => {
+                        const isSelected = input.value === option.value;
+                        return (
+                          <button
+                            type="button"
+                            key={option.id}
+                            className={`duration-card ${
+                              isSelected ? "is-selected" : ""
+                            }`}
+                            onClick={() => input.onChange(option.value)}
+                          >
+                            <div className="duration-title">{option.title}</div>
+                            {option.description && (
+                              <div className="duration-desc">
+                                {option.description}
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                />
               </div>
-              <div
-                className="bottom-mobile register-bottom"
-                style={{ paddingTop: "0px" }}
-              >
+              <div className="bottom-mobile register-bottom">
                 <div className="secret-input type-submit next-prev">
                   {!confirmPopup && (
                     <button
@@ -185,8 +129,7 @@ const CreateStepThree = (props) => {
             </form>
           </div>
         </>
-      </> : null}
-      {/* <ConfirmDate isOpen={confirmPopup} toggle={toggle} /> */}
+      ) : null}
     </>
   );
 };

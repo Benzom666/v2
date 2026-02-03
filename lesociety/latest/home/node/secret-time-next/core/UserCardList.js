@@ -252,8 +252,18 @@ const UserCardList = ({
           >
             {!dateDetailsIsOpen ? (
               <>
-                <Image
-                  src={date?.user_data[0]?.images[0] ?? ""}
+                {(() => {
+                  const imageIndex =
+                    typeof date?.image_index === "number"
+                      ? date.image_index
+                      : 0;
+                  const imageSrc =
+                    date?.user_data?.[0]?.images?.[imageIndex] ??
+                    date?.user_data?.[0]?.images?.[0] ??
+                    "";
+                  return (
+                    <Image
+                      src={imageSrc}
                   alt="user image"
                   width={500}
                   height={500}
@@ -261,7 +271,9 @@ const UserCardList = ({
                   // onLoadingComplete={onLoad}
                   priority={true}
                   blurDataURL="https://img.freepik.com/premium-photo/black-stone-texture-dark-slate-background-top-view_88281-1206.jpg?w=2000"
-                />
+                    />
+                  );
+                })()}
 
                 {/* <ImageShow
                   alt="not fount"

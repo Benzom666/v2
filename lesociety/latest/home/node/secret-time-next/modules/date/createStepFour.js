@@ -4,13 +4,11 @@ import { Inputs } from "core";
 import { FiArrowRight } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import validate from "modules/auth/forms/validate/validate";
-import { CustomIcon } from "core/icon";
 import { useRouter } from "next/router";
-import useWindowSize from "utils/useWindowSize";
-import { IoIosClose } from "react-icons/io";
 import { apiRequest } from "utils/Utilities";
 import DateWarningModal from "./DateWarningModal";
 import { findDOMNode } from "react-dom";
+import CreateDateHeader from "@/core/CreateDateHeader";
 
 const CreateStepFour = (props) => {
   const {
@@ -93,6 +91,7 @@ const CreateStepFour = (props) => {
         dateSuggestion?.search_type?.label,
       date_length: timeState?.education,
       price: priceState?.education,
+      image_index: dateSuggestion?.image_index ?? 0,
       date_details: dateDescription?.date_description,
       user_name: user?.user_name,
       date_status: false,
@@ -133,6 +132,7 @@ const CreateStepFour = (props) => {
         dateSuggestion?.search_type?.label,
       date_length: timeState?.education,
       price: priceState?.education,
+      image_index: dateSuggestion?.image_index ?? 0,
       date_details: dateDescription?.date_description,
       user_name: user?.user_name,
       date_status: false,
@@ -150,7 +150,6 @@ const CreateStepFour = (props) => {
     }
   };
 
-  const { width } = useWindowSize();
 
   const changeHandler = (e) => {
     if (!showWarningPopup) {
@@ -184,91 +183,21 @@ const CreateStepFour = (props) => {
       <>
         {!confirmPopup ? (
           <div className="outer_container">
-            <div className="inner_container">
-              <div className="d-flex d-md-none justify-content-between align-items-center login-text mb-0">
-                <a onClick={previousPage}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="feather feather-chevron-left"
-                  >
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                  </svg>
-                </a>
-                <h6 className="m-0 text-white-50 text-uppercase">
-                  Create a New Date
-                </h6>
-                <IoIosClose
-                  className="mouse-point"
-                  size={32}
-                  style={{ color: " rgba(255, 255, 255, 0.5)" }}
-                  onClick={onClose}
-                />
-              </div>
-              {width > 767 && (
-                <div
-                  className="d-flex justify-content-center"
-                  //style={{ marginLeft: "22px" }}
-                >
-                  <h3 className="text-center text-uppercase">
-                    Create a New Date
-                  </h3>
-                  {/* <IoIosClose
-              className="desk-close-icon mouse-point"
-              size={32}
-              onClick={toggle}
-            /> */}
-                </div>
-              )}
-              <div
-                className="step-wraps"
-                // style={{ marginLeft: "10px" }}
-              >
-                <ul>
-                  <li className="complete active">
-                    <span></span>
-                  </li>
-                  <li className="complete active">
-                    <span></span>
-                  </li>
-                  <li className="complete active">
-                    <span></span>
-                  </li>
-                  <li className="complete active">
-                    <span></span>
-                  </li>
-                  <li className="active">
-                    <span></span>
-                  </li>
-                  <li>
-                    <span></span>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <CreateDateHeader
+              activeStep={4}
+              onBack={previousPage}
+              onClose={onClose}
+              showBack={true}
+              showClose={true}
+            />
             <>
-              {" "}
-              <div className="date-suggetion-text">
-                <div
-                  className="inner_container"
-                  //style={{ paddingRight: "35px", paddingLeft: "35px" }}
-                >
-                  <h6>
-                    {" "}
-                    {router?.query?.new_edit ? "Edit" : "Describe"} your date.
-                  </h6>
-                  <p>
-                    {router?.query?.new_edit
-                      ? "You can only edit your date description."
-                      : "Write more about your date suggestion, and why someone should choose you as their date."}
-                  </p>
+              <div className="inner_container">
+                <div className="create-date-intro">
+                  <h2>Make him want this date.</h2>
+                  <div className="intro-subtitle">
+                    Tell him why this night with you is unforgettable. Your
+                    vibe, your energy, what he can expect.
+                  </div>
                 </div>
               </div>
               <form
@@ -277,7 +206,7 @@ const CreateStepFour = (props) => {
                 style={{ paddingRight: "10px", paddingLeft: "10px" }}
               >
                 <div className="inner_container">
-                  <div className="mb-5 date-description">
+                  <div className="mb-4 date-description description-field">
                     <Field
                       ref={inputRef}
                       withRef
@@ -285,56 +214,10 @@ const CreateStepFour = (props) => {
                       type="text"
                       validationLength={500}
                       component={Inputs.textarea}
-                      //label="Describe_Date_Details"
-                      placeholder="Help our gentlemen understand your choice for this date and give them insight into your personality. This will help them know what to expect from the experience. (You can also include expectations, your availability or any rules you might have.)"
+                      placeholder="I love deep conversations over great wine... I’m playful, classy, and always up for an adventure. Expect laughter, real connection, and a night that feels effortless."
                       onChange={changeHandler}
                       value={val}
                     />
-                  </div>
-                </div>
-                {/* {width > 767 && (
-                    <div className="date-suggetion-text mb-5">
-                        <div className="inner_container">
-                            <h6>Want To Offer <br /> A Free Date To Mr. Right?</h6>
-                            <p>How much money does he need to be making per year for you to offer a free date?</p>   
-                        </div>
-                    </div>
-                 )}    */}
-                <div className="inner_container">
-                  <>
-                    {/* <div className="mb-4">
-                                <div className="secret-input type-text select-wrap-icon">
-                                    <select className="form-control">
-                                        <option>Minimum yearly income</option>
-                                        <option>Minimum yearly income</option>
-                                        <option>Minimum yearly income</option>
-                                        <option>Minimum yearly income</option>
-                                    </select>
-                                </div>    
-                            </div> */}
-                    {/* <div className="mb-5">
-                                <Field
-                                    name="education"
-                                    options={education_plan}
-                                    value={education_plan}
-                                    component={Inputs.checkboxField}
-                                />
-                            </div> */}
-                    <div className="mb-2 text-center">
-                      <CustomIcon.Diamond color={"#fff"} size={120} />
-                    </div>
-                  </>
-
-                  <div
-                    className="mb-8 bottom-content text-center"
-                    style={{ marginBottom: "28px" }}
-                  >
-                    <p style={{ fontSize: "16px", paddingBottom: "30px" }}>
-                      Thank you for being one of our early adopters! To show you
-                      our appreciation, we will keep your posts active until you
-                      delete it. This allows you to earn multiple times for each
-                      post. Goodluck!
-                    </p>
                   </div>
                   <div className="bottom-mobile register-bottom">
                     <div className="secret-input type-submit next-prev">

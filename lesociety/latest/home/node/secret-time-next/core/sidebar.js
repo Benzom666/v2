@@ -30,9 +30,10 @@ export default function SideBar({ isActive, count }) {
   const [documentUpoaded, setDocumentUpoaded] = useState(false);
   const [notifData, setNotifdata] = useState(null);
   
-  // TODO: Replace with actual token counts from user data
+  // Token counts for both genders
   const interestedTokens = user?.interested_tokens || 0;
   const superInterestedTokens = user?.super_interested_tokens || 0;
+  const chatTokens = user?.chat_tokens || 0;
   const isPaidMember = interestedTokens > 0 || superInterestedTokens > 0;
   // const [count, setCount] = useState(0);
   // const socket = io(socketURL, {
@@ -138,10 +139,12 @@ export default function SideBar({ isActive, count }) {
       })
     : "";
   const defaultMaxChats = 15;
-  const remainingChats =
+  // Use chat_tokens from Redux store (purchased tokens) or fallback to remaining_chats
+  const remainingChats = chatTokens > 0 ? chatTokens : (
     user?.remaining_chats !== undefined && user?.remaining_chats !== null
       ? user?.remaining_chats
-      : defaultMaxChats;
+      : defaultMaxChats
+  );
   const ringMaxChats = Math.max(defaultMaxChats, remainingChats || defaultMaxChats);
   const ringDash = `${Math.max(0, Math.min(remainingChats, ringMaxChats)) / ringMaxChats * 220} 220`;
 
