@@ -20,6 +20,7 @@ import io from "socket.io-client";
 
 import "styles/style.scss";
 import "styles/membership.scss";
+import "styles/sidebar-tokens.css";
 import { removeCookie } from "utils/cookie";
 import LanscapeDecline from "@/core/LanscapeDecline";
 import { socketURL } from "utils/Utilities";

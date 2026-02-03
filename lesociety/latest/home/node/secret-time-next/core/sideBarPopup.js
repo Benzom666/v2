@@ -6,7 +6,7 @@ import Image from "next/image";
 import SubHeading from "./SubHeading";
 import H5 from "./H5";
 import { HiBadgeCheck } from "react-icons/hi";
-import { FiChevronRight, FiSearch, FiBell, FiMessageSquare, FiHeart, FiSettings } from "react-icons/fi";
+import { FiChevronRight } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { deAuthenticateAction, logout } from "../modules/auth/authActions";
 import { useRouter } from "next/router";
@@ -29,6 +29,11 @@ function sideBarPopup({ isOpen, toggle, count }) {
   const router = useRouter();
   const [documentUpoaded, setDocumentUpoaded] = useState(false);
   const [notifData, setNotifdata] = useState(null);
+  
+  // TODO: Replace with actual token counts from user data
+  const interestedTokens = user?.interested_tokens || 0;
+  const superInterestedTokens = user?.super_interested_tokens || 0;
+  const isPaidMember = interestedTokens > 0 || superInterestedTokens > 0;
   // const [count, setCount] = useState(0);
   // const socket = io(socketURL, {
   //   autoConnect: true,
@@ -122,6 +127,13 @@ function sideBarPopup({ isOpen, toggle, count }) {
         year: "numeric",
       })
     : "";
+  const defaultMaxChats = 15;
+  const remainingChats =
+    user?.remaining_chats !== undefined && user?.remaining_chats !== null
+      ? user?.remaining_chats
+      : defaultMaxChats;
+  const ringMaxChats = Math.max(defaultMaxChats, remainingChats || defaultMaxChats);
+  const ringDash = `${Math.max(0, Math.min(remainingChats, ringMaxChats)) / ringMaxChats * 220} 220`;
 
   return (
     <>
@@ -213,33 +225,166 @@ function sideBarPopup({ isOpen, toggle, count }) {
               </div>
               {/* Current Plan Section - Men Only */}
               {user?.gender === "male" && (
-              <div className="user-card-sidebar" style={{ padding: "20px 25px", textAlign: "center", backgroundColor: "#0b0b0b", marginBottom: "8px" }}>
-                <div style={{ marginBottom: "16px", textAlign: "left" }}>
-                  <div style={{ fontSize: "12px", color: "#AFABAB", marginBottom: "4px" }}>Current Plan</div>
-                  <div style={{ fontSize: "14px", color: "white" }}><span style={{ fontWeight: "bold" }}>The Test Drive:</span> Limited Access</div>
+                <div className="user-card-sidebar sidebar-plan-card">
+                  <div className="sidebar-plan-header">
+                    <div className="sidebar-plan-label">Current Plan</div>
+                    <div className="sidebar-plan-name">
+                      {isPaidMember ? (
+                        <>
+                          <span>Priority Member</span> – Full Access
+                        </>
+                      ) : (
+                        <>
+                          <span>The Test Drive</span> – Limited Access
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {!isPaidMember ? (
+                    <>
+                      <div className="sidebar-plan-icons sidebar-plan-locked">
+                        <div className="token-circle locked">
+                          <div className="token-label">Interested</div>
+                          <div className="token-circle-inner">
+                            <svg viewBox="0 0 100 100" className="token-ring">
+                              <defs>
+                                <linearGradient id="token-gradient-locked-popup" x1="0%" y1="0%" x2="100%" y2="100%">
+                                  <stop offset="0%" stopColor="#f24462" />
+                                  <stop offset="100%" stopColor="#4a90e2" />
+                                </linearGradient>
+                              </defs>
+                              <circle cx="50" cy="50" r="42" className="token-ring-bg" />
+                              <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '0 264', stroke: 'url(#token-gradient-locked-popup)' }} />
+                            </svg>
+                            <div className="token-value">Locked</div>
+                          </div>
+                        </div>
+                        <div className="token-circle locked">
+                          <div className="token-label">Super Interested</div>
+                          <div className="token-circle-inner">
+                            <svg viewBox="0 0 100 100" className="token-ring">
+                              <defs>
+                                <linearGradient id="token-gradient-locked-2-popup" x1="0%" y1="0%" x2="100%" y2="100%">
+                                  <stop offset="0%" stopColor="#f24462" />
+                                  <stop offset="100%" stopColor="#4a90e2" />
+                                </linearGradient>
+                              </defs>
+                              <circle cx="50" cy="50" r="42" className="token-ring-bg" />
+                              <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '0 264', stroke: 'url(#token-gradient-locked-2-popup)' }} />
+                            </svg>
+                            <div className="token-value">Locked</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="sidebar-plan-note">Add tokens to get started.</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="sidebar-plan-icons sidebar-plan-active">
+                        <div className="token-circle active">
+                          <div className="token-label">Interested</div>
+                          <div className="token-circle-inner">
+                            <svg viewBox="0 0 100 100" className="token-ring">
+                              <defs>
+                                <linearGradient id="token-gradient-interested-popup" x1="0%" y1="0%" x2="100%" y2="100%">
+                                  <stop offset="0%" stopColor="#f24462" />
+                                  <stop offset="100%" stopColor="#4a90e2" />
+                                </linearGradient>
+                              </defs>
+                              <circle cx="50" cy="50" r="42" className="token-ring-bg" />
+                              <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '264 264', stroke: 'url(#token-gradient-interested-popup)' }} />
+                            </svg>
+                            <div className="token-value">{interestedTokens}</div>
+                          </div>
+                        </div>
+                        <div className="token-circle active">
+                          <div className="token-label">Super Interested</div>
+                          <div className="token-circle-inner">
+                            <svg viewBox="0 0 100 100" className="token-ring">
+                              <defs>
+                                <linearGradient id="token-gradient-super-popup" x1="0%" y1="0%" x2="100%" y2="100%">
+                                  <stop offset="0%" stopColor="#f24462" />
+                                  <stop offset="100%" stopColor="#4a90e2" />
+                                </linearGradient>
+                              </defs>
+                              <circle cx="50" cy="50" r="42" className="token-ring-bg" />
+                              <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '264 264', stroke: 'url(#token-gradient-super-popup)' }} />
+                            </svg>
+                            <div className="token-value">{superInterestedTokens}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="sidebar-plan-note">Need more? Top up anytime.</div>
+                    </>
+                  )}
+                  
+                  <button
+                    type="button"
+                    className="sidebar-topup-btn"
+                    onClick={() => setShowPricingModal(true)}
+                  >
+                    Top Up Tokens
+                  </button>
                 </div>
-                <div style={{ display: "flex", justifyContent: "center", gap: "32px", marginBottom: "16px" }}>
-                  <img src="/images/sidebar/interested-locked.svg" alt="Interested" style={{ width: "110px", height: "auto" }} />
-                  <img src="/images/sidebar/superinterested-locked.svg" alt="Super Interested" style={{ width: "110px", height: "auto" }} />
+              )}
+              {/* Membership Section - Women Only (Conversations) */}
+              {user?.gender === "female" && (
+                <div className="user-card-sidebar sidebar-membership-card">
+                  <div className="sidebar-membership-header">
+                    <div className="sidebar-membership-label">Membership</div>
+                    <div className="sidebar-membership-plan">
+                      <span>The Test Drive:</span> Limited Access
+                    </div>
+                  </div>
+
+                  <div className="sidebar-membership-row">
+                    <div className="sidebar-membership-text">
+                      <div className="sidebar-membership-title">
+                        Conversations Left.
+                      </div>
+                      <div className="sidebar-membership-subtext">
+                        Start a new chat anytime. Your balance updates as you go.
+                      </div>
+                    </div>
+                    <div className="sidebar-ring">
+                      <svg viewBox="0 0 80 80" aria-hidden="true">
+                        <circle className="ring-bg" cx="40" cy="40" r="35" />
+                        <circle
+                          className="ring-progress"
+                          cx="40"
+                          cy="40"
+                          r="35"
+                          strokeDasharray={ringDash}
+                        />
+                        <defs>
+                          <linearGradient
+                            id="sidebar-ring-gradient"
+                            x1="0%"
+                            y1="0%"
+                            x2="100%"
+                            y2="0%"
+                          >
+                            <stop offset="0%" stopColor="#f24462" />
+                            <stop offset="100%" stopColor="#4a90e2" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                      <div className="sidebar-ring-value">{remainingChats}</div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="sidebar-topup-btn"
+                    onClick={() => {
+                      toggle();
+                      setShowPricingModal(true);
+                    }}
+                  >
+                    Top Up Tokens
+                  </button>
                 </div>
-                <div style={{ fontSize: "12px", color: "white", marginBottom: "8px" }}>Add tokens to get started</div>
-                <a onClick={() => setShowPricingModal(true)} style={{
-                  background: "linear-gradient(#191c21, #191c21) padding-box, linear-gradient(90deg, #f24462, #4a90e2) border-box",
-                  border: "2px solid transparent",
-                  borderRadius: "8px",
-                  padding: "12px 40px",
-                  color: "white",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  textDecoration: "none",
-                  display: "inline-block",
-                  minWidth: "200px",
-                  cursor: "pointer"
-                }}>
-                  Top Up Tokens
-                </a>
-              </div>
               )}
               <div className="verification_card_header text-center mb-3">
                 <div className="d-flex align-items-center mb-0 header_btn_wrap">
@@ -297,89 +442,6 @@ function sideBarPopup({ isOpen, toggle, count }) {
                   </div>
                   <SubHeading title="Stay ahead of the crowd" />
                 </div>
-              )}
-              {/* Women's Navigation Menu */}
-              {user?.gender === "female" && (
-              <div className="user-card-sidebar" style={{ backgroundColor: "#0b0b0b", marginBottom: "8px" }}>
-                <div className="sidebar_nav_links_women">
-                  <ul>
-                    <li>
-                      <Link href="/search">
-                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
-                          <span className="d-flex align-items-center">
-                            <FiSearch size={20} style={{ marginRight: "12px" }} />
-                            Search
-                          </span>
-                          <FiChevronRight size={18} />
-                        </a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/notifications">
-                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
-                          <span className="d-flex align-items-center">
-                            <FiBell size={20} style={{ marginRight: "12px" }} />
-                            Notifications
-                            {count > 0 && <span style={{
-                              backgroundColor: "#f24462",
-                              color: "white",
-                              borderRadius: "10px",
-                              padding: "2px 8px",
-                              fontSize: "12px",
-                              marginLeft: "8px"
-                            }}>{count}</span>}
-                          </span>
-                          <FiChevronRight size={18} />
-                        </a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/messages">
-                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
-                          <span className="d-flex align-items-center">
-                            <FiMessageSquare size={20} style={{ marginRight: "12px" }} />
-                            Messages
-                          </span>
-                          <FiChevronRight size={18} />
-                        </a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/matches">
-                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
-                          <span className="d-flex align-items-center">
-                            <FiHeart size={20} style={{ marginRight: "12px" }} />
-                            Matches
-                          </span>
-                          <FiChevronRight size={18} />
-                        </a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/favorites">
-                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
-                          <span className="d-flex align-items-center">
-                            <FiHeart size={20} style={{ marginRight: "12px" }} />
-                            Favorites
-                          </span>
-                          <FiChevronRight size={18} />
-                        </a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/settings">
-                        <a onClick={toggle} className="d-flex align-items-center justify-content-between">
-                          <span className="d-flex align-items-center">
-                            <FiSettings size={20} style={{ marginRight: "12px" }} />
-                            Settings
-                          </span>
-                          <FiChevronRight size={18} />
-                        </a>
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
               )}
               <div className="user-card-sidebar">
                 <div

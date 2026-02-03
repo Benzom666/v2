@@ -1,0 +1,78 @@
+/* Sidebar Token Circles */
+.sidebar-plan-icons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 20px;
+  margin: 24px 0 16px;
+}
+
+.token-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.token-label {
+  font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #ffffff;
+  text-align: center;
+}
+
+.token-circle-inner {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.token-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.token-ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 6;
+}
+
+.token-ring-progress {
+  fill: none;
+  stroke: url(#token-gradient);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.token-ring-progress.super {
+  stroke: url(#token-gradient-super);
+}
+
+.token-value {
+  font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: #ffffff;
+  text-align: center;
+  z-index: 1;
+}
+
+.token-circle.locked .token-value {
+  font-size: 14px;
+  color: #7a7a7a;
+}
+
+/* Gradients for token rings */
+.sidebar-plan-card svg defs {
+  position: absolute;
+}
+
+/* Add to global styles or inline SVG */

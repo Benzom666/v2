@@ -33,8 +33,12 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
       timestamp: new Date().toISOString()
     });
     
-    // TODO: Navigate to post-payment success screen
-    alert(`Payment Successful! $${total} processed.\nInterested: ${interestedCount} x $2 = $${interestedCount * 2}\nSuper Interested: ${superInterestedCount} x $4 = $${superInterestedCount * 4}`);
+    // TODO: Update user's token counts in Redux/API
+    // For now, just show success message
+    alert(`Payment Successful! $${total} processed.\n\nYou received:\n• ${interestedCount} Interested tokens\n• ${superInterestedCount} Super Interested tokens\n\nYour sidebar will now show your token balance!`);
+    
+    // TODO: Call API to update user tokens
+    // await apiRequest({ method: 'POST', url: 'user/update-tokens', data: { interestedCount, superInterestedCount } });
     
     // Close modal after payment
     onClose();
