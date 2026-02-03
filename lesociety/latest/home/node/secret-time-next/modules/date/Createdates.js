@@ -9,8 +9,6 @@ import ConfirmDate from "./confirmDate";
 import { useRouter } from "next/router";
 import useWindowSize from "utils/useWindowSize";
 import { useEffect } from "react";
-import { IoIosArrowBack } from "react-icons/io";
-import { IoIosClose } from "react-icons/io";
 import CreatedatesWarningPopUp from "./CreatedatesWarningPopUp";
 
 const CreateDate = (props) => {
@@ -69,42 +67,10 @@ const CreateDate = (props) => {
 
   return (
     <div>
-      {!mobile &&
-        page !== 4 &&
-        !router.query?.new_edit &&
-        !router.query?.drafted && (
-          <div className="d-flex justify-content-between align-items-center">
-            <div
-              onClick={() => {
-                if (page > 0) {
-                  previousPage();
-                } else {
-                  router.push("/create-date/choose-city");
-                }
-              }}
-              className="pl-4 cursor-pointer"
-            >
-              <span>
-                <IoIosArrowBack
-                  size={25}
-                  color={"rgba(255, 255, 255, 0.7)"}
-                  className="message-mobile-header-icon"
-                />
-              </span>
-            </div>
-            <div
-              onClick={toggle}
-              className="w-15 d-none d-sm-block cursor-pointer text-end pe-5"
-            >
-              <IoIosClose
-                className="mouse-point"
-                size={33}
-                //style={{ color: " rgba(255, 255, 255, 0.5)" }}
-                onClick={toggle}
-              />
-            </div>
-          </div>
-        )}
+      {/*
+        Desktop header controls are now handled by CreateDateHeader to avoid
+        duplicate back/close buttons and alignment drift.
+      */}
 
       {!router.query.drafted && page == 0 && (
         <CreateStepOne
