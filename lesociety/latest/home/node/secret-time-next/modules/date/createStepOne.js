@@ -123,7 +123,7 @@ const CreateStepOne = (props) => {
   return (
     <>
       {!confirmPopup ? (
-        <>
+        <div className="create-date-shell">
           <CreateDateHeader
             activeStep={1}
             onBack={previousPage}
@@ -131,105 +131,107 @@ const CreateStepOne = (props) => {
             showBack={true}
             showClose={true}
           />
-          <div className="inner_container">
-            <div className="create-date-intro">
-              <h2>What kind of outing do you want him to take you on?</h2>
-              <div className="intro-subtitle">
-                When a man chooses Interested, he's saying: I'll take you on the
-                date you create here and cover everything.
-              </div>
-            </div>
-          </div>
-          <div className="date-class-section choose-gender step-1 experience-section">
-            <form
-              onSubmit={handleSubmit}
-              style={{
-                paddingRight: "10px",
-                paddingLeft: "10px",
-                paddingTop: "0px",
-              }}
-            >
-              <div className="inner_container">
-                <Field
-                  name="search_type"
-                  component={({ input }) => (
-                    <>
-                      {experienceGroups.map((group, groupIndex) => (
-                        <div className="experience-group" key={groupIndex}>
-                          {group.title && (
-                            <div className="experience-group-title">
-                              {group.title}
-                            </div>
-                          )}
-                          <div
-                            className={`experience-grid ${
-                              group.options.length === 1 ? "single" : ""
-                            }`}
-                          >
-                            {group.options.map((option) => {
-                              const isSelected = input.value?.id === option.id;
-                              return (
-                                <button
-                                  type="button"
-                                  key={option.id}
-                                  className={`experience-card ${
-                                    isSelected ? "is-selected" : ""
-                                  }`}
-                                  onClick={() =>
-                                    input.onChange({
-                                      id: option.id,
-                                      label: option.label,
-                                      icon: option.icon,
-                                      category: option.category,
-                                    })
-                                  }
-                                >
-                                  <span className="experience-badge">
-                                    {option.badge}
-                                  </span>
-                                  <span className="experience-card-image">
-                                    <Image
-                                      src={option.image}
-                                      alt={option.label}
-                                      fill
-                                      sizes="(max-width: 600px) 50vw, 200px"
-                                      style={{ objectFit: "cover" }}
-                                    />
-                                  </span>
-                                  <span className="experience-card-content">
-                                    <div className="experience-card-title">
-                                      {option.label}
-                                    </div>
-                                    <div className="experience-card-desc">
-                                      {option.description}
-                                    </div>
-                                  </span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                />
-                <div className="bottom-mobile register-bottom">
-                  <div className="secret-input type-submit next-prev">
-                    {!confirmPopup && (
-                      <button
-                        type="submit"
-                        className="next"
-                        disabled={!state?.values?.search_type || invalid}
-                      >
-                        Next <FiArrowRight />
-                      </button>
-                    )}
-                  </div>
+          <div className="create-date-content">
+            <div className="inner_container">
+              <div className="create-date-intro">
+                <h2>What kind of outing do you want him to take you on?</h2>
+                <div className="intro-subtitle">
+                  When a man chooses Interested, he's saying: I'll take you on
+                  the date you create here and cover everything.
                 </div>
               </div>
-            </form>
+            </div>
+            <div className="date-class-section choose-gender step-1 experience-section">
+              <form
+                onSubmit={handleSubmit}
+                style={{
+                  paddingRight: "10px",
+                  paddingLeft: "10px",
+                  paddingTop: "0px",
+                }}
+              >
+                <div className="inner_container">
+                  <Field
+                    name="search_type"
+                    component={({ input }) => (
+                      <>
+                        {experienceGroups.map((group, groupIndex) => (
+                          <div className="experience-group" key={groupIndex}>
+                            {group.title && (
+                              <div className="experience-group-title">
+                                {group.title}
+                              </div>
+                            )}
+                            <div
+                              className={`experience-grid ${
+                                group.options.length === 1 ? "single" : ""
+                              }`}
+                            >
+                              {group.options.map((option) => {
+                                const isSelected = input.value?.id === option.id;
+                                return (
+                                  <button
+                                    type="button"
+                                    key={option.id}
+                                    className={`experience-card ${
+                                      isSelected ? "is-selected" : ""
+                                    }`}
+                                    onClick={() =>
+                                      input.onChange({
+                                        id: option.id,
+                                        label: option.label,
+                                        icon: option.icon,
+                                        category: option.category,
+                                      })
+                                    }
+                                  >
+                                    <span className="experience-badge">
+                                      {option.badge}
+                                    </span>
+                                    <span className="experience-card-image">
+                                      <Image
+                                        src={option.image}
+                                        alt={option.label}
+                                        fill
+                                        sizes="(max-width: 600px) 50vw, 200px"
+                                        style={{ objectFit: "cover" }}
+                                      />
+                                    </span>
+                                    <span className="experience-card-content">
+                                      <div className="experience-card-title">
+                                        {option.label}
+                                      </div>
+                                      <div className="experience-card-desc">
+                                        {option.description}
+                                      </div>
+                                    </span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                  />
+                  <div className="bottom-mobile register-bottom">
+                    <div className="secret-input type-submit next-prev">
+                      {!confirmPopup && (
+                        <button
+                          type="submit"
+                          className="next"
+                          disabled={!state?.values?.search_type || invalid}
+                        >
+                          Next <FiArrowRight />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-        </>
+        </div>
       ) : null}
     </>
   );

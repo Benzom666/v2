@@ -58,7 +58,7 @@ const CreateStepThree = (props) => {
   return (
     <>
       {!confirmPopup ? (
-        <>
+        <div className="create-date-shell">
           <CreateDateHeader
             activeStep={3}
             onBack={previousPage}
@@ -66,69 +66,73 @@ const CreateStepThree = (props) => {
             showBack={true}
             showClose={true}
           />
-          <div className="inner_container">
-            <div className="create-date-intro">
-              <h2>How long do you want this date to last?</h2>
-              <div className="intro-subtitle">
-                Be upfront — great dates start with perfect timing.
-              </div>
-            </div>
-          </div>
-          <div className="date-class-section choose-gender">
-            <form
-              onSubmit={handleSubmit}
-              className="inner_container"
-              style={{
-                paddingRight: "20px",
-                paddingLeft: "20px",
-                paddingTop: "0px",
-              }}
-            >
-              <div className="mb-4">
-                <Field
-                  name="education"
-                  component={({ input }) => (
-                    <div className="duration-list">
-                      {durationOptions.map((option) => {
-                        const isSelected = input.value === option.value;
-                        return (
-                          <button
-                            type="button"
-                            key={option.id}
-                            className={`duration-card ${
-                              isSelected ? "is-selected" : ""
-                            }`}
-                            onClick={() => input.onChange(option.value)}
-                          >
-                            <div className="duration-title">{option.title}</div>
-                            {option.description && (
-                              <div className="duration-desc">
-                                {option.description}
-                              </div>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                />
-              </div>
-              <div className="bottom-mobile register-bottom">
-                <div className="secret-input type-submit next-prev">
-                  {!confirmPopup && (
-                    <button
-                      type="submit"
-                      className="next"
-                      disabled={!state.values?.education || invalid}
-                    >
-                      Next <FiArrowRight />
-                    </button>
-                  )}
+          <div className="create-date-content">
+            <div className="inner_container">
+              <div className="create-date-intro">
+                <h2>How long do you want this date to last?</h2>
+                <div className="intro-subtitle">
+                  Be upfront — great dates start with perfect timing.
                 </div>
               </div>
-            </form>
+            </div>
+            <div className="date-class-section choose-gender">
+              <form
+                onSubmit={handleSubmit}
+                className="inner_container"
+                style={{
+                  paddingRight: "20px",
+                  paddingLeft: "20px",
+                  paddingTop: "0px",
+                }}
+              >
+                <div className="mb-4">
+                  <Field
+                    name="education"
+                    component={({ input }) => (
+                      <div className="duration-list">
+                        {durationOptions.map((option) => {
+                          const isSelected = input.value === option.value;
+                          return (
+                            <button
+                              type="button"
+                              key={option.id}
+                              className={`duration-card ${
+                                isSelected ? "is-selected" : ""
+                              }`}
+                              onClick={() => input.onChange(option.value)}
+                            >
+                              <div className="duration-title">
+                                {option.title}
+                              </div>
+                              {option.description && (
+                                <div className="duration-desc">
+                                  {option.description}
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  />
+                </div>
+                <div className="bottom-mobile register-bottom">
+                  <div className="secret-input type-submit next-prev">
+                    {!confirmPopup && (
+                      <button
+                        type="submit"
+                        className="next"
+                        disabled={!state.values?.education || invalid}
+                      >
+                        Next <FiArrowRight />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-        </>
+        </div>
       ) : null}
     </>
   );

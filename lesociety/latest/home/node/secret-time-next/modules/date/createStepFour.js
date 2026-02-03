@@ -182,7 +182,7 @@ const CreateStepFour = (props) => {
 
       <>
         {!confirmPopup ? (
-          <div className="outer_container">
+          <div className="create-date-shell">
             <CreateDateHeader
               activeStep={4}
               onBack={previousPage}
@@ -190,7 +190,7 @@ const CreateStepFour = (props) => {
               showBack={true}
               showClose={true}
             />
-            <>
+            <div className="create-date-content">
               <div className="inner_container">
                 <div className="create-date-intro">
                   <h2>Make him want this date.</h2>
@@ -241,7 +241,7 @@ const CreateStepFour = (props) => {
                   </div>
                 </div>
               </form>
-            </>
+            </div>
           </div>
         ) : null}
         {/* <ConfirmDate isOpen={confirmPopup} toggle={toggle} /> */}

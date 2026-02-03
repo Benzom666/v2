@@ -213,7 +213,7 @@ const DatePreview = (props) => {
   return (
     <>
       {!confirmPopup ? (
-        <>
+        <div className="create-date-shell">
           <CreateDateHeader
             activeStep={5}
             onBack={previousPage}
@@ -221,68 +221,75 @@ const DatePreview = (props) => {
             showBack={true}
             showClose={true}
           />
-          <div className="inner_container">
-            <div className="create-date-intro">
-              <h2>You're almost done!</h2>
-              <div className="intro-subtitle">
-                Take a moment to review your date.
-              </div>
-              <div className="intro-note">
-                Your description can only be edited. Everything else is locked.
-              </div>
-            </div>
-          </div>
-          <form
-            onSubmit={handleSubmit}
-            className="date-class-section choose-gender date-preview-card"
-          >
-            <div className="inner_container inner_container_Date_Preview_width">
-              <UserCardDetail
-                user={user}
-                cityState={cityState}
-                dateSuggestion={dateSuggestion}
-                timeState={timeState}
-                priceState={priceState}
-                dateDescription={dateDescription}
-                imageSrc={
-                  eligibleImages.find(
-                    (img) => img.idx === dateSuggestion?.image_index
-                  )?.url
-                }
-                showSwap={eligibleImages.length >= 2}
-                onSwap={handleSwapImage}
-              />
-              {!confirmPopup && (
-                <div className="bottom-mobile register-bottom">
-                  <div className="secret-input type-submit next-prev">
-                    {!router?.query?.new_edit && (
-                      <button type="button" className="edit next">
-                        <Link href="/create-date/choose-city?edit=true">
-                          <a>Edit</a>
-                        </Link>
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      className="next"
-                      onClick={router?.query?.new_edit ? updateDate : postDate}
-                    >
-                      {loader ? (
-                        <span className="spin-loader-button"></span>
-                      ) : (
-                        <>
-                          <a className="forgot-passwrd">
-                            {router?.query?.new_edit ? "Update Date" : "Post Date"}
-                          </a>
-                        </>
-                      )}
-                    </button>
-                  </div>
+          <div className="create-date-content">
+            <div className="inner_container">
+              <div className="create-date-intro">
+                <h2>You're almost done!</h2>
+                <div className="intro-subtitle">
+                  Take a moment to review your date.
                 </div>
-              )}
+                <div className="intro-note">
+                  Your description can only be edited. Everything else is
+                  locked.
+                </div>
+              </div>
             </div>
-          </form>
-        </>
+            <form
+              onSubmit={handleSubmit}
+              className="date-class-section choose-gender date-preview-card"
+            >
+              <div className="inner_container inner_container_Date_Preview_width">
+                <UserCardDetail
+                  user={user}
+                  cityState={cityState}
+                  dateSuggestion={dateSuggestion}
+                  timeState={timeState}
+                  priceState={priceState}
+                  dateDescription={dateDescription}
+                  imageSrc={
+                    eligibleImages.find(
+                      (img) => img.idx === dateSuggestion?.image_index
+                    )?.url
+                  }
+                  showSwap={eligibleImages.length >= 2}
+                  onSwap={handleSwapImage}
+                />
+                {!confirmPopup && (
+                  <div className="bottom-mobile register-bottom">
+                    <div className="secret-input type-submit next-prev">
+                      {!router?.query?.new_edit && (
+                        <button type="button" className="edit next">
+                          <Link href="/create-date/choose-city?edit=true">
+                            <a>Edit</a>
+                          </Link>
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className="next"
+                        onClick={
+                          router?.query?.new_edit ? updateDate : postDate
+                        }
+                      >
+                        {loader ? (
+                          <span className="spin-loader-button"></span>
+                        ) : (
+                          <>
+                            <a className="forgot-passwrd">
+                              {router?.query?.new_edit
+                                ? "Update Date"
+                                : "Post Date"}
+                            </a>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
       ) : null}
       <ConfirmDate isOpen={confirmPopup} toggle={toggle} />
     </>

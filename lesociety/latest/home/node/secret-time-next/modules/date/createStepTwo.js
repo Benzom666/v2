@@ -193,7 +193,7 @@ const CreateStepTwo = (props) => {
   return (
     <>
       {!confirmPopup ? (
-        <>
+        <div className="create-date-shell">
           <CreateDateHeader
             activeStep={2}
             onBack={previousPage}
@@ -201,91 +201,50 @@ const CreateStepTwo = (props) => {
             showBack={true}
             showClose={true}
           />
-          <div className="inner_container">
-            <div className="create-date-intro">
-              <h2>Your aspiration. Your price.</h2>
-              <div className="intro-subtitle">
-                When a man chooses Super Interested, he's saying: I'll cover the
-                outing and financially support your aspiration to skip straight
-                to our first date - Fast.
+          <div className="create-date-content">
+            <div className="inner_container">
+              <div className="create-date-intro">
+                <h2>Your aspiration. Your price.</h2>
+                <div className="intro-subtitle">
+                  When a man chooses Super Interested, he's saying: I'll cover
+                  the outing and financially support your aspiration to skip
+                  straight to our first date - Fast.
+                </div>
               </div>
             </div>
-          </div>
-          <div className="date-class-section choose-gender">
-            <form
-              onSubmit={handleSubmit}
-              className="inner_container"
-              style={{
-                paddingRight: "20px",
-                paddingLeft: "20px",
-                paddingTop: "0px",
-              }}
-            >
-              <div className="mb-4">
-                <div className="aspiration__main__dropdown">
-                  <label htmlFor="category" className="aspiration__label1">
-                    1. Who do you aspire to be?
-                  </label>
-                  <label htmlFor="category" className="aspiration__label2">
-                    Your selection will be locked for 30 days
-                  </label>
-                  <Field
-                    name="enter__category"
-                    component={({ input, meta }) => (
-                      <>
-                        <Select
-                          placeholder="Select A Category"
-                          className="aspiration__antd__dropdown"
-                          showSearch={false}
-                          value={categoryId}
-                          onChange={(value, event) => {
-                            dispatch(initialize("CreateStepTwo", {}));
-                            setAspiration([]);
-                            setAspirationId("");
-                            input.onChange(value);
-                            setCategoryId({
-                              value: value,
-                              label: event.children,
-                            });
-                          }}
-                          validate={validate}
-                          onBlur={(e) => {
-                            e.preventDefault();
-                          }}
-                          disabled={disableDropdowns}
-                          popupClassName="aspiration__antd__dropdown__popup"
-                          onDropdownVisibleChange={(open) => {
-                            if (open) {
-                              document.body.style.overflow = "hidden";
-                            } else {
-                              document.body.style.overflow = "unset";
-                            }
-                          }}
-                        >
-                          <Option value="">Select A Category</Option>
-                          {category.map((item) => (
-                            <Option value={item.value}>{item.label}</Option>
-                          ))}
-                        </Select>
-                        {meta.error && meta.touched && (
-                          <span>{meta.error}</span>
-                        )}
-                      </>
-                    )}
-                  />
-                  <div className="aspiration__antd__dropdown2">
+            <div className="date-class-section choose-gender">
+              <form
+                onSubmit={handleSubmit}
+                className="inner_container"
+                style={{
+                  paddingRight: "20px",
+                  paddingLeft: "20px",
+                  paddingTop: "0px",
+                }}
+              >
+                <div className="mb-4">
+                  <div className="aspiration__main__dropdown">
+                    <label htmlFor="category" className="aspiration__label1">
+                      1. Who do you aspire to be?
+                    </label>
+                    <label htmlFor="category" className="aspiration__label2">
+                      Your selection will be locked for 30 days
+                    </label>
                     <Field
-                      name="enter__aspiration"
+                      name="enter__category"
                       component={({ input, meta }) => (
                         <>
                           <Select
-                            placeholder="Select Your Aspiration"
+                            placeholder="Select A Category"
                             className="aspiration__antd__dropdown"
                             showSearch={false}
-                            value={aspirationId}
+                            value={categoryId}
                             onChange={(value, event) => {
+                              dispatch(initialize("CreateStepTwo", {}));
+                              setAspiration([]);
+                              setAspirationId("");
                               input.onChange(value);
-                              setAspirationId({
+                              setCategoryId({
                                 value: value,
                                 label: event.children,
                               });
@@ -294,11 +253,7 @@ const CreateStepTwo = (props) => {
                             onBlur={(e) => {
                               e.preventDefault();
                             }}
-                            disabled={
-                              !categoryId ||
-                              !(aspiration.length > 0) ||
-                              disableDropdowns
-                            }
+                            disabled={disableDropdowns}
                             popupClassName="aspiration__antd__dropdown__popup"
                             onDropdownVisibleChange={(open) => {
                               if (open) {
@@ -308,8 +263,8 @@ const CreateStepTwo = (props) => {
                               }
                             }}
                           >
-                            <Option value="">Select Your Aspiration</Option>
-                            {aspiration.map((item) => (
+                            <Option value="">Select A Category</Option>
+                            {category.map((item) => (
                               <Option value={item.value}>{item.label}</Option>
                             ))}
                           </Select>
@@ -319,68 +274,115 @@ const CreateStepTwo = (props) => {
                         </>
                       )}
                     />
+                    <div className="aspiration__antd__dropdown2">
+                      <Field
+                        name="enter__aspiration"
+                        component={({ input, meta }) => (
+                          <>
+                            <Select
+                              placeholder="Select Your Aspiration"
+                              className="aspiration__antd__dropdown"
+                              showSearch={false}
+                              value={aspirationId}
+                              onChange={(value, event) => {
+                                input.onChange(value);
+                                setAspirationId({
+                                  value: value,
+                                  label: event.children,
+                                });
+                              }}
+                              validate={validate}
+                              onBlur={(e) => {
+                                e.preventDefault();
+                              }}
+                              disabled={
+                                !categoryId ||
+                                !(aspiration.length > 0) ||
+                                disableDropdowns
+                              }
+                              popupClassName="aspiration__antd__dropdown__popup"
+                              onDropdownVisibleChange={(open) => {
+                                if (open) {
+                                  document.body.style.overflow = "hidden";
+                                } else {
+                                  document.body.style.overflow = "unset";
+                                }
+                              }}
+                            >
+                              <Option value="">Select Your Aspiration</Option>
+                              {aspiration.map((item) => (
+                                <Option value={item.value}>{item.label}</Option>
+                              ))}
+                            </Select>
+                            {meta.error && meta.touched && (
+                              <span>{meta.error}</span>
+                            )}
+                          </>
+                        )}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="mb-4">
-                <label htmlFor="category" className="price__radio__label">
-                  2. Set your suggested financial gift
-                </label>
-                <p className="price__radio__gentlemen">
-                  He hands you the gift in person on the date to help support
-                  your goals. Showing his commitment.
-                </p>
-                <Field
-                  name="education"
-                  component={({ input }) => (
-                    <div className="price-grid">
-                      {priceOptions.map((price) => {
-                        const isSelected = Number(input.value) === price;
-                        return (
-                          <button
-                            type="button"
-                            key={price}
-                            className={`price-card ${
-                              isSelected ? "is-selected" : ""
-                            }`}
-                            onClick={() => input.onChange(price)}
-                          >
-                            ${price}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                />
-                <p className="price__radio__gentlemen mt-3">
-                  Pro tip: Women who post multiple dates at different price
-                  points get 3-5x more Super Interested offers.
-                </p>
-              </div>
-
-              <div className="bottom-mobile register-bottom">
-                <div className="secret-input type-submit next-prev">
-                  {!confirmPopup && (
-                    <button
-                      type="submit"
-                      className="next"
-                      disabled={!state.values?.education || invalid}
-                      onClick={() => {
-                        if (disableDropdowns) {
-                          return;
-                        }
-                        dropDownHandleSubmit();
-                      }}
-                    >
-                      Next <FiArrowRight />
-                    </button>
-                  )}
+                <div className="mb-4">
+                  <label htmlFor="category" className="price__radio__label">
+                    2. Set your suggested financial gift
+                  </label>
+                  <p className="price__radio__gentlemen">
+                    He hands you the gift in person on the date to help support
+                    your goals. Showing his commitment.
+                  </p>
+                  <Field
+                    name="education"
+                    component={({ input }) => (
+                      <div className="price-grid">
+                        {priceOptions.map((price) => {
+                          const isSelected = Number(input.value) === price;
+                          return (
+                            <button
+                              type="button"
+                              key={price}
+                              className={`price-card ${
+                                isSelected ? "is-selected" : ""
+                              }`}
+                              onClick={() => input.onChange(price)}
+                            >
+                              ${price}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  />
+                  <p className="price__radio__gentlemen mt-3">
+                    Pro tip: Women who post multiple dates at different price
+                    points get 3-5x more Super Interested offers.
+                  </p>
                 </div>
-              </div>
-            </form>
+
+                <div className="bottom-mobile register-bottom">
+                  <div className="secret-input type-submit next-prev">
+                    {!confirmPopup && (
+                      <button
+                        type="submit"
+                        className="next"
+                        disabled={!state.values?.education || invalid}
+                        onClick={() => {
+                          if (disableDropdowns) {
+                            return;
+                          }
+                          dropDownHandleSubmit();
+                        }}
+                      >
+                        Next <FiArrowRight />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-        </>
+        </div>
       ) : null}
     </>
   );
