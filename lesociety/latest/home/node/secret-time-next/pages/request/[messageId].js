@@ -18,6 +18,7 @@ import SkeletonElement from "@/modules/skeleton/SkeletonElement";
 import ImageShow from "@/modules/ImageShow";
 import useWindowSize from "utils/useWindowSize";
 import { logout } from "@/modules/auth/authActions";
+import StarIcon from "../../assets/request star.png";
 
 const UserCardListForMessage = ({
   conversations,
@@ -211,6 +212,32 @@ const UserCardListForMessage = ({
                             }
                           }, 5000);
 
+                          const isSuper =
+                            conversation?.isSuperInterested ??
+                            conversation?.message?.isSuperInterested ??
+                            conversation?.message?.is_super_interested ??
+                            false;
+                          const totalHours = 48;
+                          const createdAt =
+                            conversation?.message?.sent_time ||
+                            conversation?.message?.createdAt ||
+                            conversation?.createdAt;
+                          let remainingHours = 32;
+                          let progressPercent = 70;
+                          if (createdAt) {
+                            const elapsed =
+                              (Date.now() - new Date(createdAt).getTime()) /
+                              (1000 * 60 * 60);
+                            remainingHours = Math.max(
+                              Math.ceil(totalHours - elapsed),
+                              0
+                            );
+                            progressPercent = Math.min(
+                              Math.max((elapsed / totalHours) * 100, 8),
+                              100
+                            );
+                          }
+
                           return pageLoading ? (
                             <SkeletonUserCardListForMessage
                               conversation={conversation}
@@ -227,10 +254,29 @@ const UserCardListForMessage = ({
                               <H5 style1={true}>
                                 {conversation?.user?.user_name} is
                               </H5>
+                              {isSuper && (
+                                <div className="request__message__super__text">
+                                  <div className="super">
+                                    <CustomIcon.RequestSuperText
+                                      color={"white"}
+                                      size={150}
+                                    />
+                                  </div>
+                                </div>
+                              )}
                               <CustomIcon.IntrestedText
                                 color={"white"}
                                 size={150}
                               />
+                              {isSuper && (
+                                <div className="superinterested__icon">
+                                  <Image
+                                    src={StarIcon}
+                                    height={53}
+                                    width={53}
+                                  />
+                                </div>
+                              )}
                               <figure>
                                 <ImageShow
                                   className="requested-profile-img"
@@ -245,6 +291,17 @@ const UserCardListForMessage = ({
                                   "{showText(conversation?.message?.message)}"
                                 </span>
                               </figure>
+                              <div className="request-expiry">
+                                <div className="request-expiry-text">
+                                  Request expires in {remainingHours} hours
+                                </div>
+                                <div className="request-expiry-track">
+                                  <span
+                                    className="request-expiry-fill"
+                                    style={{ width: `${progressPercent}%` }}
+                                  />
+                                </div>
+                              </div>
                               <div className="d-flex align-items-center my-4 header_btn_wrap">
                                 <a
                                   className="create-date"
