@@ -10,6 +10,7 @@ import {
   CHANGE_SELECTED_LOCATION_POPUP,
   SET_GENDER,
   CHANGE_IMAGE_WARNING_POPUP,
+  UPDATE_USER_TOKENS,
 } from "./actionConstants";
 
 import { reset, initialize } from "redux-form";
@@ -143,3 +144,13 @@ export function signupStep4(data, setLoader, handleUpdateRoutePage) {
     handleUpdateRoutePage: handleUpdateRoutePage,
   };
 }
+
+export const updateUserTokens = (interestedTokens, superInterestedTokens) => {
+  return {
+    type: UPDATE_USER_TOKENS,
+    payload: {
+      interested_tokens: interestedTokens,
+      super_interested_tokens: superInterestedTokens,
+    },
+  };
+};

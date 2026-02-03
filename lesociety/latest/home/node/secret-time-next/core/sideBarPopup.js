@@ -20,6 +20,8 @@ import { apiRequest } from "utils/Utilities";
 import io from "socket.io-client";
 import { socket } from "pages/user/user-list";
 import PricingMenuModal from "./PricingMenuModal";
+import interestedLocked from "../assets/interested-locked.svg";
+import superInterestedLocked from "../assets/superinterested-locked.svg";
 
 function sideBarPopup({ isOpen, toggle, count }) {
   const [showPricingModal, setShowPricingModal] = useState(false);
@@ -245,36 +247,10 @@ function sideBarPopup({ isOpen, toggle, count }) {
                     <>
                       <div className="sidebar-plan-icons sidebar-plan-locked">
                         <div className="token-circle locked">
-                          <div className="token-label">Interested</div>
-                          <div className="token-circle-inner">
-                            <svg viewBox="0 0 100 100" className="token-ring">
-                              <defs>
-                                <linearGradient id="token-gradient-locked-popup" x1="0%" y1="0%" x2="100%" y2="100%">
-                                  <stop offset="0%" stopColor="#f24462" />
-                                  <stop offset="100%" stopColor="#4a90e2" />
-                                </linearGradient>
-                              </defs>
-                              <circle cx="50" cy="50" r="42" className="token-ring-bg" />
-                              <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '0 264', stroke: 'url(#token-gradient-locked-popup)' }} />
-                            </svg>
-                            <div className="token-value">Locked</div>
-                          </div>
+                          <Image src={interestedLocked} alt="Interested Locked" width={110} height={120} />
                         </div>
                         <div className="token-circle locked">
-                          <div className="token-label">Super Interested</div>
-                          <div className="token-circle-inner">
-                            <svg viewBox="0 0 100 100" className="token-ring">
-                              <defs>
-                                <linearGradient id="token-gradient-locked-2-popup" x1="0%" y1="0%" x2="100%" y2="100%">
-                                  <stop offset="0%" stopColor="#f24462" />
-                                  <stop offset="100%" stopColor="#4a90e2" />
-                                </linearGradient>
-                              </defs>
-                              <circle cx="50" cy="50" r="42" className="token-ring-bg" />
-                              <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '0 264', stroke: 'url(#token-gradient-locked-2-popup)' }} />
-                            </svg>
-                            <div className="token-value">Locked</div>
-                          </div>
+                          <Image src={superInterestedLocked} alt="Super Interested Locked" width={111} height={120} />
                         </div>
                       </div>
                       <div className="sidebar-plan-note">Add tokens to get started.</div>

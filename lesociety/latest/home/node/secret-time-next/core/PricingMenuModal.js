@@ -6,57 +6,120 @@ import arrow1 from "../assets/arrow1.svg";
 import arrow2 from "../assets/arrow2.svg";
 import interestedIcon from "../assets/interested.svg";
 import superInterestedIcon from "../assets/superinterested.svg";
+import { useDispatch } from "react-redux";
+import { updateUserTokens } from "../modules/auth/authActions";
+import { useSelector } from "react-redux";
 
 const PricingMenuModal = ({ isOpen, onClose }) => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.authReducer.user);
+  const isFemale = user?.gender === "female";
+
+  // Men's pricing state
   const [interestedCount, setInterestedCount] = useState(0);
   const [superInterestedCount, setSuperInterestedCount] = useState(0);
 
+  // Women's pricing state
+  const [aLaCarteCount, setALaCarteCount] = useState(0);
+  const [queensBundleCount, setQueensBundleCount] = useState(0);
+
   const INTERESTED_PRICE = 2;
   const SUPER_INTERESTED_PRICE = 4;
-  const MIN_PURCHASE = 25;
+  const MIN_PURCHASE_MEN = 25;
+
+  const A_LA_CARTE_PRICE = 0.50; // 50 cents per chat
+  const QUEENS_BUNDLE_PRICE = 25; // $25 for 100 chats
+  const QUEENS_BUNDLE_CHATS = 100;
+  const MIN_PURCHASE_WOMEN = 10;
 
   const calculateTotal = () => {
-    return (interestedCount * INTERESTED_PRICE) + (superInterestedCount * SUPER_INTERESTED_PRICE);
+    if (isFemale) {
+      return (aLaCarteCount * A_LA_CARTE_PRICE) + (queensBundleCount * QUEENS_BUNDLE_PRICE);
+    } else {
+      return (interestedCount * INTERESTED_PRICE) + (superInterestedCount * SUPER_INTERESTED_PRICE);
+    }
+  };
+
+  const calculateTotalChats = () => {
+    return aLaCarteCount + (queensBundleCount * QUEENS_BUNDLE_CHATS);
   };
 
   const total = calculateTotal();
-  const canCheckout = total >= MIN_PURCHASE;
+  const minPurchase = isFemale ? MIN_PURCHASE_WOMEN : MIN_PURCHASE_MEN;
+  const canCheckout = total >= minPurchase;
 
   const handleCheckout = () => {
     if (!canCheckout) return;
-    
+
     // Dummy payment - always succeeds for testing
     console.log('Processing payment:', {
-      interestedCount,
-      superInterestedCount,
+      isFemale,
       total,
       timestamp: new Date().toISOString()
     });
-    
-    // TODO: Update user's token counts in Redux/API
-    // For now, just show success message
-    alert(`Payment Successful! $${total} processed.\n\nYou received:\n• ${interestedCount} Interested tokens\n• ${superInterestedCount} Super Interested tokens\n\nYour sidebar will now show your token balance!`);
-    
-    // TODO: Call API to update user tokens
-    // await apiRequest({ method: 'POST', url: 'user/update-tokens', data: { interestedCount, superInterestedCount } });
-    
-    // Close modal after payment
+
+    if (isFemale) {
+      const totalChats = calculateTotalChats();
+      console.log('Women purchase:', {
+        aLaCarteCount,
+        queensBundleCount,
+        totalChats,
+        total
+      });
+      alert(`Payment Successful! $${total} processed.\n\nYou received:\n• ${aLaCarteCount} A La' Carte chats\n• ${queensBundleCount} Queens Bundle (${queensBundleCount * QUEENS_BUNDLE_CHATS} chats)\n\nTotal: ${totalChats} new chats!`);
+    } else {
+      console.log('Men purchase:', {
+        interestedCount,
+        superInterestedCount,
+        total
+      });
+      
+      // Update Redux store with new token counts
+      dispatch(updateUserTokens(interestedCount, superInterestedCount));
+      
+      alert(`Payment Successful! $${total} processed.\n\nYou received:\n• ${interestedCount} Interested tokens\n• ${superInterestedCount} Super Interested tokens\n\nYour sidebar will now show your updated token balance!`);
+    }
+
+    // TODO: Call API to update user tokens/chats on backend
+    // await apiRequest({ method: 'POST', url: 'user/update-tokens', data: { ... } });
+
+    // Reset counts and close modal
+    setInterestedCount(0);
+    setSuperInterestedCount(0);
+    setALaCarteCount(0);
+    setQueensBundleCount(0);
     onClose();
   };
 
   const handleIncrement = (type) => {
-    if (type === 'interested') {
-      setInterestedCount(prev => prev + 1);
+    if (isFemale) {
+      if (type === 'aLaCarte') {
+        setALaCarteCount(prev => prev + 1);
+      } else if (type === 'queensBundle') {
+        setQueensBundleCount(prev => prev + 1);
+      }
     } else {
-      setSuperInterestedCount(prev => prev + 1);
+      if (type === 'interested') {
+        setInterestedCount(prev => prev + 1);
+      } else {
+        setSuperInterestedCount(prev => prev + 1);
+      }
     }
   };
 
   const handleDecrement = (type) => {
-    if (type === 'interested') {
-      setInterestedCount(prev => Math.max(0, prev - 1));
+    if (isFemale) {
+      if (type === 'aLaCarte') {
+        setALaCarteCount(prev => Math.max(0, prev - 1));
+      } else if (type === 'queensBundle') {
+        setQueensBundleCount(prev => Math.max(0, prev - 1));
+      }
     } else {
-      setSuperInterestedCount(prev => Math.max(0, prev - 1));
+      if (type === 'interested') {
+        setInterestedCount(prev => Math.max(0, prev - 1));
+      } else {
+        setSuperInterestedCount(prev => Math.max(0, prev - 1));
+      }
     }
   };
 
@@ -69,67 +132,129 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
           <Image src={close1} alt="close" width={24} height={24} />
         </CloseButton>
 
-        {/* Interested Card */}
-        <PricingCard>
-          <CardHeader>
-            <TitleSection>
-              <Image src={interestedIcon} alt="Interested" width={165} height={70} />
-            </TitleSection>
-            <ArrowIcon>
-              <Image src={arrow1} alt="arrow" width={85} height={135} />
-            </ArrowIcon>
-          </CardHeader>
-          <CardSubtitle>Show You're Committed</CardSubtitle>
-          <CardPrice>$2/message</CardPrice>
+        {isFemale ? (
+          <>
+            {/* Women's Pricing: A La' Carte */}
+            <PricingCard>
+              <CardHeader>
+                <TitleSection>
+                  <div style={{ fontFamily: 'HipsterScriptW00-Regular, cursive, sans-serif', fontSize: '48px', color: '#ffffff', lineHeight: '1' }}>
+                    A La' Carte
+                  </div>
+                </TitleSection>
+                <ArrowIcon>
+                  <Image src={arrow1} alt="arrow" width={85} height={135} />
+                </ArrowIcon>
+              </CardHeader>
+              <CardSubtitle>Pay As You Go</CardSubtitle>
+              <CardPrice>50 cents/ Per new chat</CardPrice>
 
-          <CounterSection>
-            <CounterButton onClick={() => handleDecrement('interested')}>−</CounterButton>
-            <CounterValue>{interestedCount}</CounterValue>
-            <CounterButton onClick={() => handleIncrement('interested')}>+</CounterButton>
-          </CounterSection>
+              <CounterSection>
+                <CounterButton onClick={() => handleDecrement('aLaCarte')}>−</CounterButton>
+                <CounterValue>{aLaCarteCount}</CounterValue>
+                <CounterButton onClick={() => handleIncrement('aLaCarte')}>+</CounterButton>
+              </CounterSection>
 
-          <CardDescription>
-            <p>- Show you're a gentleman by committing to her date and covering the outing.</p>
-            <p>- Standard visibility.</p>
-          </CardDescription>
-        </PricingCard>
+              <CardDescription>
+                <p>- Perfect for keep trying it out</p>
+                <p>- Your credits stay active until used</p>
+              </CardDescription>
+            </PricingCard>
 
-        {/* Super Interested Card */}
-        <PricingCard highlighted>
-          <CardHeader>
-            <TitleSection>
-              <Image src={superInterestedIcon} alt="Super Interested" width={165} height={70} />
-            </TitleSection>
-            <ArrowIcon>
-              <Image src={arrow2} alt="arrow" width={85} height={135} />
-            </ArrowIcon>
-          </CardHeader>
-          <CardSubtitle>
-            <span style={{ marginRight: '4px' }}>⚡</span>
-            Supercharge Your Presence
-          </CardSubtitle>
-          <CardPrice>$4/message</CardPrice>
+            {/* Women's Pricing: Queens Bundle */}
+            <PricingCard highlighted>
+              <CardHeader>
+                <TitleSection>
+                  <div style={{ fontFamily: 'HipsterScriptW00-Regular, cursive, sans-serif', fontSize: '48px', color: '#ffffff', lineHeight: '1' }}>
+                    Queens Bundle
+                  </div>
+                </TitleSection>
+                <ArrowIcon>
+                  <Image src={arrow2} alt="arrow" width={85} height={135} />
+                </ArrowIcon>
+              </CardHeader>
+              <CardSubtitle>
+                <span style={{ marginRight: '4px' }}>⚡</span>
+                Maximize Your Experience
+              </CardSubtitle>
+              <CardPrice>$25 for package</CardPrice>
 
-          <CounterSection>
-            <CounterButton onClick={() => handleDecrement('superInterested')}>−</CounterButton>
-            <CounterValue>{superInterestedCount}</CounterValue>
-            <CounterButton onClick={() => handleIncrement('superInterested')}>+</CounterButton>
-          </CounterSection>
+              <CounterSection>
+                <CounterButton onClick={() => handleDecrement('queensBundle')}>−</CounterButton>
+                <CounterValue>{queensBundleCount > 0 ? queensBundleCount * QUEENS_BUNDLE_CHATS : 0}</CounterValue>
+                <CounterButton onClick={() => handleIncrement('queensBundle')}>+</CounterButton>
+              </CounterSection>
 
-          <CardDescription>
-            <p>- Go VIP by investing in her aspirations and increasing your chance. You'll also cover her date outing.</p>
-            <p>- 3x more responses. Priority visibility.</p>
-          </CardDescription>
-        </PricingCard>
+              <CardDescription>
+                <p>- Best Value (25 Cents per chat)</p>
+              </CardDescription>
+            </PricingCard>
+          </>
+        ) : (
+          <>
+            {/* Men's Pricing: Interested */}
+            <PricingCard>
+              <CardHeader>
+                <TitleSection>
+                  <Image src={interestedIcon} alt="Interested" width={165} height={70} />
+                </TitleSection>
+                <ArrowIcon>
+                  <Image src={arrow1} alt="arrow" width={85} height={135} />
+                </ArrowIcon>
+              </CardHeader>
+              <CardSubtitle>Show You're Committed</CardSubtitle>
+              <CardPrice>$2/message</CardPrice>
+
+              <CounterSection>
+                <CounterButton onClick={() => handleDecrement('interested')}>−</CounterButton>
+                <CounterValue>{interestedCount}</CounterValue>
+                <CounterButton onClick={() => handleIncrement('interested')}>+</CounterButton>
+              </CounterSection>
+
+              <CardDescription>
+                <p>- Show you're a gentleman by committing to her date and covering the outing.</p>
+                <p>- Standard visibility.</p>
+              </CardDescription>
+            </PricingCard>
+
+            {/* Men's Pricing: Super Interested */}
+            <PricingCard highlighted>
+              <CardHeader>
+                <TitleSection>
+                  <Image src={superInterestedIcon} alt="Super Interested" width={165} height={70} />
+                </TitleSection>
+                <ArrowIcon>
+                  <Image src={arrow2} alt="arrow" width={85} height={135} />
+                </ArrowIcon>
+              </CardHeader>
+              <CardSubtitle>
+                <span style={{ marginRight: '4px' }}>⚡</span>
+                Supercharge Your Presence
+              </CardSubtitle>
+              <CardPrice>$4/message</CardPrice>
+
+              <CounterSection>
+                <CounterButton onClick={() => handleDecrement('superInterested')}>−</CounterButton>
+                <CounterValue>{superInterestedCount}</CounterValue>
+                <CounterButton onClick={() => handleIncrement('superInterested')}>+</CounterButton>
+              </CounterSection>
+
+              <CardDescription>
+                <p>- Go VIP by investing in her aspirations and increasing your chance. You'll also cover her date outing.</p>
+                <p>- 3x more responses. Priority visibility.</p>
+              </CardDescription>
+            </PricingCard>
+          </>
+        )}
 
         {/* Footer */}
-        <MinPurchase>*Min purchase of ${MIN_PURCHASE}</MinPurchase>
-        <CheckoutButton 
-          disabled={!canCheckout} 
+        <MinPurchase>*Min purchase of ${minPurchase}</MinPurchase>
+        <CheckoutButton
+          disabled={!canCheckout}
           canCheckout={canCheckout}
           onClick={handleCheckout}
         >
-          (${total}) Proceed to Checkout
+          (${total.toFixed(2)}) Proceed to Checkout
         </CheckoutButton>
       </ModalContent>
     </ModalOverlay>

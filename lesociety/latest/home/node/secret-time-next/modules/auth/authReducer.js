@@ -7,6 +7,7 @@ import {
   CHANGE_SELECTED_LOCATION_POPUP,
   SET_GENDER,
   CHANGE_IMAGE_WARNING_POPUP,
+  UPDATE_USER_TOKENS,
 } from "./actionConstants";
 import { getCookie, setCookie, removeCookie } from "../../utils/cookie";
 import {
@@ -124,6 +125,18 @@ const authReducer = (state = initialState, action) => {
       };
       saveToLocalStorage(setGender);
       return setGender;
+
+    case UPDATE_USER_TOKENS:
+      const updatedTokenState = {
+        ...state,
+        user: { 
+          ...state.user, 
+          interested_tokens: (state.user.interested_tokens || 0) + action.payload.interested_tokens,
+          super_interested_tokens: (state.user.super_interested_tokens || 0) + action.payload.super_interested_tokens,
+        },
+      };
+      saveToLocalStorage(updatedTokenState);
+      return updatedTokenState;
 
     default:
       return { ...state };
