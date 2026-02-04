@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import styled from "styled-components";
 import close1 from "../assets/close1.png";
 import Image from "next/image";
@@ -13,6 +14,7 @@ import { apiRequest } from "utils/Utilities";
 import { AUTHENTICATE_UPDATE } from "../modules/auth/actionConstants";
 
 const PricingMenuModal = ({ isOpen, onClose }) => {
+  const [mounted, setMounted] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.user);
   const isFemale = user?.gender === "female";
@@ -157,9 +159,13 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
     }
   };
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  return (
+  if (!isOpen || !mounted) return null;
+
+  return ReactDOM.createPortal(
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>
@@ -230,10 +236,10 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
             <PricingCard active={interestedCount > 0}>
               <CardHeader>
                 <TitleSection>
-                  <Image src={interestedIcon} alt="Interested" width={165} height={70} />
+                  <Image src={interestedIcon} alt="Interested" width={170} height={72} />
                 </TitleSection>
                 <ArrowIcon>
-                  <Image src={arrow1} alt="arrow" width={85} height={135} />
+                  <Image src={arrow1} alt="arrow" width={104} height={156} />
                 </ArrowIcon>
               </CardHeader>
               <CardSubtitle>Show You're Committed</CardSubtitle>
@@ -255,10 +261,10 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
             <PricingCard highlighted active={superInterestedCount > 0}>
               <CardHeader>
                 <TitleSection>
-                  <Image src={superInterestedIcon} alt="Super Interested" width={165} height={70} />
+                  <Image src={superInterestedIcon} alt="Super Interested" width={170} height={72} />
                 </TitleSection>
                 <ArrowIcon>
-                  <Image src={arrow2} alt="arrow" width={85} height={135} />
+                  <Image src={arrow2} alt="arrow" width={104} height={156} />
                 </ArrowIcon>
               </CardHeader>
               <CardSubtitle>
@@ -274,8 +280,8 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
               </CounterSection>
 
               <CardDescription>
-                <p>- Go VIP by investing in her aspirations and increasing your chance. You'll also cover her date outing.</p>
-                <p>- 3x more responses. Priority visibility.</p>
+                <p>- <strong>Go VIP</strong> by investing in her aspirations and increasing your chance. You'll also cover her date outing.</p>
+                <p>- <strong>3x more responses</strong>. Priority visibility.</p>
               </CardDescription>
             </PricingCard>
           </>
@@ -291,7 +297,8 @@ const PricingMenuModal = ({ isOpen, onClose }) => {
           (${total.toFixed(2)}) Proceed to Checkout
         </CheckoutButton>
       </ModalContent>
-    </ModalOverlay>
+    </ModalOverlay>,
+    document.body
   );
 };
 
@@ -304,7 +311,7 @@ const ModalOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -314,16 +321,16 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   background: #000000;
-  border-radius: 0;
+  border-radius: 20px;
   width: 100%;
-  max-width: 420px;
-  padding: 32px 16px 20px;
+  max-width: 380px;
+  padding: 24px 16px 24px;
   position: relative;
   overflow: visible;
 
   @media (max-width: 768px) {
-    max-width: 95vw;
-    padding: 24px 12px 16px;
+    max-width: 380px;
+    padding: 24px 14px 24px;
   }
 `;
 
@@ -347,14 +354,17 @@ const CloseButton = styled.button`
 
 const PricingCard = styled.div`
   background: #000000;
-  border: 2px solid ${props =>
+  border: 1px solid ${props =>
     props.active || props.highlighted ? '#F24462' : 'rgba(255, 255, 255, 0.2)'};
   border-radius: 24px;
-  padding: 24px 20px 24px;
-  margin-bottom: 16px;
+  padding: 20px 18px 18px;
+  margin-bottom: 10px;
+  min-height: 230px;
   position: relative;
   box-shadow: ${props =>
-    props.active || props.highlighted ? '0 0 20px rgba(242, 68, 98, 0.2)' : 'none'};
+    props.active || props.highlighted
+      ? '0 0 16px rgba(242, 68, 98, 0.12), 0 4px 12px rgba(0,0,0,0.25)'
+      : '0 4px 12px rgba(0,0,0,0.25)'};
   transition: all 0.3s ease;
   overflow: hidden;
 
@@ -366,7 +376,7 @@ const PricingCard = styled.div`
 const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 8px;
   position: relative;
 `;
@@ -375,14 +385,14 @@ const TitleSection = styled.div`
   flex: 1;
   display: flex;
   align-items: center;
-  margin-top: 4px;
+  margin-top: 0;
 `;
 
 const ArrowIcon = styled.div`
   flex-shrink: 0;
   position: absolute;
-  right: -8px;
-  top: -12px;
+  right: -6px;
+  top: -2px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -390,36 +400,37 @@ const ArrowIcon = styled.div`
 
 const CardSubtitle = styled.div`
   font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 4px;
+  font-size: 19px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 6px;
   margin-top: 0px;
   letter-spacing: 0.3px;
+  line-height: 1.4;
 `;
 
 const CardPrice = styled.div`
   font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   color: #AFABAB;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 `;
 
 const CounterSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 56px;
-  margin-bottom: 20px;
-  padding: 16px 0;
+  gap: 34px;
+  margin-bottom: 12px;
+  padding: 8px 0;
 `;
 
 const CounterButton = styled.button`
   background: transparent;
   border: none;
   color: #F24462;
-  font-size: 40px;
+  font-size: 28px;
   font-weight: 300;
   cursor: pointer;
   width: 40px;
@@ -443,34 +454,43 @@ const CounterButton = styled.button`
 
 const CounterValue = styled.div`
   font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-  font-size: 72px;
+  font-size: 50px;
   font-weight: 300;
   color: #ffffff;
-  min-width: 100px;
+  min-width: 64px;
   text-align: center;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
   line-height: 1;
   padding-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const CardDescription = styled.div`
   font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-  font-size: 11px;
+  font-size: 9.5px;
   font-weight: 300;
-  color: #AFABAB;
+  color: rgba(175, 171, 171, 0.9);
   line-height: 1.5;
+  letter-spacing: 0.2px;
 
   p {
-    margin: 3px 0;
+    margin: 6px 0;
+  }
+
+  strong {
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
   }
 `;
 
 const MinPurchase = styled.div`
   text-align: center;
   font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-  font-size: 11px;
-  color: #AFABAB;
-  margin: 20px 0 12px;
+  font-size: 9px;
+  color: rgba(175, 171, 171, 0.6);
+  margin: 18px 0 10px;
   letter-spacing: 0.3px;
 `;
 
@@ -481,14 +501,16 @@ const CheckoutButton = styled.button`
     : '#3a3a3a'};
   color: ${props => props.canCheckout ? '#ffffff' : '#7a7a7a'};
   border: none;
-  border-radius: 4px;
-  padding: 16px 20px;
+  border-radius: 18px;
+  padding: 0 20px;
+  height: 44px;
+  line-height: 44px;
   font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   cursor: ${props => props.canCheckout ? 'pointer' : 'not-allowed'};
   transition: all 0.3s;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2px;
 
   &:hover {
     ${props => props.canCheckout && `

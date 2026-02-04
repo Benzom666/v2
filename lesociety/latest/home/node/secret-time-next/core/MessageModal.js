@@ -15,6 +15,8 @@ import MessageSend3 from "assets/message_new.svg";
 import MessageSend4 from "assets/Path.svg";
 import MessageSend5 from "assets/Send.svg";
 import useWindowSize from "utils/useWindowSize";
+import PaywallModal from "@/core/PaywallModal";
+import { usePaywall } from "../hooks/usePaywall";
 
 function MessageModal({ user, date, toggle, userMessageNoModal, close }) {
   const [classPopup, setPopupClass] = React.useState("hide");
@@ -46,6 +48,7 @@ function MessageModal({ user, date, toggle, userMessageNoModal, close }) {
   const dispatch = useDispatch();
 
   const { width } = useWindowSize();
+  const { paywallConfig, showMenFirstDatePaywall, closePaywall } = usePaywall();
 
   useEffect(() => {
     if (classPopup === "show") {
@@ -101,8 +104,33 @@ function MessageModal({ user, date, toggle, userMessageNoModal, close }) {
     }, 3000);
   };
 
+  const shouldBlockForPaywall = () => {
+    const isMale = user?.gender === "male";
+    const interestedTokens = user?.interested_tokens || 0;
+    const superInterestedTokens = user?.super_interested_tokens || 0;
+
+    if (!isMale) return false;
+    return interestedTokens === 0 && superInterestedTokens === 0;
+  };
+
+  const getPaywallName = () => {
+    return (
+      date?.user_name ||
+      date?.user_data?.[0]?.full_name ||
+      date?.user_data?.[0]?.name ||
+      receiverData?.user_data?.[0]?.full_name ||
+      receiverData?.user_data?.[0]?.name ||
+      receiverData?.user_data?.[0]?.username ||
+      "Someone"
+    );
+  };
+
   const handleUserMessageSubmit = async (values) => {
     // moveIcon();
+    if (shouldBlockForPaywall()) {
+      showMenFirstDatePaywall(getPaywallName());
+      return;
+    }
     try {
       const data = {
         senderId: user?._id ?? "",
@@ -138,6 +166,11 @@ function MessageModal({ user, date, toggle, userMessageNoModal, close }) {
   const handleSubmit = async (values) => {
     if (userMessageNoModal) {
       handleUserMessageSubmit(values);
+      return;
+    }
+
+    if (shouldBlockForPaywall()) {
+      showMenFirstDatePaywall(getPaywallName());
       return;
     }
 
@@ -421,6 +454,13 @@ function MessageModal({ user, date, toggle, userMessageNoModal, close }) {
           </div>
         </>
       )}
+      <PaywallModal
+        isOpen={paywallConfig.isOpen}
+        onClose={closePaywall}
+        type={paywallConfig.type}
+        expiresIn={paywallConfig.expiresIn}
+        userName={paywallConfig.userName}
+      />
     </>
   );
 }

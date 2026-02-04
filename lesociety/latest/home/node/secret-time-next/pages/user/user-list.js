@@ -40,6 +40,8 @@ import StarIcon from "../../assets/Star.png";
 import StarBlankIcon from "../../assets/Star_blank.png";
 import DateLiveModal from "@/core/DateLiveModal";
 import { AUTHENTICATE_UPDATE } from "@/modules/auth/actionConstants";
+import PaywallModal from "@/core/PaywallModal";
+import { usePaywall } from "../../hooks/usePaywall";
 
 export const socket = io(socketURL, {
   reconnection: true,
@@ -82,6 +84,7 @@ function UserList(props) {
   const iconRef = useRef(null);
 
   const [isSuperInterested, setIsSuperInterested] = useState(false);
+  const { paywallConfig, showMenFirstDatePaywall, closePaywall } = usePaywall();
 
   // useEffect(() => {
   //   if (user?.gender === "male" && state?.showSelectedLocationPopup) {
@@ -269,6 +272,21 @@ function UserList(props) {
   };
 
   const handleSubmit = async (values) => {
+    const isMale = user?.gender === "male";
+    const interestedTokens = user?.interested_tokens || 0;
+    const superInterestedTokens = user?.super_interested_tokens || 0;
+
+    if (isMale && interestedTokens === 0 && superInterestedTokens === 0) {
+      showMenFirstDatePaywall(
+        receiverData?.user_name ||
+          receiverData?.user_data?.[0]?.full_name ||
+          receiverData?.user_data?.[0]?.name ||
+          receiverData?.user_data?.[0]?.username ||
+          "Someone"
+      );
+      return;
+    }
+
     console.log("values", values);
     try {
       const data = {
@@ -747,6 +765,13 @@ function UserList(props) {
         selectedLocation={selectedLocation}
         setLocation={setLocation}
         setSearchStaus={setSearchStaus}
+      />
+      <PaywallModal
+        isOpen={paywallConfig.isOpen}
+        onClose={closePaywall}
+        type={paywallConfig.type}
+        expiresIn={paywallConfig.expiresIn}
+        userName={paywallConfig.userName}
       />
     </div>
   );

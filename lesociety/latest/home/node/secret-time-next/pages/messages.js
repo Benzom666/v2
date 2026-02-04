@@ -85,7 +85,6 @@ const Messages = (props) => {
   const {
     paywallConfig,
     showLadiesChatPaywall,
-    showMenFirstDatePaywall,
     closePaywall
   } = usePaywall();
 
@@ -460,22 +459,9 @@ const Messages = (props) => {
 
   const sendMessage = async (e) => {
     // e.preventDefault();
-    const isMale = user?.gender === "male";
     const isFemale = user?.gender === "female";
-    const interestedTokens = user?.interested_tokens || 0;
-    const superInterestedTokens = user?.super_interested_tokens || 0;
     const chatTokens = user?.chat_tokens || 0;
     const remainingChats = user?.remaining_chats || 0;
-
-    if (isMale && interestedTokens === 0 && superInterestedTokens === 0) {
-      showMenFirstDatePaywall(
-        currentChat?.user?.full_name ||
-          currentChat?.user?.name ||
-          currentChat?.user?.username ||
-          "Someone"
-      );
-      return;
-    }
 
     if (isFemale && chatTokens === 0 && remainingChats === 0) {
       showLadiesChatPaywall();

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import PricingMenuModal from "./PricingMenuModal";
+import Line3 from "../assets/line3.svg";
 
 const PaywallModal = ({ 
   isOpen, 
@@ -12,8 +14,13 @@ const PaywallModal = ({
 }) => {
   const [showPricing, setShowPricing] = useState(false);
   const [timeLeft, setTimeLeft] = useState(expiresIn * 3600); // Convert to seconds
+  const [mounted, setMounted] = useState(false);
   const user = useSelector((state) => state.authReducer.user);
   const isFemale = user?.gender === "female";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -43,7 +50,7 @@ const PaywallModal = ({
     setShowPricing(false);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   if (showPricing) {
     return <PricingMenuModal isOpen={true} onClose={handleClosePricing} />;
@@ -51,7 +58,7 @@ const PaywallModal = ({
 
   // Men's Paywall
   if (type === "men_first_date" && !isFemale) {
-    return (
+    return ReactDOM.createPortal(
       <ModalOverlay onClick={onClose}>
         <SlideUpContent onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={onClose}>×</CloseButton>
@@ -72,6 +79,7 @@ const PaywallModal = ({
           <TimerSection>
             <TimerText>Exclusive offer ends in {formatTimeLeft()}</TimerText>
             <ProgressBar>
+              <TimerLine src={Line3} alt="timer line" />
               <ProgressFill progress={getProgressPercentage()} />
             </ProgressBar>
           </TimerSection>
@@ -85,13 +93,14 @@ const PaywallModal = ({
             attached you can cancel anytime.
           </FooterText>
         </SlideUpContent>
-      </ModalOverlay>
+      </ModalOverlay>,
+      document.body
     );
   }
 
   // Ladies Chat Paywall
   if (type === "ladies_chat" && isFemale) {
-    return (
+    return ReactDOM.createPortal(
       <ModalOverlay onClick={onClose}>
         <SlideUpContent onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={onClose}>×</CloseButton>
@@ -114,6 +123,7 @@ const PaywallModal = ({
           <TimerSection>
             <TimerText>This Interest expires in {formatTimeLeft()}</TimerText>
             <ProgressBar>
+              <TimerLine src={Line3} alt="timer line" />
               <ProgressFill progress={getProgressPercentage()} />
             </ProgressBar>
           </TimerSection>
@@ -126,7 +136,8 @@ const PaywallModal = ({
             Pay only for what you use. No recurring fees.
           </FooterText>
         </SlideUpContent>
-      </ModalOverlay>
+      </ModalOverlay>,
+      document.body
     );
   }
 
@@ -269,18 +280,29 @@ const TimerText = styled.div`
 
 const ProgressBar = styled.div`
   width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
+  height: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
 `;
 
 const ProgressFill = styled.div`
-  height: 100%;
+  height: 3px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   width: ${props => props.progress}%;
   background: linear-gradient(90deg, #4A90E2 0%, #F24462 50%, #F24462 100%);
-  border-radius: 3px;
+  border-radius: 999px;
   transition: width 1s linear;
+`;
+
+const TimerLine = styled.img`
+  width: 100%;
+  height: 12px;
+  object-fit: contain;
+  opacity: 0.9;
 `;
 
 const CTAButton = styled.button`
