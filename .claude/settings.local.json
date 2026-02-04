@@ -38,7 +38,13 @@
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",
       "Bash(tree:*)",
-      "Bash(jobs:*)"
+      "Bash(jobs:*)",
+      "Bash(ls:*)",
+      "Bash(xargs:*)",
+      "Bash(python3:*)",
+      "Bash(chmod:*)",
+      "Bash(grep:*)",
+      "Bash(fuser:*)"
     ]
   }
 }

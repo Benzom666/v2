@@ -27,12 +27,22 @@ import { removeCookie } from "utils/cookie";
 import LanscapeDecline from "@/core/LanscapeDecline";
 import { socketURL } from "utils/Utilities";
 
-// export const socket = io(socketURL, {
-//   autoConnect: true,
-// });
-export const socket = io(socketURL, {
-  autoConnect: true,
-});
+// Lazy socket initialization with reconnection for better reliability
+// Socket will connect when first needed and auto-reconnect if disconnected
+export let socket = null;
+
+export const getSocket = () => {
+  if (!socket) {
+    socket = io(socketURL, {
+      autoConnect: true,
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: Infinity,
+    });
+  }
+  return socket;
+};
 
 // export const socket = io(socketURL, {
 //   autoConnect: true,

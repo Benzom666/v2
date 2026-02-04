@@ -30,19 +30,41 @@ export const apiURL =
 //   });
 // };
 
-export const apiRequest = async (args = {}) => {
+export const apiRequest = async (args = {}, retries = 3) => {
   let token = "";
   const authCookie = loadFromLocalStorage();
   if (authCookie) {
     token = authCookie.user?.token;
   }
   args.url = `${`${apiURL}/api/v1`}/${args.url}`;
-  return axios({
-    ...args,
-    headers: {
-      Authorization: `Bearer ${token || ""}`,
-    },
-  });
+
+  // Add retry logic for connection errors
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await axios({
+        ...args,
+        headers: {
+          Authorization: `Bearer ${token || ""}`,
+        },
+        timeout: 10000, // 10 second timeout
+      });
+    } catch (error) {
+      const isConnectionError =
+        error.code === 'ECONNREFUSED' ||
+        error.code === 'ECONNRESET' ||
+        error.message?.includes('Network Error') ||
+        !error.response;
+
+      if (isConnectionError && i < retries - 1) {
+        console.log(`API connection failed, retrying (${i + 1}/${retries})...`, args.url);
+        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Exponential backoff
+        continue;
+      }
+
+      // If it's the last retry or not a connection error, throw the error
+      throw error;
+    }
+  }
 };
 
 export const apiRequestChatHistory = async (url, data) => {
