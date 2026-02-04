@@ -29,7 +29,16 @@
       "Bash(pkill:*)",
       "Bash(PORT=3002 npm run dev:*)",
       "Bash(NODE_OPTIONS=--openssl-legacy-provider PORT=3002 npm run dev)",
-      "Bash(ip:*)"
+      "Bash(ip:*)",
+      "Bash(PORT=3000 npm run dev:*)",
+      "Bash(NODE_OPTIONS=--openssl-legacy-provider PORT=3000 npm run dev:*)",
+      "Bash(git diff:*)",
+      "Bash(kill:*)",
+      "Bash(NODE_OPTIONS=\"--openssl-legacy-provider\" npm run dev:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(tree:*)",
+      "Bash(jobs:*)"
     ]
   }
 }

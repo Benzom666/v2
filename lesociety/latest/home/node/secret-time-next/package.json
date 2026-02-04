@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "set PORT=3000 && next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider next dev",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider next build",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider next start"
   },
   "dependencies": {
     "@adobe/react-spectrum": "^3.14.1",
@@ -32,6 +32,7 @@
     "react-dom": "16.13.1",
     "react-dropzone": "^11.4.2",
     "react-hook-form": "^7.16.1",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^4.2.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-modal": "^3.16.1",
