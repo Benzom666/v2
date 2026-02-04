@@ -8,8 +8,13 @@ import { useDispatch } from "react-redux";
 import { logout } from "./authActions";
 
 export function* login(action) {
+  console.log('=== SAGA LOGIN START ===', action);
   action.loader(true);
   try {
+    console.log('=== API REQUEST START ===', {
+      url: `user/login`,
+      payload: action.payload
+    });
     const response = yield race({
       success: call(apiRequest, {
         data: action.payload,

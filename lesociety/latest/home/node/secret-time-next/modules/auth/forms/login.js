@@ -23,7 +23,9 @@ const SimpleForm = (props) => {
   const [notifData, setNotifdata] = useState(null);
 
   const submitHandler = async (values) => {
+    console.log('=== FORM SUBMIT ===', values);
     values.email = values.email?.toLowerCase();
+    console.log('=== DISPATCHING LOGIN ===', values);
     dispatch(login(values, setLoading));
   };
 
