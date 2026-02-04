@@ -20,7 +20,17 @@ export function* login(action) {
     });
     if (response.success) {
       // API returns data wrapped in { data: { data: { user info } } }
+      // response.success is the axios response, so:
+      // response.success.data = { data: { data: { token, ...user } }, status, error, message }
+      // response.success.data.data = { data: { token, ...user } }
+      // response.success.data.data.data = { token, ...user }
       const userData = response.success.data.data.data || response.success.data.data;
+
+      if (!userData || !userData.email) {
+        action.loader(false);
+        showToast("Invalid response from server", "error");
+        return;
+      }
       
       yield put({
         type: AUTHENTICATE,
