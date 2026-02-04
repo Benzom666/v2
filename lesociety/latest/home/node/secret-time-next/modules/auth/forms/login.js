@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { Field, reduxForm } from "redux-form";
 import { useSelector, useDispatch } from "react-redux";
 import { Inputs } from "core";
+import loginValidate from "./validate/loginValidate";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useWindowSize from "../../../utils/useWindowSize";
-import validate from "./validate/validate";
 import { login } from "../authActions";
 import { useEffect } from "react";
 import { useRef } from "react";
-import { async } from "rxjs";
 import { apiRequest } from "utils/Utilities";
 
 const SimpleForm = (props) => {
@@ -183,7 +182,7 @@ const SimpleForm = (props) => {
                   strokeWidth="0.8"
                 />
                 <path
-                  d="M18.5 12C18.5 10.4087 17.8679 8.88258 16.7426 7.75736C15.6174 6.63214 14.0913 6 12.5 6C10.9087 6 9.38258 6.63214 8.25736 7.75736C7.13214 8.88258 6.5 10.4087 6.5 12L6.54917 12C6.54917 10.4217 7.17613 8.90813 8.29213 7.79213C9.40813 6.67613 10.9217 6.04917 12.5 6.04917C14.0783 6.04917 15.5919 6.67613 16.7079 7.79213C17.8239 8.90813 18.4508 10.4217 18.4508 12H18.5Z"
+                  d="M18.5 12C18.5 10.4087 17.8679 8.88258 8.25736 7.75736C15.6174 6.63214 14.0913 6 12.5 6C10.9087 6 9.38258 6.63214 8.25736 7.13214C7.13214 8.88258 6.5 10.4087 6.5 12L6.54917 12C6.54917 10.4217 7.17613 8.90813 8.29213 7.79213C9.40813 6.67613 10.9217 6.04917 12.5 6.04917C14.0783 6.04917 15.5919 6.67613 16.7079 7.79213C17.8239 8.90813 18.4508 10.4217 18.4508 12H18.5Z"
                   stroke="#4D4C56"
                   strokeWidth="0.8"
                   strokeLinecap="round"
@@ -259,7 +258,7 @@ const SimpleForm = (props) => {
                   strokeWidth="0.8"
                 />
                 <path
-                  d="M18.5 12C18.5 10.4087 17.8679 8.88258 16.7426 7.75736C15.6174 6.63214 14.0913 6 12.5 6C10.9087 6 9.38258 6.63214 8.25736 7.75736C7.13214 8.88258 6.5 10.4087 6.5 12L6.54917 12C6.54917 10.4217 7.17613 8.90813 8.29213 7.79213C9.40813 6.67613 10.9217 6.04917 12.5 6.04917C14.0783 6.04917 15.5919 6.67613 16.7079 7.79213C17.8239 8.90813 18.4508 10.4217 18.4508 12H18.5Z"
+                  d="M18.5 12C18.5 10.4087 17.8679 8.88258 8.25736 7.75736C15.6174 6.63214 14.0913 6 12.5 6C10.9087 6 9.38258 6.63214 8.25736 7.13214C7.13214 8.88258 6.5 10.4087 6.5 12L6.54917 12C6.54917 10.4217 7.17613 8.90813 8.29213 7.79213C9.40813 6.67613 10.9217 6.04917 12.5 6.04917C14.0783 6.04917 15.5919 6.67613 16.7079 7.79213C17.8239 8.90813 18.4508 10.4217 18.4508 12H18.5Z"
                   stroke="#4D4C56"
                   strokeWidth="0.8"
                   strokeLinecap="round"
@@ -302,5 +301,5 @@ const SimpleForm = (props) => {
 
 export default reduxForm({
   form: "LoginForm",
-  validate,
+  validate: loginValidate,
 })(SimpleForm);
