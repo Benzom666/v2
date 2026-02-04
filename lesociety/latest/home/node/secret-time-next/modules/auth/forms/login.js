@@ -18,11 +18,6 @@ const SimpleForm = (props) => {
   const authState = useSelector((state) => state.authReducer);
   const userLogin = authState?.user;
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState({
-    name: "",
-    password: "",
-  });
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const passRef = useRef(null);
   const [notifData, setNotifdata] = useState(null);
@@ -32,18 +27,12 @@ const SimpleForm = (props) => {
     dispatch(login(values, setLoading));
   };
 
-  const handleKeyPress = () => {
-    alert("k");
-  };
-
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
     if (passRef.current) {
       setTimeout(() => {
-        passRef.current.setSelectionRange(
-          password.password.length,
-          password.password.length
-        );
+        const length = passRef.current.value?.length || 0;
+        passRef.current.setSelectionRange(length, length);
       }, 10);
     }
   };
@@ -141,21 +130,14 @@ const SimpleForm = (props) => {
             component={Inputs.inputField}
             type="text"
             label="User Email"
-            value={user?.name}
-            onKeyPress={handleKeyPress}
-            onChange={(e) => setUser({ ...user, name: e.target.value })}
             placeholder="E.g. Janedoe@gmail.com"
           />
           <div className="password-fields">
             <Field
               name="password"
-              onChange={(e) =>
-                setPassword({ ...user, password: e.target.value })
-              }
               component={Inputs.inputField}
               type={showPassword ? "text" : "password"}
               label="Password"
-              // validate={[passwordRequired]}
               placeholder="Password"
               normalize={(value) => value.replace(/\s+/g, "")}
               refName={passRef}
@@ -217,19 +199,12 @@ const SimpleForm = (props) => {
             component={Inputs.inputField}
             type="text"
             label="User Email"
-            // validate={[userRequired] || apiError}
-            value={user?.name}
-            onChange={(e) => setUser({ ...user, name: e.target.value })}
             placeholder="E.g. Janedoe@gmail.com"
           />
           <div className="password-fields mobile-side-password">
             <Field
               name="password"
-              onChange={(e) =>
-                setPassword({ ...user, password: e.target.value })
-              }
               component={Inputs.inputField}
-              // validate={[passwordRequired]}
               type={showPassword ? "text" : "password"}
               label="Password"
               placeholder="Enter your password"

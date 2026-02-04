@@ -78,6 +78,13 @@ export function* login(action) {
       yield put(reset("LoginForm"));
     }
   } catch (error) {
+    console.log('=== LOGIN ERROR ===', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      code: error.code,
+      fullError: error
+    });
     action.loader(false);
     if (error.response?.status === 401) {
       yield put(
