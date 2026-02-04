@@ -119,7 +119,16 @@ const SimpleForm = (props) => {
     reset,
     submitting,
     submitSucceeded,
+    syncErrors,
   } = props;
+
+  // Log validation errors for debugging
+  console.log('=== FORM STATE ===', {
+    invalid,
+    pristine,
+    submitting,
+    syncErrors
+  });
 
   // console.log("userLogin", userLogin);
 
