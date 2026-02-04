@@ -180,7 +180,7 @@ const Step5PreviewMobile = () => {
                   {!router?.query?.new_edit && (
                     <button
                       type="button"
-                      className="edit next"
+                      className="edit"
                       onClick={handleEdit}
                     >
                       <Link href="/create-date/choose-city?edit=true">

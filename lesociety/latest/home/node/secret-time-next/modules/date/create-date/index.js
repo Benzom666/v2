@@ -21,7 +21,7 @@ import Step5PreviewDesktop from "./components/CreateDateDesktop/Step5Preview";
 const CreateDateFlow = () => {
   const router = useRouter();
   const { width } = useWindowSize();
-  const { currentStep, setCity, setUserInfo, setEditMode, goToStep } =
+  const { currentStep, setCity, setUserInfo, setEditMode, goToStep, formData } =
     useCreateDate();
 
   const cityState = useSelector((state) => state?.form?.ChooseCity?.values);
@@ -48,6 +48,12 @@ const CreateDateFlow = () => {
       goToStep(3); // Go to description step for edit
     }
   }, [router.query, setEditMode, goToStep]);
+
+  useEffect(() => {
+    if (router.query.drafted === "true" && formData?.dateId) {
+      setEditMode(true, formData.dateId);
+    }
+  }, [router.query.drafted, formData?.dateId, setEditMode]);
 
   // Protect route - require city selection
   if (!cityState?.enter_city) {
@@ -123,7 +129,7 @@ const CreateDate = (props) => {
     enter__category: stepTwoData?.enter__category || "",
     enter__aspiration: stepTwoData?.enter__aspiration || "",
     education: stepTwoData?.education || "",
-    date_duration: stepThreeData?.date_duration || "",
+    date_duration: stepThreeData?.date_duration || stepThreeData?.education || "",
     date_description: stepFourData?.date_description || "",
     image_index: stepOneData?.image_index || 0,
     dateId: stepOneData?.dateId || null,

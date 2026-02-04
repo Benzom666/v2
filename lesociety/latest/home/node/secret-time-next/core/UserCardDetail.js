@@ -109,7 +109,7 @@ const UserCardDetail = ({
         <h4>Date Details</h4>
         <div className="date__detail__time__frame">
           <span className="time__frame">Time Frame:</span>
-          <span className="time__value"> {timeState?.education}</span>
+          <span className="time__value"> {timeState?.date_duration}</span>
         </div>
         <div className="time__together">(Estimated Time Together)</div>
         <div className="interested__only">

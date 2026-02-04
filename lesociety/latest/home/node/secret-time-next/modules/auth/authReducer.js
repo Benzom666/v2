@@ -51,7 +51,8 @@ if (typeof localStorage !== "undefined") {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case DEAUTHENTICATE:
-      // removeCookie("auth");
+      removeCookie("auth");
+      removeCookie("token");
       removeSessionStorage("auth");
       removeSessionStorage("form");
 
@@ -68,7 +69,8 @@ const authReducer = (state = initialState, action) => {
         user: action.payload,
       };
 
-      // setCookie("auth", JSON.stringify(authObj));
+      setCookie("auth", JSON.stringify(authObj));
+      setCookie("token", action.payload?.token || "");
       // setSessionStorage("auth", JSON.stringify(authObj));
       saveToLocalStorage(authObj);
       return authObj;
@@ -81,7 +83,8 @@ const authReducer = (state = initialState, action) => {
         showSelectedLocationPopup: true,
         showImageWarningPopup: true,
       };
-      // setCookie("auth", JSON.stringify(updateAuth));
+      setCookie("auth", JSON.stringify(updateAuth));
+      setCookie("token", updateAuth.user?.token || "");
       // setSessionStorage("auth", JSON.stringify(updateAuth));
       saveToLocalStorage(updateAuth);
       return {

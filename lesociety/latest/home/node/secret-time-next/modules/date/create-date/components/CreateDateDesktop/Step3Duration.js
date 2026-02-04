@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { useRouter } from "next/router";
 import { DURATION_OPTIONS } from "../../constants/dateOptions";
 import { useCreateDate } from "../../context/CreateDateContext";
 import { useDateValidation } from "../../hooks/useDateValidation";
@@ -14,7 +13,6 @@ import { toast } from "react-toastify";
  * Horizontal cards with better use of screen width
  */
 const Step3DurationDesktop = () => {
-  const router = useRouter();
   const { formData, nextStep, prevStep, updateFormData } = useCreateDate();
   const { validateDuration } = useDateValidation();
   const { saveDraft } = useCreateDateFlow(useCreateDate());
@@ -68,10 +66,9 @@ const Step3DurationDesktop = () => {
           <div className="create-date-content">
             <div className="inner_container">
               <div className="create-date-intro">
-                <h2>How long should the date be?</h2>
+                <h2>How long do you want this date to last?</h2>
                 <div className="intro-subtitle">
-                  Set the expected duration so he knows how much time to plan
-                  for.
+                  Be upfront — great dates start with perfect timing.
                 </div>
               </div>
             </div>

@@ -5,14 +5,22 @@ import { CustomIcon } from "core/icon";
 import { getCookie } from "./cookie";
 import { loadFromLocalStorage } from "./sessionStorage";
 
-export const socketURL =
-  process.env.NODE_ENV === "production"
-    ? process.env.NEXT_PUBLIC_PROD_SOCKET_URL
-    : process.env.NEXT_PUBLIC_DEV_SOCKET_URL;
-export const apiURL =
-  process.env.NODE_ENV === "production"
-    ? process.env.NEXT_PUBLIC_PROD_API_URL
-    : process.env.NEXT_PUBLIC_DEV_API_URL;
+const resolveEnvUrl = (prodValue, devValue, fallback) => {
+  const envValue = process.env.NODE_ENV === "production" ? prodValue : devValue;
+  return envValue || fallback;
+};
+
+export const socketURL = resolveEnvUrl(
+  process.env.NEXT_PUBLIC_PROD_SOCKET_URL,
+  process.env.NEXT_PUBLIC_DEV_SOCKET_URL,
+  "http://localhost:3001/"
+);
+
+export const apiURL = resolveEnvUrl(
+  process.env.NEXT_PUBLIC_PROD_API_URL,
+  process.env.NEXT_PUBLIC_DEV_API_URL,
+  "http://localhost:3001"
+);
 
 // export const apiRequest = async (args = {}) => {
 //   let token = "";
@@ -32,11 +40,61 @@ export const apiURL =
 
 export const apiRequest = async (args = {}, retries = 3) => {
   let token = "";
+
+  // Try loading from sessionStorage first (primary storage for auth)
   const authCookie = loadFromLocalStorage();
   if (authCookie) {
     token = authCookie.user?.token;
+    console.log('=== TOKEN FROM SESSIONSTORAGE ===', token ? 'FOUND' : 'NOT FOUND');
   }
-  args.url = `${`${apiURL}/api/v1`}/${args.url}`;
+
+  // Fallback to localStorage
+  if (!token && typeof window !== "undefined") {
+    try {
+      const localAuth = window.localStorage?.getItem("auth");
+      if (localAuth) {
+        token = JSON.parse(localAuth)?.user?.token;
+        console.log('=== TOKEN FROM LOCALSTORAGE ===', token ? 'FOUND' : 'NOT FOUND');
+      }
+    } catch (err) {
+      console.log("Failed to parse localStorage auth", err);
+    }
+  }
+
+  // Fallback to cookie
+  if (!token) {
+    const cookieAuth = getCookie("auth");
+    if (cookieAuth) {
+      try {
+        token = JSON.parse(decodeURIComponent(cookieAuth))?.user?.token;
+        console.log('=== TOKEN FROM COOKIE ===', token ? 'FOUND' : 'NOT FOUND');
+      } catch (err) {
+        console.log("Failed to parse auth cookie", err);
+      }
+    }
+  }
+
+  // Fallback to token cookie
+  if (!token) {
+    const tokenCookie = getCookie("token");
+    if (tokenCookie) {
+      token = tokenCookie;
+      console.log('=== TOKEN FROM TOKEN COOKIE ===', token ? 'FOUND' : 'NOT FOUND');
+    }
+  }
+
+  // Use explicit token if provided
+  if (!token && args?.token) {
+    token = args.token;
+    console.log('=== TOKEN FROM ARGS ===', token ? 'FOUND' : 'NOT FOUND');
+  }
+
+  if (!token) {
+    console.log('=== NO TOKEN FOUND ===', { url: args.url });
+  }
+  const base = `${apiURL}`.replace(/\/$/, "");
+  const path = `${args.url || ""}`.replace(/^\/+/, "");
+  args.url = `${base}/api/v1/${path}`;
 
   // Add retry logic for connection errors
   for (let i = 0; i < retries; i++) {

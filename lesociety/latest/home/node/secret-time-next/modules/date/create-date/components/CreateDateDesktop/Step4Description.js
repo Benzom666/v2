@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { useRouter } from "next/router";
 import { VALIDATION_RULES } from "../../constants/dateOptions";
 import { useCreateDate } from "../../context/CreateDateContext";
 import { useDateValidation } from "../../hooks/useDateValidation";
@@ -15,7 +14,6 @@ import { toast } from "react-toastify";
  * Centered form with proper max-width
  */
 const Step4DescriptionDesktop = () => {
-  const router = useRouter();
   const { formData, nextStep, prevStep, updateFormData } = useCreateDate();
   const { validateDescription, getDescriptionStatus } = useDateValidation();
   const { saveDraft } = useCreateDateFlow(useCreateDate());
@@ -37,27 +35,6 @@ const Step4DescriptionDesktop = () => {
     const value = e.target.value;
     setDescription(value);
     updateFormData("date_description", value);
-  };
-
-  /**
-   * Handle save as draft
-   */
-  const handleSaveDraft = async () => {
-    if (!description.trim()) {
-      toast.error("Please enter a description");
-      return;
-    }
-
-    setIsSaving(true);
-    try {
-      await saveDraft();
-      setIsSaving(false);
-      toast.success("Draft saved!");
-      router.push("/user/user-list");
-    } catch (err) {
-      setIsSaving(false);
-      toast.error("Failed to save draft. Please try again.");
-    }
   };
 
   /**
@@ -119,9 +96,10 @@ const Step4DescriptionDesktop = () => {
           <div className="create-date-content">
             <div className="inner_container">
               <div className="create-date-intro">
-                <h2>Tell him about your ideal date</h2>
+                <h2>Make him want this date.</h2>
                 <div className="intro-subtitle">
-                  Describe what you have in mind. Be creative and specific!
+                  Tell him why this night with you is unforgettable. Your
+                  vibe, your energy, what he can expect.
                 </div>
               </div>
             </div>
@@ -130,7 +108,7 @@ const Step4DescriptionDesktop = () => {
                 <div className="description-input-wrapper">
                   <textarea
                     className="description-textarea desktop-description-textarea"
-                    placeholder="Describe your ideal date... What will you do? Where will you go? What should he know?"
+                    placeholder="I love deep conversations over great wine... I'm playful, classy, and always up for an adventure."
                     value={description}
                     onChange={handleDescriptionChange}
                     maxLength={VALIDATION_RULES.DESCRIPTION_MAX_LENGTH}
@@ -160,18 +138,6 @@ const Step4DescriptionDesktop = () => {
               </div>
 
               <div className="desktop-navigation desktop-description-buttons">
-                <button
-                  type="button"
-                  className="btn-secondary draft-btn"
-                  onClick={handleSaveDraft}
-                  disabled={isSaving}
-                >
-                  {isSaving ? (
-                    <span className="spin-loader-button"></span>
-                  ) : (
-                    "Save as Draft"
-                  )}
-                </button>
                 <button
                   type="button"
                   className="btn-next"

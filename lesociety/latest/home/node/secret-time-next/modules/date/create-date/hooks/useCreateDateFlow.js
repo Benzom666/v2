@@ -35,6 +35,7 @@ export const useCreateDateFlow = (createDateContext) => {
       const res = await apiRequest({
         method: "GET",
         url: `categories`,
+        token: user?.token,
       });
 
       return (
@@ -53,7 +54,7 @@ export const useCreateDateFlow = (createDateContext) => {
       }
       return [];
     }
-  }, [router, dispatch]);
+  }, [router, dispatch, user]);
 
   /**
    * Fetch aspirations for a category
@@ -63,6 +64,7 @@ export const useCreateDateFlow = (createDateContext) => {
       const res = await apiRequest({
         method: "GET",
         url: `aspirations?category_id=${categoryId}`,
+        token: user?.token,
       });
 
       return (
@@ -81,7 +83,7 @@ export const useCreateDateFlow = (createDateContext) => {
       }
       return [];
     }
-  }, [router, dispatch]);
+  }, [router, dispatch, user]);
 
   /**
    * Save user's aspiration preference
@@ -99,6 +101,7 @@ export const useCreateDateFlow = (createDateContext) => {
         data: data,
         method: "POST",
         url: `user/save-aspiration`,
+        token: user?.token,
       });
 
       // Fetch updated user details
@@ -106,6 +109,7 @@ export const useCreateDateFlow = (createDateContext) => {
         const res = await apiRequest({
           method: "GET",
           url: `user/user-by-name?user_name=${user?.user_name}`,
+          token: user?.token,
         });
 
         // Update Redux state
@@ -146,6 +150,7 @@ export const useCreateDateFlow = (createDateContext) => {
           current_page: 1,
           per_page: 10000,
         },
+        token: user?.token,
       });
 
       const dates = res?.data?.data?.dates || [];
@@ -180,18 +185,45 @@ export const useCreateDateFlow = (createDateContext) => {
     try {
       const isUpdate = isEditMode && dateId;
 
+      const selectedExperience = formData.search_type;
+      const experienceCategory = selectedExperience?.category;
       const data = {
-        search_type: formData.search_type,
-        enter__category: formData.enter__category,
-        enter__aspiration: formData.enter__aspiration,
-        education: formData.education,
-        date_duration: formData.date_duration,
-        date_description: formData.date_description,
-        image_index: formData.image_index,
-        city: cityState?.enter_city?.name,
-        country: cityState?.enter_country?.value,
+        user_name: user?.user_name,
+        location: cityState?.enter_city?.name,
+        country: cityState?.enter_country?.label,
+        country_code: cityState?.enter_country?.value,
         province: cityState?.enter_city?.province?.[0]?.short_code,
+        standard_class_date:
+          experienceCategory === "standard_class_date"
+            ? selectedExperience?.label
+            : "",
+        middle_class_dates:
+          experienceCategory === "middle_class_dates"
+            ? selectedExperience?.label
+            : "",
+        executive_class_dates:
+          experienceCategory === "executive_class_dates"
+            ? selectedExperience?.label
+            : "",
+        date_length: formData.date_duration,
+        price: formData.education,
+        date_details: formData.date_description,
+        image_index: formData.image_index,
       };
+
+      const hasAllRequiredForCreate =
+        !!user?.user_name &&
+        !!cityState?.enter_city?.name &&
+        !!cityState?.enter_country?.value &&
+        !!cityState?.enter_country?.label &&
+        !!formData.date_duration &&
+        !!formData.education &&
+        !!formData.date_description;
+
+      if (!isUpdate && !hasAllRequiredForCreate) {
+        setSaving(false);
+        return null;
+      }
 
       let res;
       if (isUpdate) {
@@ -202,17 +234,20 @@ export const useCreateDateFlow = (createDateContext) => {
             ...data,
             date_id: dateId,
           },
+          token: user?.token,
         });
       } else {
         res = await apiRequest({
           method: "POST",
           url: `/date`,
           data: data,
+          token: user?.token,
         });
 
         // Update form data with new date ID
-        if (res.data?.data?.date?._id) {
-          updateFormData("dateId", res.data.data.date._id);
+        const newDateId = res.data?.data?._id || res.data?.data?.date?._id;
+        if (newDateId) {
+          updateFormData("dateId", newDateId);
         }
       }
 
@@ -244,6 +279,7 @@ export const useCreateDateFlow = (createDateContext) => {
     setSaving,
     setErrorState,
     updateFormData,
+    user,
     router,
     dispatch,
   ]);
@@ -262,6 +298,7 @@ export const useCreateDateFlow = (createDateContext) => {
         data: {
           date_status: true,
         },
+        token: user?.token,
       });
 
       setSaving(false);
@@ -308,7 +345,7 @@ export const useCreateDateFlow = (createDateContext) => {
       setErrorState(err);
       return false;
     }
-  }, [cityState, setSaving, setErrorState, router, dispatch]);
+  }, [cityState, setSaving, setErrorState, router, dispatch, user]);
 
   /**
    * Update date image index
@@ -323,9 +360,11 @@ export const useCreateDateFlow = (createDateContext) => {
         method: "POST",
         url: `/date/update`,
         data: {
+          user_name: user?.user_name,
           date_id: dateId,
           image_index: imageIndex,
         },
+        token: user?.token,
       });
 
       updateFormData("image_index", imageIndex);
@@ -335,7 +374,7 @@ export const useCreateDateFlow = (createDateContext) => {
       toast.error("Failed to update image. Please try again.");
       return false;
     }
-  }, [dateId, updateFormData]);
+  }, [dateId, updateFormData, user]);
 
   /**
    * Navigate to user list

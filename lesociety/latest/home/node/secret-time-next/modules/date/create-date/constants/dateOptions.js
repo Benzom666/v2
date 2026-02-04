@@ -124,39 +124,33 @@ export const PRICE_OPTIONS = [80, 100, 150, 200, 300, 400, 500, 750, 1000];
 export const DURATION_OPTIONS = [
   {
     id: "1-2_hours",
-    label: "1-2 Hours",
+    label: "1-2 hours",
     value: "1-2 hours",
-    description: "Quick and sweet",
+    description: "A quick drink or coffee.",
   },
   {
     id: "2-3_hours",
-    label: "2-3 Hours",
+    label: "2-3 hours",
     value: "2-3 hours",
-    description: "Standard date length",
+    description: "Dinner and a relaxed evening.",
   },
   {
     id: "3-4_hours",
-    label: "3-4 Hours",
+    label: "3-4 hours",
     value: "3-4 hours",
-    description: "Plenty of time to connect",
+    description: "Dinner + drinks or a show.",
   },
   {
-    id: "4-5_hours",
-    label: "4-5 Hours",
-    value: "4-5 hours",
-    description: "An extended experience",
+    id: "4plus_hours",
+    label: "Full evening (4+ hours)",
+    value: "Full evening (4+ hours)",
+    description: "Let the night unfold beautifully.",
   },
   {
-    id: "5-6_hours",
-    label: "5-6 Hours",
-    value: "5-6 hours",
-    description: "A full evening out",
-  },
-  {
-    id: "6+_hours",
-    label: "6+ Hours",
-    value: "6+ hours",
-    description: "An all-day adventure",
+    id: "flexible",
+    label: "Flexible – lets see where it take us",
+    value: "Flexible – lets see where it take us",
+    description: "",
   },
 ];
 

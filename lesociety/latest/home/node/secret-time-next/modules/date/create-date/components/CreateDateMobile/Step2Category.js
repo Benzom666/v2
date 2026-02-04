@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Select } from "antd";
-import { useRouter } from "next/router";
 import { PRICE_OPTIONS } from "../../constants/dateOptions";
 import { useCreateDate } from "../../context/CreateDateContext";
 import { useDateValidation } from "../../hooks/useDateValidation";
@@ -17,7 +16,6 @@ const { Option } = Select;
  * Dropdown for category/aspiration and grid for price
  */
 const Step2CategoryMobile = () => {
-  const router = useRouter();
   const {
     formData,
     user,
@@ -59,10 +57,7 @@ const Step2CategoryMobile = () => {
 
       // Set initial category if in form data
       if (formData.enter__category) {
-        const initialCat = cats.find((c) => c.value === formData.enter__category);
-        if (initialCat) {
-          setCategoryId(initialCat);
-        }
+        setCategoryId(formData.enter__category);
       }
     };
 
@@ -79,8 +74,8 @@ const Step2CategoryMobile = () => {
    */
   useEffect(() => {
     const loadAspirations = async () => {
-      if (categoryId?.value) {
-        const asps = await fetchAspirations(categoryId.value);
+    if (categoryId) {
+        const asps = await fetchAspirations(categoryId);
         setAspirations(asps);
 
         // Clear aspiration when category changes
@@ -99,9 +94,8 @@ const Step2CategoryMobile = () => {
   /**
    * Handle category change
    */
-  const handleCategoryChange = (value, event) => {
-    const selectedCategory = { value, label: event.children };
-    setCategoryId(selectedCategory);
+  const handleCategoryChange = (value) => {
+    setCategoryId(value);
     updateFormData("enter__category", value);
     setAspirations([]);
     setAspirationId("");
@@ -111,9 +105,8 @@ const Step2CategoryMobile = () => {
   /**
    * Handle aspiration change
    */
-  const handleAspirationChange = (value, event) => {
-    const selectedAspiration = { value, label: event.children };
-    setAspirationId(selectedAspiration);
+  const handleAspirationChange = (value) => {
+    setAspirationId(value);
     updateFormData("enter__aspiration", value);
   };
 
@@ -198,7 +191,7 @@ const Step2CategoryMobile = () => {
                       placeholder="Select A Category"
                       className="aspiration__antd__dropdown"
                       showSearch={false}
-                      value={categoryId}
+                      value={categoryId || undefined}
                       onChange={handleCategoryChange}
                       disabled={disableDropdowns}
                       popupClassName="aspiration__antd__dropdown__popup"
@@ -219,18 +212,15 @@ const Step2CategoryMobile = () => {
                     </Select>
 
                     <div className="aspiration__antd__dropdown2">
-                      <Select
-                        placeholder="Select Your Aspiration"
-                        className="aspiration__antd__dropdown"
-                        showSearch={false}
-                        value={
-                          aspirations.find((a) => a.value === aspirationId) ||
-                          aspirationId
-                        }
-                        onChange={handleAspirationChange}
-                        disabled={
-                          !categoryId ||
-                          !(aspirations.length > 0) ||
+                          <Select
+                            placeholder="Select Your Aspiration"
+                            className="aspiration__antd__dropdown"
+                            showSearch={false}
+                            value={aspirationId || undefined}
+                            onChange={handleAspirationChange}
+                            disabled={
+                              !categoryId ||
+                              !(aspirations.length > 0) ||
                           disableDropdowns
                         }
                         popupClassName="aspiration__antd__dropdown__popup"

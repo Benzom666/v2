@@ -168,6 +168,7 @@ const ChooseCity = (props) => {
             initialize("CreateStepOne", {
               search_type: category,
               image_index: draftedDate?.image_index ?? 0,
+              dateId: draftedDate?._id || draftedDate?.date_id,
             })
           );
           dispatch(
@@ -180,6 +181,7 @@ const ChooseCity = (props) => {
           dispatch(
             initialize("CreateStepThree", {
               education: draftedDate?.date_length,
+              date_duration: draftedDate?.date_length,
             })
           );
           dispatch(
@@ -325,7 +327,8 @@ const ChooseCity = (props) => {
       <div className="inner-page ">
         {/* {width > 767 && <HeaderLoggedIn />} */}
         <div className="inner-part-page">
-          <div className="create-date-shell create-date-wrap new-date">
+          <div className="create-date-wrap new-date">
+            <div className="create-date-shell">
             {!confirmPopup ? (
               <div className="auth-section choose-city new-city create-date-panel">
                 <form onSubmit={handleSubmit}>
@@ -435,6 +438,7 @@ const ChooseCity = (props) => {
                 </form>
               </div>
             ) : null}
+            </div>
           </div>
         </div>
         <Footer />

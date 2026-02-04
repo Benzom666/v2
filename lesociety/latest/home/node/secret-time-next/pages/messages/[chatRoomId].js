@@ -15,7 +15,7 @@ import MessageSend from "assets/Send.svg";
 import MessageSend2 from "assets/message_send2.png";
 import { logout } from "@/modules/auth/authActions";
 import PaywallModal from "@/core/PaywallModal";
-import { usePaywall } from "@/hooks/usePaywall";
+import { usePaywall } from "hooks/usePaywall";
 // const socket = io.connect(socketURL);
 
 function ChatMessages({ ...props }) {
