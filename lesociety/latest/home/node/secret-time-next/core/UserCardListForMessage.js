@@ -217,7 +217,7 @@ const UserCardListForMessage = ({
                         .filter((c) => c.status == 0)
                         .map((conversation, index) => {
                           const profilePic =
-                            conversation.user?.images.length > 0
+                            conversation.user?.images?.length > 0
                               ? conversation.user?.images[0]
                               : "";
 

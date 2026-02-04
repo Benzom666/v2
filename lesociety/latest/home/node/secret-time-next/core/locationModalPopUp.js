@@ -58,7 +58,7 @@ function Modal({ currentLocationLoading, show, ...props }) {
                   top: "-4%",
                   left: "30%",
                 }}
-                src={!_.isEmpty(user) ? user?.images[0] : UserImg}
+                src={!_.isEmpty(user) ? user?.images?.[0] : UserImg}
                 placeholderImg="https://i.ibb.co/y8RhMrL/Untitled-design.png"
               />
             ) : (
@@ -73,7 +73,7 @@ function Modal({ currentLocationLoading, show, ...props }) {
                   top: "-4%",
                   left: "33%",
                 }}
-                src={!_.isEmpty(user) ? user?.images[0] : UserImg}
+                src={!_.isEmpty(user) ? user?.images?.[0] : UserImg}
                 placeholderImg="https://i.ibb.co/y8RhMrL/Untitled-design.png"
               />
             )}

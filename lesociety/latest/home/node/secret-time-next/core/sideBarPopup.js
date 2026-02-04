@@ -201,7 +201,7 @@ function sideBarPopup({ isOpen, toggle, count }) {
                 <div className="d-flex align-items-center mb-4">
                   <figure className="mb-0 p-0">
                     <img
-                      src={!_.isEmpty(user) ? user?.images[0] : UserImg}
+                      src={!_.isEmpty(user) ? user?.images?.[0] : UserImg}
                       alt="user image"
                       width={40}
                       height={40}

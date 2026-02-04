@@ -277,7 +277,7 @@ export default function HeaderLoggedIn({
                       role="button"
                     >
                       <img
-                        src={!_.isEmpty(user) ? user?.images[0] : UserImg}
+                        src={!_.isEmpty(user) ? user?.images?.[0] : UserImg}
                         alt="user image"
                         width={32}
                         height={32}
