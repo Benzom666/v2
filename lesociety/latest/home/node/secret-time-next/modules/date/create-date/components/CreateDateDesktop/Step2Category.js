@@ -52,7 +52,9 @@ const Step2CategoryDesktop = () => {
    */
   useEffect(() => {
     const loadCategories = async () => {
+      console.log('=== STEP 2: Loading categories ===');
       const cats = await fetchCategories();
+      console.log('=== STEP 2: Categories loaded ===', { count: cats.length, categories: cats });
       setCategories(cats);
 
       // Set initial category if in form data
@@ -74,8 +76,10 @@ const Step2CategoryDesktop = () => {
    */
   useEffect(() => {
     const loadAspirations = async () => {
-    if (categoryId) {
+      if (categoryId) {
+        console.log('=== STEP 2: Loading aspirations for category ===', categoryId);
         const asps = await fetchAspirations(categoryId);
+        console.log('=== STEP 2: Aspirations loaded ===', { count: asps.length, aspirations: asps });
         setAspirations(asps);
 
         // Clear aspiration when category changes
