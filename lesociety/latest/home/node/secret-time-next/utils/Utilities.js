@@ -41,11 +41,17 @@ export const apiURL = resolveEnvUrl(
 export const apiRequest = async (args = {}, retries = 3) => {
   let token = "";
 
-  // Try loading from sessionStorage first (primary storage for auth)
-  const authCookie = loadFromLocalStorage();
-  if (authCookie) {
-    token = authCookie.user?.token;
-    console.log('=== TOKEN FROM SESSIONSTORAGE ===', token ? 'FOUND' : 'NOT FOUND');
+  // CRITICAL: Use explicitly passed token FIRST (highest priority)
+  if (args?.token) {
+    token = args.token;
+  }
+
+  // Try loading from sessionStorage (primary storage for auth)
+  if (!token) {
+    const authCookie = loadFromLocalStorage();
+    if (authCookie?.user?.token) {
+      token = authCookie.user.token;
+    }
   }
 
   // Fallback to localStorage
@@ -54,7 +60,6 @@ export const apiRequest = async (args = {}, retries = 3) => {
       const localAuth = window.localStorage?.getItem("auth");
       if (localAuth) {
         token = JSON.parse(localAuth)?.user?.token;
-        console.log('=== TOKEN FROM LOCALSTORAGE ===', token ? 'FOUND' : 'NOT FOUND');
       }
     } catch (err) {
       console.log("Failed to parse localStorage auth", err);
@@ -67,7 +72,6 @@ export const apiRequest = async (args = {}, retries = 3) => {
     if (cookieAuth) {
       try {
         token = JSON.parse(decodeURIComponent(cookieAuth))?.user?.token;
-        console.log('=== TOKEN FROM COOKIE ===', token ? 'FOUND' : 'NOT FOUND');
       } catch (err) {
         console.log("Failed to parse auth cookie", err);
       }
@@ -79,17 +83,11 @@ export const apiRequest = async (args = {}, retries = 3) => {
     const tokenCookie = getCookie("token");
     if (tokenCookie) {
       token = tokenCookie;
-      console.log('=== TOKEN FROM TOKEN COOKIE ===', token ? 'FOUND' : 'NOT FOUND');
     }
   }
 
-  // Use explicit token if provided
-  if (!token && args?.token) {
-    token = args.token;
-    console.log('=== TOKEN FROM ARGS ===', token ? 'FOUND' : 'NOT FOUND');
-  }
-
-  if (!token) {
+  // Log if no token found (except for health check)
+  if (!token && !args?.url?.includes('health')) {
     console.log('=== NO TOKEN FOUND ===', { url: args.url });
   }
   const base = `${apiURL}`.replace(/\/$/, "");
