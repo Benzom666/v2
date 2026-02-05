@@ -1,4 +1,4 @@
-import CreateDate from "modules/date/create-date";
+// import CreateDate from "modules/date/create-date"; // REMOVED - broken module
 import SimpleCreateStepTwo from "modules/date/create-date/SIMPLE_CreateStepTwo";
 import HeaderLoggedIn from "@/core/loggedInHeader";
 import Footer from "core/footer";
