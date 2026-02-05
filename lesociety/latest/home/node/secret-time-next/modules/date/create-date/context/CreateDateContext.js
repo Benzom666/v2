@@ -98,6 +98,12 @@ export const CreateDateProvider = ({ children, initialData = {} }) => {
    * Set user info
    */
   const setUserInfo = useCallback((userInfo) => {
+    console.log('=== SET USER INFO CALLED ===', {
+      hasUser: !!userInfo,
+      hasToken: !!userInfo?.token,
+      tokenLength: userInfo?.token?.length,
+      userName: userInfo?.user_name
+    });
     setUser(userInfo);
   }, []);
 
