@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Select } from "antd";
 import { PRICE_OPTIONS } from "../../constants/dateOptions";
 import { useCreateDate } from "../../context/CreateDateContext";
 import { useDateValidation } from "../../hooks/useDateValidation";
@@ -8,8 +7,6 @@ import { useCreateDateFlow } from "../../hooks/useCreateDateFlow";
 import CreateDateHeader from "@/core/CreateDateHeader";
 import ConfirmDate from "../../../confirmDate";
 import { toast } from "react-toastify";
-
-const { Option } = Select;
 
 /**
  * Desktop Step 2: Category & Price Selection
@@ -52,9 +49,7 @@ const Step2CategoryDesktop = () => {
    */
   useEffect(() => {
     const loadCategories = async () => {
-      console.log('=== STEP 2: Loading categories ===');
       const cats = await fetchCategories();
-      console.log('=== STEP 2: Categories loaded ===', { count: cats.length, categories: cats });
       setCategories(cats);
 
       // Set initial category if in form data
@@ -77,9 +72,7 @@ const Step2CategoryDesktop = () => {
   useEffect(() => {
     const loadAspirations = async () => {
       if (categoryId) {
-        console.log('=== STEP 2: Loading aspirations for category ===', categoryId);
         const asps = await fetchAspirations(categoryId);
-        console.log('=== STEP 2: Aspirations loaded ===', { count: asps.length, aspirations: asps });
         setAspirations(asps);
 
         // Clear aspiration when category changes
@@ -194,59 +187,59 @@ const Step2CategoryDesktop = () => {
                         <label htmlFor="category" className="aspiration__label2">
                           Your selection will be locked for 30 days
                         </label>
-                        <Select
-                          placeholder="Select A Category"
-                          className="aspiration__antd__dropdown"
-                          showSearch={false}
-                          value={categoryId || undefined}
-                          onChange={handleCategoryChange}
-                          disabled={disableDropdowns}
-                          popupClassName="aspiration__antd__dropdown__popup"
-                          onDropdownVisibleChange={(open) => {
-                            if (open) {
-                              document.body.style.overflow = "hidden";
-                            } else {
-                              document.body.style.overflow = "unset";
-                            }
-                          }}
-                        >
-                          <Option value="">Select A Category</Option>
-                          {categories.map((item) => (
-                            <Option key={item.value} value={item.value}>
-                              {item.label}
-                            </Option>
-                          ))}
-                        </Select>
 
-                        <div className="aspiration__antd__dropdown2">
-                          <Select
-                            placeholder="Select Your Aspiration"
-                            className="aspiration__antd__dropdown"
-                            showSearch={false}
-                            value={aspirationId || undefined}
-                            onChange={handleAspirationChange}
-                            disabled={
-                              !categoryId ||
-                              !(aspirations.length > 0) ||
-                              disableDropdowns
-                            }
-                            popupClassName="aspiration__antd__dropdown__popup"
-                            onDropdownVisibleChange={(open) => {
-                              if (open) {
-                                document.body.style.overflow = "hidden";
-                              } else {
-                                document.body.style.overflow = "unset";
-                              }
-                            }}
-                          >
-                            <Option value="">Select Your Aspiration</Option>
-                            {aspirations.map((item) => (
-                              <Option key={item.value} value={item.value}>
-                                {item.label}
-                              </Option>
-                            ))}
-                          </Select>
-                        </div>
+                        {/* SIMPLE HTML SELECT FOR CATEGORY */}
+                        <select
+                          id="category"
+                          className="form-control"
+                          style={{
+                            width: "100%",
+                            padding: "12px",
+                            fontSize: "16px",
+                            border: "1px solid #ddd",
+                            borderRadius: "8px",
+                            marginBottom: "16px",
+                            backgroundColor: "#fff"
+                          }}
+                          value={categoryId || ""}
+                          onChange={(e) => handleCategoryChange(e.target.value)}
+                          disabled={disableDropdowns}
+                        >
+                          <option value="">Select A Category</option>
+                          {categories.map((item) => (
+                            <option key={item.value} value={item.value}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </select>
+
+                        {/* SIMPLE HTML SELECT FOR ASPIRATION */}
+                        <select
+                          id="aspiration"
+                          className="form-control"
+                          style={{
+                            width: "100%",
+                            padding: "12px",
+                            fontSize: "16px",
+                            border: "1px solid #ddd",
+                            borderRadius: "8px",
+                            backgroundColor: !categoryId || !(aspirations.length > 0) ? "#f5f5f5" : "#fff"
+                          }}
+                          value={aspirationId || ""}
+                          onChange={(e) => handleAspirationChange(e.target.value)}
+                          disabled={
+                            !categoryId ||
+                            !(aspirations.length > 0) ||
+                            disableDropdowns
+                          }
+                        >
+                          <option value="">Select Your Aspiration</option>
+                          {aspirations.map((item) => (
+                            <option key={item.value} value={item.value}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
                   </div>

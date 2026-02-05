@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Select } from "antd";
 import { PRICE_OPTIONS } from "../../constants/dateOptions";
 import { useCreateDate } from "../../context/CreateDateContext";
 import { useDateValidation } from "../../hooks/useDateValidation";
@@ -8,8 +7,6 @@ import { useCreateDateFlow } from "../../hooks/useCreateDateFlow";
 import CreateDateHeader from "@/core/CreateDateHeader";
 import ConfirmDate from "../../../confirmDate";
 import { toast } from "react-toastify";
-
-const { Option } = Select;
 
 /**
  * Mobile Step 2: Category & Price Selection
@@ -187,58 +184,55 @@ const Step2CategoryMobile = () => {
                     <label htmlFor="category" className="aspiration__label2">
                       Your selection will be locked for 30 days
                     </label>
-                    <Select
-                      placeholder="Select A Category"
-                      className="aspiration__antd__dropdown"
-                      showSearch={false}
-                      value={categoryId || undefined}
-                      onChange={handleCategoryChange}
-                      disabled={disableDropdowns}
-                      popupClassName="aspiration__antd__dropdown__popup"
-                      onDropdownVisibleChange={(open) => {
-                        if (open) {
-                          document.body.style.overflow = "hidden";
-                        } else {
-                          document.body.style.overflow = "unset";
-                        }
+                    <select
+                      className="form-control"
+                      style={{
+                        width: "100%",
+                        padding: "12px",
+                        fontSize: "16px",
+                        border: "1px solid #ddd",
+                        borderRadius: "8px",
+                        marginBottom: "16px",
+                        backgroundColor: "#fff"
                       }}
+                      value={categoryId || ""}
+                      onChange={(e) => handleCategoryChange(e.target.value)}
+                      disabled={disableDropdowns}
                     >
-                      <Option value="">Select A Category</Option>
+                      <option value="">Select A Category</option>
                       {categories.map((item) => (
-                        <Option key={item.value} value={item.value}>
+                        <option key={item.value} value={item.value}>
                           {item.label}
-                        </Option>
+                        </option>
                       ))}
-                    </Select>
+                    </select>
 
                     <div className="aspiration__antd__dropdown2">
-                          <Select
-                            placeholder="Select Your Aspiration"
-                            className="aspiration__antd__dropdown"
-                            showSearch={false}
-                            value={aspirationId || undefined}
-                            onChange={handleAspirationChange}
-                            disabled={
-                              !categoryId ||
-                              !(aspirations.length > 0) ||
+                      <select
+                        className="form-control"
+                        style={{
+                          width: "100%",
+                          padding: "12px",
+                          fontSize: "16px",
+                          border: "1px solid #ddd",
+                          borderRadius: "8px",
+                          backgroundColor: !categoryId || !(aspirations.length > 0) ? "#f5f5f5" : "#fff"
+                        }}
+                        value={aspirationId || ""}
+                        onChange={(e) => handleAspirationChange(e.target.value)}
+                        disabled={
+                          !categoryId ||
+                          !(aspirations.length > 0) ||
                           disableDropdowns
                         }
-                        popupClassName="aspiration__antd__dropdown__popup"
-                        onDropdownVisibleChange={(open) => {
-                          if (open) {
-                            document.body.style.overflow = "hidden";
-                          } else {
-                            document.body.style.overflow = "unset";
-                          }
-                        }}
                       >
-                        <Option value="">Select Your Aspiration</Option>
+                        <option value="">Select Your Aspiration</option>
                         {aspirations.map((item) => (
-                          <Option key={item.value} value={item.value}>
+                          <option key={item.value} value={item.value}>
                             {item.label}
-                          </Option>
+                          </option>
                         ))}
-                      </Select>
+                      </select>
                     </div>
                   </div>
                 </div>
