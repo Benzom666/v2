@@ -1,4 +1,5 @@
 import CreateDate from "modules/date/create-date";
+import SimpleCreateStepTwo from "modules/date/create-date/SIMPLE_CreateStepTwo";
 import HeaderLoggedIn from "@/core/loggedInHeader";
 import Footer from "core/footer";
 import useWindowSize from "/utils/useWindowSize";
@@ -12,7 +13,7 @@ function Step1({ dispatch, ...props }) {
       {/* {width > 767 && <HeaderLoggedIn />} */}
       <div className="inner-part-page">
         <div className="auth-section create-date-wrap">
-          <CreateDate />
+          <SimpleCreateStepTwo />
         </div>
       </div>
       <Footer />

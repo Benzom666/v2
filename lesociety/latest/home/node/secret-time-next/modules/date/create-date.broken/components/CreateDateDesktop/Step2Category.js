@@ -94,11 +94,16 @@ const Step2CategoryDesktop = () => {
    * Handle category change
    */
   const handleCategoryChange = (value) => {
+    console.log('=== handleCategoryChange CALLED ===', value);
+    console.log('=== Current categoryId ===', categoryId);
+    console.log('=== Updating state ===');
     setCategoryId(value);
     updateFormData("enter__category", value);
+    console.log('=== State updated, clearing aspirations ===');
     setAspirations([]);
     setAspirationId("");
     updateFormData("enter__aspiration", "");
+    console.log('=== handleCategoryChange DONE ===');
   };
 
   /**
@@ -154,6 +159,14 @@ const Step2CategoryDesktop = () => {
     }
   };
 
+  console.log('=== RENDERING Step2Category ===', {
+    categoriesCount: categories.length,
+    categoryId,
+    aspirationId,
+    aspirationsCount: aspirations.length,
+    disableDropdowns
+  });
+
   return (
     <>
       {!confirmPopup ? (
@@ -203,7 +216,14 @@ const Step2CategoryDesktop = () => {
                               <button
                                 key={item.value}
                                 type="button"
-                                onClick={() => handleCategoryChange(item.value)}
+                                onClick={(e) => {
+                                  console.log('=== BUTTON CLICKED ===', item.value, item.label);
+                                  console.log('=== Event ===', e);
+                                  console.log('=== disableDropdowns ===', disableDropdowns);
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleCategoryChange(item.value);
+                                }}
                                 disabled={disableDropdowns}
                                 style={{
                                   width: "100%",
