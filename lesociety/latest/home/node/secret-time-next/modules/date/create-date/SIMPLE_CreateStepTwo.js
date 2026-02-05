@@ -22,6 +22,43 @@ function CreateStepTwo({ handleSubmit, pristine, submitting }) {
 
   const user = useSelector((state) => state?.authReducer?.user);
 
+  // Load saved data on mount
+  useEffect(() => {
+    const saved = loadFromLocalStorage();
+    if (saved) {
+      if (saved.selectedCategory) {
+        setSelectedCategory(saved.selectedCategory);
+        // Load aspirations for the saved category
+        const fetchAspirations = async () => {
+          try {
+            const res = await apiRequest({
+              method: "GET",
+              url: `aspirations?category_id=${saved.selectedCategory}`,
+              token: user?.token,
+            });
+
+            const asps = res.data?.data?.map((asp) => ({
+              label: asp?.name,
+              value: asp?._id,
+            })) || [];
+            setAspirations(asps);
+
+            if (saved.selectedAspiration) {
+              setSelectedAspiration(saved.selectedAspiration);
+            }
+          } catch (err) {
+            console.error("Failed to fetch aspirations:", err);
+          }
+        };
+
+        fetchAspirations();
+      }
+      if (saved.selectedPrice) {
+        setSelectedPrice(saved.selectedPrice);
+      }
+    }
+  }, []);
+
   // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
@@ -98,15 +135,15 @@ function CreateStepTwo({ handleSubmit, pristine, submitting }) {
       },
     });
 
-    // Navigate to createStepThree (duration selection)
-    router.push({
-      pathname: "/create-date/duration",
-      query: {
-        category: selectedCategory,
-        aspiration: selectedAspiration,
-        price: selectedPrice
-      }
+    // Save to localStorage for next step
+    saveToLocalStorage({
+      selectedCategory,
+      selectedAspiration,
+      selectedPrice,
     });
+
+    // Navigate to duration page
+    router.push("/create-date/duration");
   };
 
   const handleBack = () => {
