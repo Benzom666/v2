@@ -98,7 +98,15 @@ function CreateStepTwo({ handleSubmit, pristine, submitting }) {
       },
     });
 
-    router.push("/create-date/date-duration");
+    // Navigate to createStepThree (duration selection)
+    router.push({
+      pathname: "/create-date/duration",
+      query: {
+        category: selectedCategory,
+        aspiration: selectedAspiration,
+        price: selectedPrice
+      }
+    });
   };
 
   const handleBack = () => {
@@ -145,93 +153,69 @@ function CreateStepTwo({ handleSubmit, pristine, submitting }) {
                               Your selection will be locked for 30 days
                             </label>
 
-                            {/* Category Selection */}
-                            <div
+                            {/* Category Selection - DROPDOWN */}
+                            <select
+                              value={selectedCategory || ""}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                console.log("Category selected:", value);
+                                setSelectedCategory(value);
+                                setSelectedAspiration("");
+                              }}
                               style={{
-                                maxHeight: "300px",
-                                overflowY: "auto",
-                                backgroundColor: "#1a1a1a",
-                                borderRadius: "8px",
+                                width: "100%",
                                 padding: "12px",
-                                marginBottom: "16px"
+                                fontSize: "16px",
+                                backgroundColor: "#fff",
+                                color: "#000",
+                                border: "1px solid #ddd",
+                                borderRadius: "6px",
+                                cursor: "pointer"
                               }}
                             >
+                              <option value="">Select A Category</option>
                               {categories.map((cat) => (
-                                <div
-                                  key={cat.value}
-                                  onClick={() => {
-                                    console.log("Category clicked:", cat.value);
-                                    setSelectedCategory(cat.value);
-                                    setSelectedAspiration("");
-                                  }}
-                                  style={{
-                                    padding: "12px",
-                                    marginBottom: "8px",
-                                    backgroundColor:
-                                      selectedCategory === cat.value
-                                        ? "#3a3a3a"
-                                        : "#2a2a2a",
-                                    color: "#fff",
-                                    border:
-                                      selectedCategory === cat.value
-                                        ? "2px solid #fff"
-                                        : "1px solid rgba(255,255,255,0.2)",
-                                    borderRadius: "6px",
-                                    cursor: "pointer",
-                                    fontSize: "14px"
-                                  }}
-                                >
+                                <option key={cat.value} value={cat.value}>
                                   {cat.label}
-                                </div>
+                                </option>
                               ))}
-                            </div>
+                            </select>
 
-                            {/* Aspiration Selection */}
+                            {/* Aspiration Selection - DROPDOWN */}
                             {selectedCategory && (
                               <>
                                 <label
                                   className="aspiration__label1"
-                                  style={{ marginTop: "16px", display: "block" }}
+                                  style={{ marginTop: "16px", display: "block", color: "#fff" }}
                                 >
                                   Select Your Aspiration
                                 </label>
-                                <div
+                                <select
+                                  value={selectedAspiration || ""}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    console.log("Aspiration selected:", value);
+                                    setSelectedAspiration(value);
+                                  }}
+                                  disabled={!selectedCategory}
                                   style={{
-                                    maxHeight: "300px",
-                                    overflowY: "auto",
-                                    backgroundColor: "#1a1a1a",
-                                    borderRadius: "8px",
-                                    padding: "12px"
+                                    width: "100%",
+                                    padding: "12px",
+                                    fontSize: "16px",
+                                    backgroundColor: "#fff",
+                                    color: "#000",
+                                    border: "1px solid #ddd",
+                                    borderRadius: "6px",
+                                    cursor: selectedCategory ? "pointer" : "not-allowed"
                                   }}
                                 >
+                                  <option value="">Select Your Aspiration</option>
                                   {aspirations.map((asp) => (
-                                    <div
-                                      key={asp.value}
-                                      onClick={() => {
-                                        console.log("Aspiration clicked:", asp.value);
-                                        setSelectedAspiration(asp.value);
-                                      }}
-                                      style={{
-                                        padding: "12px",
-                                        marginBottom: "8px",
-                                        backgroundColor:
-                                          selectedAspiration === asp.value
-                                            ? "#3a3a3a"
-                                            : "#2a2a2a",
-                                        color: "#fff",
-                                        border:
-                                          selectedAspiration === asp.value
-                                            ? "2px solid #fff"
-                                            : "1px solid rgba(255,255,255,0.2)",
-                                        borderRadius: "6px",
-                                        cursor: "pointer",
-                                        fontSize: "14px"
-                                      }}
-                                    >
+                                    <option key={asp.value} value={asp.value}>
                                       {asp.label}
-                                    </div>
+                                    </option>
                                   ))}
-                                </div>
+                                </select>
                               </>
                             )}
                           </div>
