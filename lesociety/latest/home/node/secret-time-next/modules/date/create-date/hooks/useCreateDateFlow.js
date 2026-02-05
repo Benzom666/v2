@@ -32,22 +32,10 @@ export const useCreateDateFlow = (createDateContext) => {
    */
   const fetchCategories = useCallback(async () => {
     try {
-      console.log('=== FETCHING CATEGORIES ===', {
-        hasUser: !!user,
-        hasToken: !!user?.token,
-        tokenLength: user?.token?.length,
-        userName: user?.user_name
-      });
-
       const res = await apiRequest({
         method: "GET",
         url: `categories`,
         token: user?.token,
-      });
-
-      console.log('=== CATEGORIES RESPONSE ===', {
-        status: res?.status,
-        dataCount: res?.data?.data?.length
       });
 
       return (

@@ -37,11 +37,6 @@ const CreateDateFlow = () => {
 
   useEffect(() => {
     if (user?.user_name) {
-      console.log('=== UPDATING USER IN CONTEXT ===', {
-        hasToken: !!user?.token,
-        tokenLength: user?.token?.length,
-        userName: user?.user_name
-      });
       setUserInfo(user);
     }
   }, [user, setUserInfo]);

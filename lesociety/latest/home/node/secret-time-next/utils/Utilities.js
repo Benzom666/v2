@@ -85,11 +85,6 @@ export const apiRequest = async (args = {}, retries = 3) => {
       token = tokenCookie;
     }
   }
-
-  // Log if no token found (except for health check)
-  if (!token && !args?.url?.includes('health')) {
-    console.log('=== NO TOKEN FOUND ===', { url: args.url });
-  }
   const base = `${apiURL}`.replace(/\/$/, "");
   const path = `${args.url || ""}`.replace(/^\/+/, "");
   args.url = `${base}/api/v1/${path}`;
