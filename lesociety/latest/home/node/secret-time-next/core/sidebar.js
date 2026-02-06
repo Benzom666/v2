@@ -224,14 +224,14 @@ export default function SideBar({ isActive, count }) {
                     <div className="token-circle active">
                       <div className="token-label">Interested</div>
                       <div className="token-circle-inner">
-                        <Image src={require('../assets/bestring.png')} alt="Interested Ring" width={100} height={100} />
+                        <Image src="/bestring.png" alt="Interested Ring" width={100} height={100} />
                         <div className="token-value">{interestedTokens}</div>
                       </div>
                     </div>
                     <div className="token-circle active">
                       <div className="token-label">Super Interested</div>
                       <div className="token-circle-inner">
-                        <Image src={require('../assets/bestring.png')} alt="Super Interested Ring" width={100} height={100} />
+                        <Image src="/bestring.png" alt="Super Interested Ring" width={100} height={100} />
                         <div className="token-value">{superInterestedTokens}</div>
                       </div>
                     </div>
@@ -269,7 +269,7 @@ export default function SideBar({ isActive, count }) {
                   </div>
                 </div>
                 <div className="sidebar-ring">
-                  <Image src={require('../assets/bestring.png')} alt="Chat Ring" width={80} height={80} />
+                  <Image src="/bestring.png" alt="Chat Ring" width={80} height={80} />
                   <div className="sidebar-ring-value">{remainingChats}</div>
                 </div>
               </div>

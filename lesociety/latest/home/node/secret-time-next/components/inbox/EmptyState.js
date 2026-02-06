@@ -47,7 +47,7 @@ const EmptyState = ({ gender = 'male', activeDatesCount = 0 }) => {
               </InterestSubtext>
             </InterestCopy>
             <InterestRing>
-              <Image src={require('../../assets/bestring.png')} alt="Interest Ring" width={80} height={80} />
+              <Image src="/bestring.png" alt="Interest Ring" width={80} height={80} />
               <span className="ring-value">0</span>
             </InterestRing>
           </InterestBox>
