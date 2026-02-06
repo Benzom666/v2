@@ -270,8 +270,21 @@ export default function SideBar({ isActive, count }) {
                   </div>
                 </div>
                 <div className="sidebar-ring">
-                  <img src="/images/bestring.png" alt="Chat Ring" style={{width: '80px', height: '80px'}} />
-                  <div className="sidebar-ring-value">{remainingChats}</div>
+                  <img 
+                    src="/images/bestring.png" 
+                    alt="Chat Ring" 
+                    style={{
+                      width: '80px', 
+                      height: '80px',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      objectFit: 'contain'
+                    }} 
+                    onError={(e) => console.error('Ring image failed to load', e)}
+                    onLoad={() => console.log('Ring image loaded successfully')}
+                  />
+                  <div className="sidebar-ring-value" style={{position: 'relative', zIndex: 10}}>{remainingChats}</div>
                 </div>
               </div>
 
