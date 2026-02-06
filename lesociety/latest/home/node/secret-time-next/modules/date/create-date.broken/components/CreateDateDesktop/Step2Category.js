@@ -49,10 +49,8 @@ const Step2CategoryDesktop = () => {
    */
   useEffect(() => {
     const loadCategories = async () => {
-      const cats = await fetchCategories();
-      console.log('=== CATEGORIES FETCHED ===', cats.length, cats);
+    const cats = await fetchCategories();
       setCategories(cats);
-      console.log('=== CATEGORIES STATE SET ===');
 
       // Set initial category if in form data
       if (formData.enter__category) {
@@ -94,16 +92,11 @@ const Step2CategoryDesktop = () => {
    * Handle category change
    */
   const handleCategoryChange = (value) => {
-    console.log('=== handleCategoryChange CALLED ===', value);
-    console.log('=== Current categoryId ===', categoryId);
-    console.log('=== Updating state ===');
     setCategoryId(value);
     updateFormData("enter__category", value);
-    console.log('=== State updated, clearing aspirations ===');
     setAspirations([]);
     setAspirationId("");
     updateFormData("enter__aspiration", "");
-    console.log('=== handleCategoryChange DONE ===');
   };
 
   /**
@@ -159,14 +152,6 @@ const Step2CategoryDesktop = () => {
     }
   };
 
-  console.log('=== RENDERING Step2Category ===', {
-    categoriesCount: categories.length,
-    categoryId,
-    aspirationId,
-    aspirationsCount: aspirations.length,
-    disableDropdowns
-  });
-
   return (
     <>
       {!confirmPopup ? (
@@ -203,140 +188,43 @@ const Step2CategoryDesktop = () => {
                           Your selection will be locked for 30 days
                         </label>
 
-                        {/* CATEGORY BUTTONS - CLICKABLE LIST */}
-                        {!categoryId ? (
-                          <div style={{
-                            maxHeight: "300px",
-                            overflowY: "auto",
-                            backgroundColor: "#1a1a1a",
-                            borderRadius: "8px",
-                            padding: "8px"
-                          }}>
-                            {categories.map((item) => (
-                              <button
-                                key={item.value}
-                                type="button"
-                                onClick={(e) => {
-                                  console.log('=== BUTTON CLICKED ===', item.value, item.label);
-                                  console.log('=== Event ===', e);
-                                  console.log('=== disableDropdowns ===', disableDropdowns);
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleCategoryChange(item.value);
-                                }}
-                                disabled={disableDropdowns}
-                                style={{
-                                  width: "100%",
-                                  padding: "12px",
-                                  marginBottom: "8px",
-                                  backgroundColor: "#2a2a2a",
-                                  color: "#fff",
-                                  border: "1px solid rgba(255,255,255,0.2)",
-                                  borderRadius: "6px",
-                                  cursor: disableDropdowns ? "not-allowed" : "pointer",
-                                  fontSize: "14px",
-                                  textAlign: "left",
-                                  transition: "all 0.2s"
-                                }}
-                                onMouseEnter={(e) => {
-                                  if (!disableDropdowns) {
-                                    e.target.style.backgroundColor = "#3a3a3a";
-                                    e.target.style.borderColor = "rgba(255,255,255,0.4)";
-                                  }
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.target.style.backgroundColor = "#2a2a2a";
-                                  e.target.style.borderColor = "rgba(255,255,255,0.2)";
-                                }}
-                              >
-                                {item.label}
-                              </button>
-                            ))}
-                          </div>
-                        ) : (
-                          <div>
-                            <div style={{
-                              padding: "12px",
-                              backgroundColor: "#2a2a2a",
-                              borderRadius: "8px",
-                              marginBottom: "16px",
-                              border: "1px solid rgba(255,255,255,0.2)",
-                              color: "#fff"
-                            }}>
-                              <strong>Selected:</strong> {categories.find(c => c.value === categoryId)?.label}
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  handleCategoryChange("");
-                                  setAspirations([]);
-                                  setAspirationId("");
-                                }}
-                                disabled={disableDropdowns}
-                                style={{
-                                  marginLeft: "12px",
-                                  padding: "4px 12px",
-                                  backgroundColor: "#dc3545",
-                                  color: "#fff",
-                                  border: "none",
-                                  borderRadius: "4px",
-                                  cursor: disableDropdowns ? "not-allowed" : "pointer"
-                                }}
-                              >
-                                Change
-                              </button>
-                            </div>
+                        <select
+                          className="form-control aspiration-select"
+                          value={categoryId || ""}
+                          onChange={(e) => handleCategoryChange(e.target.value)}
+                          disabled={disableDropdowns}
+                        >
+                          <option value="" disabled>
+                            Select A Category
+                          </option>
+                          {categories.map((item) => (
+                            <option key={item.value} value={item.value}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </select>
 
-                            {/* ASPIRATION BUTTONS */}
-                            {aspirations.length > 0 && (
-                              <>
-                                <label className="aspiration__label1" style={{marginTop: "16px", display: "block", color: "#fff"}}>
-                                  Select Your Aspiration
-                                </label>
-                                <div style={{
-                                  maxHeight: "300px",
-                                  overflowY: "auto",
-                                  backgroundColor: "#1a1a1a",
-                                  borderRadius: "8px",
-                                  padding: "8px"
-                                }}>
-                                  {aspirations.map((item) => (
-                                    <button
-                                      key={item.value}
-                                      type="button"
-                                      onClick={() => handleAspirationChange(item.value)}
-                                      disabled={disableDropdowns}
-                                      style={{
-                                        width: "100%",
-                                        padding: "12px",
-                                        marginBottom: "8px",
-                                        backgroundColor: aspirationId === item.value ? "#4a4a4a" : "#2a2a2a",
-                                        color: "#fff",
-                                        border: aspirationId === item.value ? "2px solid #fff" : "1px solid rgba(255,255,255,0.2)",
-                                        borderRadius: "6px",
-                                        cursor: disableDropdowns ? "not-allowed" : "pointer",
-                                        fontSize: "14px",
-                                        textAlign: "left",
-                                        transition: "all 0.2s"
-                                      }}
-                                      onMouseEnter={(e) => {
-                                        if (!disableDropdowns && aspirationId !== item.value) {
-                                          e.target.style.backgroundColor = "#3a3a3a";
-                                        }
-                                      }}
-                                      onMouseLeave={(e) => {
-                                        if (aspirationId !== item.value) {
-                                          e.target.style.backgroundColor = "#2a2a2a";
-                                        }
-                                      }}
-                                    >
-                                      {item.label}
-                                    </button>
-                                  ))}
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        )}
+                        <label
+                          htmlFor="aspiration"
+                          className="aspiration__label1 aspiration__label1--spaced"
+                        >
+                          Select Your Aspiration
+                        </label>
+                        <select
+                          className="form-control aspiration-select"
+                          value={aspirationId || ""}
+                          onChange={(e) => handleAspirationChange(e.target.value)}
+                          disabled={!categoryId || disableDropdowns}
+                        >
+                          <option value="" disabled>
+                            Select Your Aspiration
+                          </option>
+                          {aspirations.map((item) => (
+                            <option key={item.value} value={item.value}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
                   </div>

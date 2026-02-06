@@ -287,28 +287,7 @@ export default function SideBar({ isActive, count }) {
                   </div>
                 </div>
                 <div className="sidebar-ring">
-                  <svg viewBox="0 0 80 80" aria-hidden="true">
-                    <circle className="ring-bg" cx="40" cy="40" r="35" />
-                    <circle
-                      className="ring-progress"
-                      cx="40"
-                      cy="40"
-                      r="35"
-                      strokeDasharray={ringDash}
-                    />
-                    <defs>
-                      <linearGradient
-                        id="sidebar-ring-gradient"
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="0%"
-                      >
-                        <stop offset="0%" stopColor="#f24462" />
-                        <stop offset="100%" stopColor="#4a90e2" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
+                  <Image src={require('../assets/ring-new.png')} alt="Chat Ring" width={80} height={80} />
                   <div className="sidebar-ring-value">{remainingChats}</div>
                 </div>
               </div>

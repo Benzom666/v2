@@ -161,6 +161,38 @@
   color: #f24462;
 }
 
+.create-date-mobile .aspiration-select {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  background: #0f0f0f;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  margin-bottom: 14px;
+  appearance: none;
+}
+
+.create-date-mobile .aspiration-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.create-date-mobile .bottom-mobile .secret-input.next-prev {
+  justify-content: center;
+  gap: 12px;
+}
+
+.create-date-mobile .bottom-mobile .secret-input.next-prev .next,
+.create-date-mobile .bottom-mobile .secret-input.next-prev .edit {
+  flex: 1;
+  max-width: 210px;
+}
+
+.create-date-mobile .bottom-mobile .secret-input.next-prev .next:only-child {
+  max-width: 420px;
+}
+
 /* ============================================
    MOBILE DURATION SECTION (Step 3)
    ============================================ */

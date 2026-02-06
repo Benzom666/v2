@@ -21,8 +21,8 @@ import io from "socket.io-client";
 import "styles/style.scss";
 import "styles/membership.scss";
 import "styles/sidebar-tokens.css";
-// import "modules/date/create-date/styles/mobile.css"; // REMOVED - broken module
-// import "modules/date/create-date/styles/desktop.css"; // REMOVED - broken module
+import "modules/date/create-date.broken/styles/mobile.css";
+import "modules/date/create-date.broken/styles/desktop.css";
 import { removeCookie } from "utils/cookie";
 import LanscapeDecline from "@/core/LanscapeDecline";
 import { socketURL } from "utils/Utilities";

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 const NewInterests = ({ interestCount = 0, activeDatesCount = 0 }) => {
   const router = useRouter();
@@ -26,22 +27,7 @@ const NewInterests = ({ interestCount = 0, activeDatesCount = 0 }) => {
           </InterestSubtext>
         </InterestCopy>
         <InterestRing>
-          <svg viewBox="0 0 80 80" aria-hidden="true">
-            <circle cx="40" cy="40" r="34" className="ring-bg" />
-            <circle
-              cx="40"
-              cy="40"
-              r="34"
-              className="ring-progress"
-              strokeDasharray="214 214"
-            />
-            <defs>
-              <linearGradient id="interest-ring" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#f24462" />
-                <stop offset="100%" stopColor="#4a90e2" />
-              </linearGradient>
-            </defs>
-          </svg>
+          <Image src={require('../../assets/ring-new.png')} alt="Interest Ring" width={80} height={80} />
           <span className="ring-value">{interestCount}</span>
         </InterestRing>
       </InterestCard>
@@ -106,25 +92,14 @@ const InterestSubtext = styled.div`
 
 const InterestRing = styled.div`
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
 
-  svg {
+  img {
     width: 100%;
     height: 100%;
-  }
-
-  .ring-bg {
-    fill: none;
-    stroke: rgba(255, 255, 255, 0.12);
-    stroke-width: 6;
-  }
-
-  .ring-progress {
-    fill: none;
-    stroke-width: 6;
-    stroke-linecap: round;
-    stroke: url(#interest-ring);
+    object-fit: contain;
   }
 
   .ring-value {
@@ -134,9 +109,10 @@ const InterestRing = styled.div`
     align-items: center;
     justify-content: center;
     font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
     color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 `;
 

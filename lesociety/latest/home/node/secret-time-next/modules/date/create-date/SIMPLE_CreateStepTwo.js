@@ -1,26 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSelector, useDispatch } from "react-redux";
-import { Field, reduxForm } from "redux-form";
-import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
-import { Inputs } from "core";
+import { useSelector } from "react-redux";
+import CreateDateNewHeader from "@/core/CreateDateNewHeader";
 import { apiRequest } from "utils/Utilities";
-import CreateDateHeader from "@/core/CreateDateHeader";
 import { toast } from "react-toastify";
 
-const PRICE_OPTIONS = [50, 75, 100, 150, 200, 250, 300, 400, 500];
+const PRICE_OPTIONS = [80, 100, 150, 200, 300, 400, 500, 750, 1000];
 
-function CreateStepTwo({ handleSubmit, pristine, submitting }) {
+const STORAGE_KEY = "create_date_flow";
+
+const saveToLocalStorage = (data) => {
+  try {
+    const existingData = localStorage.getItem(STORAGE_KEY);
+    const parsedData = existingData ? JSON.parse(existingData) : {};
+    const updatedData = { ...parsedData, ...data };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
+  } catch (err) {
+    console.error("Error saving to localStorage:", err);
+  }
+};
+
+const loadFromLocalStorage = () => {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : null;
+  } catch (err) {
+    console.error("Error loading from localStorage:", err);
+    return null;
+  }
+};
+
+function CreateStepTwo() {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const user = useSelector((state) => state?.authReducer?.user);
 
   const [categories, setCategories] = useState([]);
   const [aspirations, setAspirations] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedAspiration, setSelectedAspiration] = useState("");
   const [selectedPrice, setSelectedPrice] = useState(null);
-
-  const user = useSelector((state) => state?.authReducer?.user);
 
   // Load saved data on mount
   useEffect(() => {
@@ -124,257 +142,366 @@ function CreateStepTwo({ handleSubmit, pristine, submitting }) {
       return;
     }
 
-    // Save to Redux form state for next step
-    dispatch({
-      type: "@@redux-form/INITIALIZE",
-      meta: { form: "CreateStepTwo" },
-      payload: {
-        enter__category: selectedCategory,
-        enter__aspiration: selectedAspiration,
-        education: selectedPrice,
-      },
-    });
-
-    // Save to localStorage for next step
     saveToLocalStorage({
       selectedCategory,
       selectedAspiration,
       selectedPrice,
     });
 
-    // Navigate to duration page
     router.push("/create-date/duration");
   };
 
-  const handleBack = () => {
-    router.push("/create-date/date-event");
-  };
-
   return (
-    <>
-      <div className="inner-page">
-        <div className="inner-part-page">
-          <div className="auth-section create-date-wrap">
-            <div className="create-date-shell create-date-desktop">
-              <CreateDateHeader
-                activeStep={2}
-                onBack={handleBack}
-                onClose={() => router.push("/user/user-list")}
-                showBack={true}
-                showClose={true}
-              />
+    <div className="create-date-page">
+      <CreateDateNewHeader
+        activeStep={2}
+        onBack={() => router.push("/create-date/choose-date-type")}
+        onClose={() => router.push("/user/user-list")}
+      />
 
-              <div className="create-date-content">
-                <div className="inner_container">
-                  <div className="create-date-intro">
-                    <h2>Your aspiration. Your price.</h2>
-                    <div className="intro-subtitle">
-                      When a man chooses Super Interested, he's saying: I'll cover
-                      the outing and financially support your aspiration to skip
-                      straight to our first date - Fast.
-                    </div>
-                  </div>
-                </div>
+      <div className="create-date-content">
+        <h1 className="page-title">Your aspiration. Your price.</h1>
+        <p className="page-subtitle">
+          When a man chooses <strong>Super Interested</strong>, he's saying: I'll cover the outing and financially support your aspiration to skip straight to our first date - Fast.
+        </p>
 
-                <div className="date-class-section choose-gender">
-                  <div className="inner_container desktop-category-container">
-                    <div className="desktop-category-layout">
-                      {/* Left side - Category & Aspiration */}
-                      <div className="desktop-category-left">
-                        <div className="mb-4">
-                          <div className="aspiration__main__dropdown">
-                            <label className="aspiration__label1">
-                              1. Who do you aspire to be?
-                            </label>
-                            <label className="aspiration__label2">
-                              Your selection will be locked for 30 days
-                            </label>
+        <div className="two-column-layout">
+          {/* Left Column - Category & Aspiration */}
+          <div className="left-column">
+            <div className="form-section">
+              <label className="section-label">
+                1. Who do you aspire to be?
+              </label>
+              <label className="section-sublabel">
+                Your selection will be locked for 30 days
+              </label>
 
-                            {/* Category Selection - DROPDOWN */}
-                            <select
-                              value={selectedCategory || ""}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                console.log("Category selected:", value);
-                                setSelectedCategory(value);
-                                setSelectedAspiration("");
-                              }}
-                              style={{
-                                width: "100%",
-                                padding: "12px",
-                                fontSize: "16px",
-                                backgroundColor: "#fff",
-                                color: "#000",
-                                border: "1px solid #ddd",
-                                borderRadius: "6px",
-                                cursor: "pointer"
-                              }}
-                            >
-                              <option value="">Select A Category</option>
-                              {categories.map((cat) => (
-                                <option key={cat.value} value={cat.value}>
-                                  {cat.label}
-                                </option>
-                              ))}
-                            </select>
+              {/* Category Selection - DROPDOWN */}
+              <select
+                value={selectedCategory || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSelectedCategory(value);
+                  setSelectedAspiration("");
+                }}
+                className="custom-select"
+              >
+                <option value="">Select A Category</option>
+                {categories.map((cat) => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
 
-                            {/* Aspiration Selection - DROPDOWN */}
-                            {selectedCategory && (
-                              <>
-                                <label
-                                  className="aspiration__label1"
-                                  style={{ marginTop: "16px", display: "block", color: "#fff" }}
-                                >
-                                  Select Your Aspiration
-                                </label>
-                                <select
-                                  value={selectedAspiration || ""}
-                                  onChange={(e) => {
-                                    const value = e.target.value;
-                                    console.log("Aspiration selected:", value);
-                                    setSelectedAspiration(value);
-                                  }}
-                                  disabled={!selectedCategory}
-                                  style={{
-                                    width: "100%",
-                                    padding: "12px",
-                                    fontSize: "16px",
-                                    backgroundColor: "#fff",
-                                    color: "#000",
-                                    border: "1px solid #ddd",
-                                    borderRadius: "6px",
-                                    cursor: selectedCategory ? "pointer" : "not-allowed"
-                                  }}
-                                >
-                                  <option value="">Select Your Aspiration</option>
-                                  {aspirations.map((asp) => (
-                                    <option key={asp.value} value={asp.value}>
-                                      {asp.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
+              {/* Aspiration Selection - DROPDOWN */}
+              {selectedCategory && (
+                <>
+                  <label className="section-label secondary">
+                    Select Your Aspiration
+                  </label>
+                  <select
+                    value={selectedAspiration || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setSelectedAspiration(value);
+                    }}
+                    disabled={!selectedCategory}
+                    className="custom-select"
+                  >
+                    <option value="">Select Your Aspiration</option>
+                    {aspirations.map((asp) => (
+                      <option key={asp.value} value={asp.value}>
+                        {asp.label}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              )}
+            </div>
+          </div>
 
-                      {/* Right side - Price */}
-                      <div className="desktop-category-right">
-                        <div className="mb-4">
-                          <label className="price__radio__label">
-                            2. Set your suggested financial gift
-                          </label>
-                          <p className="price__radio__gentlemen">
-                            He hands you the gift in person on the date to help
-                            support your goals. Showing his commitment.
-                          </p>
-                          <div className="price-grid desktop-price-grid">
-                            {PRICE_OPTIONS.map((price) => {
-                              const isSelected = selectedPrice === price;
-                              return (
-                                <button
-                                  type="button"
-                                  key={price}
-                                  className={`price-card desktop-price-card ${
-                                    isSelected ? "is-selected" : ""
-                                  }`}
-                                  onClick={() => {
-                                    console.log("Price clicked:", price);
-                                    setSelectedPrice(price);
-                                  }}
-                                  style={{
-                                    padding: "20px",
-                                    backgroundColor: isSelected
-                                      ? "#3a3a3a"
-                                      : "#2a2a2a",
-                                    border: isSelected
-                                      ? "2px solid #fff"
-                                      : "1px solid rgba(255,255,255,0.2)",
-                                    borderRadius: "8px",
-                                    color: "#fff",
-                                    cursor: "pointer",
-                                    fontSize: "18px",
-                                    fontWeight: "bold"
-                                  }}
-                                >
-                                  ${price}
-                                </button>
-                              );
-                            })}
-                          </div>
-                          <p className="price__radio__gentlemen mt-3">
-                            Pro tip: Women who post multiple dates at different
-                            price points get 3-5x more Super Interested offers.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="desktop-navigation">
+          {/* Right Column - Price */}
+          <div className="right-column">
+            <div className="form-section">
+              <label className="section-label">
+                2. Set your suggested financial gift
+              </label>
+              <p className="section-description">
+                He hands you the gift in person on the date to help support
+                your goals. Showing his commitment.
+              </p>
+              <div className="price-grid">
+                {PRICE_OPTIONS.map((price) => {
+                  const isSelected = selectedPrice === price;
+                  return (
                     <button
                       type="button"
-                      className="btn-next"
-                      onClick={handleNext}
-                      disabled={!selectedPrice || !selectedAspiration}
-                      style={{
-                        padding: "12px 24px",
-                        backgroundColor:
-                          !selectedPrice || !selectedAspiration
-                            ? "#666"
-                            : "#fff",
-                        color:
-                          !selectedPrice || !selectedAspiration
-                            ? "#999"
-                            : "#000",
-                        border: "none",
-                        borderRadius: "6px",
-                        fontSize: "16px",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px"
-                      }}
+                      key={price}
+                      className={`price-card ${isSelected ? "selected" : ""}`}
+                      onClick={() => setSelectedPrice(price)}
                     >
-                      Next <FiArrowRight />
+                      ${price}
                     </button>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
+              <p className="pro-tip">
+                Pro tip: Women who post multiple dates at different price
+                points get 3-5x more Super Interested offers.
+              </p>
             </div>
           </div>
         </div>
       </div>
 
+      <div className="bottom-button-container">
+        <button
+          className={`next-button ${
+            !selectedPrice || !selectedAspiration ? "disabled" : ""
+          }`}
+          onClick={handleNext}
+          disabled={!selectedPrice || !selectedAspiration}
+        >
+          NEXT
+        </button>
+      </div>
+
       <style jsx>{`
-        .aspiration__label1 {
-          display: block;
-          font-size: 16px;
+        .create-date-page {
+          min-height: 100vh;
+          background: #000000;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .create-date-content {
+          flex: 1;
+          padding: 24px 16px;
+          overflow-y: auto;
+          padding-bottom: 120px;
+        }
+
+        .page-title {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 20px;
           font-weight: 600;
-          color: #fff;
-          margin-bottom: 4px;
+          color: #FFFFFF;
+          text-align: center;
+          margin: 0 0 12px 0;
         }
-        .aspiration__label2 {
-          display: block;
-          font-size: 14px;
-          color: #888;
-          margin-bottom: 12px;
-        }
-        .price__radio__label {
-          display: block;
-          font-size: 16px;
-          font-weight: 600;
-          color: #fff;
-          margin-bottom: 8px;
-        }
-        .price__radio__gentlemen {
-          font-size: 14px;
-          color: #aaa;
+
+        .page-subtitle {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 13px;
+          font-weight: 400;
+          color: #CCCCCC;
+          text-align: center;
+          margin: 0 auto 32px;
+          max-width: 500px;
           line-height: 1.5;
         }
+
+        .page-subtitle strong {
+          color: #FFFFFF;
+          font-weight: 600;
+        }
+
+        .two-column-layout {
+          display: flex;
+          flex-direction: column;
+          gap: 32px;
+        }
+
+        .left-column,
+        .right-column {
+          flex: 1;
+        }
+
+        .form-section {
+          background: transparent;
+          border: none;
+          padding: 0;
+        }
+
+        .section-label {
+          display: block;
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 16px;
+          font-weight: 600;
+          color: #FFFFFF;
+          margin-bottom: 6px;
+        }
+
+        .section-label.secondary {
+          margin-top: 16px;
+        }
+
+        .section-sublabel {
+          display: block;
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 12px;
+          font-weight: 400;
+          color: #999999;
+          margin-bottom: 16px;
+        }
+
+        .section-description {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 14px;
+          font-weight: 400;
+          color: #CCCCCC;
+          line-height: 1.5;
+          margin: 0 0 16px 0;
+        }
+
+        .custom-select {
+          width: 100%;
+          padding: 14px 16px;
+          font-size: 16px;
+          background: #000000;
+          color: #FFFFFF;
+          border: 1px solid #333333;
+          border-radius: 8px;
+          cursor: pointer;
+          margin-bottom: 12px;
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+        }
+
+        .custom-select:focus {
+          outline: none;
+          border-color: #FF3B81;
+        }
+
+        .custom-select option {
+          background: #000000;
+          color: #FFFFFF;
+        }
+
+        .price-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          margin-bottom: 16px;
+        }
+
+        .price-card {
+          background: transparent;
+          border: 1px solid #333333;
+          border-radius: 10px;
+          padding: 18px 12px;
+          color: #FFFFFF;
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 17px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .price-card:hover {
+          border-color: #FF3B81;
+          transform: translateY(-2px);
+        }
+
+        .price-card.selected {
+          background: #FF3B81;
+          border: 2px solid #FF3B81;
+          color: #FFFFFF;
+        }
+
+        .pro-tip {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 12px;
+          font-weight: 400;
+          color: #999999;
+          line-height: 1.5;
+          margin: 16px 0 0 0;
+        }
+
+        .bottom-button-container {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 16px;
+          background: #000000;
+          display: flex;
+          justify-content: center;
+        }
+
+        .next-button {
+          width: 100%;
+          max-width: 420px;
+          height: 48px;
+          background: #FF3B81;
+          border: none;
+          border-radius: 8px;
+          color: #FFFFFF;
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .next-button:hover:not(.disabled) {
+          opacity: 0.9;
+        }
+
+        .next-button.disabled {
+          background: #333333;
+          color: #666666;
+          cursor: not-allowed;
+        }
+
+        @media (min-width: 768px) {
+          .create-date-content {
+            padding: 40px 32px;
+            max-width: 900px;
+            margin: 0 auto;
+          }
+
+          .page-title {
+            font-size: 28px;
+            margin-bottom: 40px;
+          }
+
+          .two-column-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+          }
+
+          .form-section {
+            padding: 24px;
+          }
+
+          .price-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+
+          .bottom-button-container {
+            padding: 24px 32px;
+          }
+
+          .next-button {
+            height: 56px;
+            font-size: 18px;
+            max-width: 900px;
+            margin: 0 auto;
+          }
+        }
       `}</style>
-    </>
+    </div>
   );
 }
 

@@ -69,7 +69,7 @@ const Messages = (props) => {
   const [arrivalMessage, setArrivalMessage] = useState("");
   const scrollRef = useRef();
   const [chatModal, setChatModal] = useState(false);
-  const [search, setSearch] = useState("");
+  // Search functionality removed - const [search, setSearch] = useState("");
   const { width } = useWindowSize();
   const mobile = width < 768;
   const router = useRouter();
@@ -697,14 +697,7 @@ const Messages = (props) => {
   const conversationLength = conversations
     ?.filter(
       (c) =>
-        (c.status == 1 || c.status == 2) &&
-        c?.user?.user_name
-          ?.toLowerCase()
-          .trim()
-          .includes(search.toLowerCase().trim())
-    )
-    .filter((c) =>
-      search?.length > 0 ? !c.message || c.message : c.message
+        (c.status == 1 || c.status == 2) && c.message
     )?.length;
 
   const requestedConversationLength = conversations?.filter(
@@ -768,16 +761,6 @@ const Messages = (props) => {
               <div className="row">
                 <div className="col-md-4 col-lg-3 p-0">
                   <div className="message_sidebar_wrap">
-                    <Field
-                      name="search"
-                      type="text"
-                      component={Inputs.inputFieldWithIcon}
-                      placeholder=" Search"
-                      icon={<IoMdSearch size={20} />}
-                      onChange={(e) => {
-                        setSearch(e.target.value);
-                      }}
-                    />
                     <Tabs
                       selectedIndex={selectedTabIndex}
                       onSelect={tabIndexChange}
@@ -846,30 +829,12 @@ const Messages = (props) => {
                               conversations
                                 .filter(
                                   (c) =>
-                                    (c.status == 1 || c.status == 2) &&
-                                    c?.user?.user_name
-                                      ?.toLowerCase()
-                                      .trim()
-                                      .includes(search.toLowerCase().trim())
-                                )
-                                .filter((c) =>
-                                  search?.length > 0
-                                    ? !c.message || c.message
-                                    : c.message
+                                    (c.status == 1 || c.status == 2) && c.message
                                 )?.length > 0 ? (
                                 conversations
                                   .filter(
                                     (c) =>
-                                      (c.status == 1 || c.status == 2) &&
-                                      c?.user?.user_name
-                                        ?.toLowerCase()
-                                        .trim()
-                                        .includes(search.toLowerCase().trim())
-                                  )
-                                  .filter((c) =>
-                                    search?.length > 0
-                                      ? !c.message || c.message
-                                      : c.message
+                                      (c.status == 1 || c.status == 2) && c.message
                                   )
                                   .sort((a, b) => {
                                     return (

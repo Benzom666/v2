@@ -187,11 +187,25 @@ export const useCreateDateFlow = (createDateContext) => {
 
       const selectedExperience = formData.search_type;
       const experienceCategory = selectedExperience?.category;
+      const resolvedCityName =
+        cityState?.enter_city?.name ||
+        cityState?.enter_city?.label ||
+        cityState?.enter_city ||
+        "";
+      const resolvedCountryLabel =
+        cityState?.enter_country?.label ||
+        cityState?.enter_country?.text ||
+        cityState?.enter_country?.name ||
+        "Unknown";
+      const resolvedCountryCode =
+        cityState?.enter_country?.value ||
+        cityState?.enter_country?.short_code ||
+        "XX";
       const data = {
         user_name: user?.user_name,
-        location: cityState?.enter_city?.name,
-        country: cityState?.enter_country?.label,
-        country_code: cityState?.enter_country?.value,
+        location: resolvedCityName,
+        country: resolvedCountryLabel,
+        country_code: resolvedCountryCode,
         province: cityState?.enter_city?.province?.[0]?.short_code,
         standard_class_date:
           experienceCategory === "standard_class_date"
@@ -213,9 +227,9 @@ export const useCreateDateFlow = (createDateContext) => {
 
       const hasAllRequiredForCreate =
         !!user?.user_name &&
-        !!cityState?.enter_city?.name &&
-        !!cityState?.enter_country?.value &&
-        !!cityState?.enter_country?.label &&
+        !!resolvedCityName &&
+        !!resolvedCountryCode &&
+        !!resolvedCountryLabel &&
         !!formData.date_duration &&
         !!formData.education &&
         !!formData.date_description;

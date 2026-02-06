@@ -185,21 +185,14 @@ const Step2CategoryMobile = () => {
                       Your selection will be locked for 30 days
                     </label>
                     <select
-                      className="form-control"
-                      style={{
-                        width: "100%",
-                        padding: "12px",
-                        fontSize: "16px",
-                        border: "1px solid #ddd",
-                        borderRadius: "8px",
-                        marginBottom: "16px",
-                        backgroundColor: "#fff"
-                      }}
+                      className="form-control aspiration-select"
                       value={categoryId || ""}
                       onChange={(e) => handleCategoryChange(e.target.value)}
                       disabled={disableDropdowns}
                     >
-                      <option value="">Select A Category</option>
+                      <option value="" disabled>
+                        Select A Category
+                      </option>
                       {categories.map((item) => (
                         <option key={item.value} value={item.value}>
                           {item.label}
@@ -209,15 +202,7 @@ const Step2CategoryMobile = () => {
 
                     <div className="aspiration__antd__dropdown2">
                       <select
-                        className="form-control"
-                        style={{
-                          width: "100%",
-                          padding: "12px",
-                          fontSize: "16px",
-                          border: "1px solid #ddd",
-                          borderRadius: "8px",
-                          backgroundColor: !categoryId || !(aspirations.length > 0) ? "#f5f5f5" : "#fff"
-                        }}
+                        className="form-control aspiration-select"
                         value={aspirationId || ""}
                         onChange={(e) => handleAspirationChange(e.target.value)}
                         disabled={
@@ -226,7 +211,9 @@ const Step2CategoryMobile = () => {
                           disableDropdowns
                         }
                       >
-                        <option value="">Select Your Aspiration</option>
+                        <option value="" disabled>
+                          Select Your Aspiration
+                        </option>
                         {aspirations.map((item) => (
                           <option key={item.value} value={item.value}>
                             {item.label}

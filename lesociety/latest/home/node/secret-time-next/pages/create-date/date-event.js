@@ -1,24 +1,7 @@
-// import CreateDate from "modules/date/create-date"; // REMOVED - broken module
-import SimpleCreateStepTwo from "modules/date/create-date/SIMPLE_CreateStepTwo";
-import HeaderLoggedIn from "@/core/loggedInHeader";
-import Footer from "core/footer";
-import useWindowSize from "/utils/useWindowSize";
-import withAuth from "../../core/withAuth";
+import SIMPLE_CreateStepTwo from "modules/date/create-date/SIMPLE_CreateStepTwo";
 
-function Step1({ dispatch, ...props }) {
-  const { width } = useWindowSize();
-
-  return (
-    <div className="inner-page">
-      {/* {width > 767 && <HeaderLoggedIn />} */}
-      <div className="inner-part-page">
-        <div className="auth-section create-date-wrap">
-          <SimpleCreateStepTwo />
-        </div>
-      </div>
-      <Footer />
-    </div>
-  );
+function DateEventPage(props) {
+  return <SIMPLE_CreateStepTwo {...props} />;
 }
 
-export default withAuth(Step1);
+export default DateEventPage;

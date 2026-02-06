@@ -1,455 +1,423 @@
 import React, { useState, useEffect } from "react";
-import { Field, reduxForm, reset, change, initialize } from "redux-form";
-import validate from "modules/auth/forms/validate/validate";
-import { FiArrowRight } from "react-icons/fi";
-import Footer from "core/footer";
-import { Inputs } from "core";
-import Link from "next/link";
-import {
-  fetchLocation,
-  fetchLiveLocation,
-  fetchRealLocation,
-} from "../../modules/auth/forms/steps/validateRealTime";
-import { countriesCode, apiRequest, dateCategory } from "../../utils/Utilities";
-import { useDispatch, useSelector } from "react-redux";
-import ConfirmDate from "./../../modules/date/confirmDate";
-import withAuth from "../../core/withAuth";
-import router from "next/router";
-import { components } from "react-select";
-import Loader from "@/modules/Loader/Loader";
-import { logout } from "@/modules/auth/authActions";
-import CreateDateHeader from "@/core/CreateDateHeader";
-import CreateDateGateModal from "@/core/CreateDateGateModal";
-import { AUTHENTICATE_UPDATE } from "@/modules/auth/actionConstants";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { FiMapPin, FiX } from "react-icons/fi";
+import CreateDateNewHeader from "@/core/CreateDateNewHeader";
+import { fetchRealLocation } from "@/modules/auth/forms/steps/validateRealTime";
 
-const ChooseCity = (props) => {
-  const [locationOptions, setLocation] = useState([]);
-  const [places, setPlaces] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [loadingLive, setLoadingLive] = useState(false);
-  const [confirmPopup, setConfirmPopup] = useState(false);
-  const [draftDateLoading, setDraftDateLoading] = useState(false);
-  const [activeDatesCount, setActiveDatesCount] = useState(0);
-  const [showIntroModal, setShowIntroModal] = useState(false);
-  const [showLimitModal, setShowLimitModal] = useState(false);
-  const [dontShowAgain, setDontShowAgain] = useState(false);
-  const dispatch = useDispatch();
-  const state = useSelector((state) => state.form.ChooseCity?.values);
-  const user = useSelector((state) => state.authReducer.user);
+function ChooseCity() {
+  const router = useRouter();
+  const user = useSelector((state) => state?.authReducer?.user);
+  const [city, setCity] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedCity, setSelectedCity] = useState(null);
 
-  const handleChange = async (value, inputAction) => {
-    if (inputAction.action === "input-change") {
-      setInputValue(value);
-      fetchRealLocation(
-        value,
-        countriesCode[state?.enter_country?.value] ||
-          countriesCode[state?.enter_country?.label],
-        setPlaces
-      );
-    }
-  };
+  const FALLBACK_CITIES = [
+    "New York, NY",
+    "Los Angeles, CA",
+    "Chicago, IL",
+    "Houston, TX",
+    "Phoenix, AZ",
+    "Philadelphia, PA",
+    "San Antonio, TX",
+    "San Diego, CA",
+    "Dallas, TX",
+    "San Jose, CA",
+    "Austin, TX",
+    "San Francisco, CA",
+    "Seattle, WA",
+    "Denver, CO",
+    "Washington, DC",
+    "Boston, MA",
+    "Toronto, ON",
+    "Vancouver, BC",
+  ];
 
-  const toggle = () => setConfirmPopup(!confirmPopup);
-
-  const fetchDraftedDate = async () => {
-    setDraftDateLoading(true);
+  useEffect(() => {
     try {
-      //debugger
-      const res = await apiRequest({
-        url: "date",
-        params: {
-          user_name: user?.user_name,
-          current_page: 1,
-          per_page: 10000,
-        },
-      });
-
-      if (res?.data?.data?.length === 0) {
-        setDraftDateLoading(false);
-        // dispatch(initialize("ChooseCity", ""));
-        dispatch(initialize("CreateStepOne", ""));
-        dispatch(initialize("CreateStepTwo", ""));
-        dispatch(initialize("CreateStepThree", ""));
-        dispatch(initialize("CreateStepFour", ""));
-        setActiveDatesCount(0);
-        if (
-          router?.query?.showIntro === "true" &&
-          !user?.create_date_popup_dismissed
-        ) {
-          setShowIntroModal(true);
+      const data = localStorage.getItem("create_date_flow");
+      if (data) {
+        const savedData = JSON.parse(data);
+        if (savedData.city) {
+          setCity(savedData.city);
         }
-      }
-
-      if (res.data.data?.dates) {
-        const draftedDate = res.data.data?.dates.find(
-          (item) => item?.date_status === false
-        );
-        if (!draftedDate) {
-          setDraftDateLoading(false);
-          // dispatch(initialize("ChooseCity", ""));
-          dispatch(initialize("CreateStepOne", ""));
-          dispatch(initialize("CreateStepTwo", ""));
-          dispatch(initialize("CreateStepThree", ""));
-          dispatch(initialize("CreateStepFour", ""));
-          const activeCount = res.data.data?.dates?.filter(
-            (item) => item?.date_status === true
-          )?.length || 0;
-          setActiveDatesCount(activeCount);
-          if (router?.query?.showIntro === "true" && activeCount >= 4) {
-            setShowLimitModal(true);
-          }
-          if (
-            router?.query?.showIntro === "true" &&
-            !user?.create_date_popup_dismissed &&
-            activeCount < 4
-          ) {
-            setShowIntroModal(true);
-          }
-        }
-        if (draftedDate) {
-          const shouldResume =
-            router?.query?.resume === "true" || router?.query?.drafted === "true";
-          if (!shouldResume) {
-            setDraftDateLoading(false);
-            dispatch(initialize("CreateStepOne", ""));
-            dispatch(initialize("CreateStepTwo", ""));
-            dispatch(initialize("CreateStepThree", ""));
-            dispatch(initialize("CreateStepFour", ""));
-            const activeCount = res.data.data?.dates?.filter(
-              (item) => item?.date_status === true
-            )?.length || 0;
-            setActiveDatesCount(activeCount);
-            if (router?.query?.showIntro === "true" && activeCount >= 4) {
-              setShowLimitModal(true);
-            }
-            if (
-              router?.query?.showIntro === "true" &&
-              !user?.create_date_popup_dismissed &&
-              activeCount < 4
-            ) {
-              setShowIntroModal(true);
-            }
-            return;
-          }
-          const category = dateCategory.find(
-            (item) =>
-              item?.label === draftedDate?.standard_class_date ||
-              item?.label === draftedDate?.middle_class_dates ||
-              item?.label === draftedDate?.executive_class_dates
-          );
-          const country = Object.keys(countriesCode).find(
-            (key) =>
-              countriesCode[key]?.toLowerCase() ===
-              draftedDate.country_code?.toLowerCase()
-          );
-
-          dispatch(
-            initialize("ChooseCity", {
-              enter_country: {
-                label: country,
-                value: draftedDate.country_code,
-              },
-              enter_city: {
-                name: draftedDate?.location,
-                country: [
-                  {
-                    short_code: draftedDate.country_code,
-                    text: country,
-                  },
-                ],
-                label: draftedDate?.location + ", " + draftedDate?.province,
-                province: [
-                  { short_code: draftedDate?.province?.toUpperCase() },
-                ],
-              },
-            })
-          );
-          dispatch(
-            initialize("CreateStepOne", {
-              search_type: category,
-              image_index: draftedDate?.image_index ?? 0,
-              dateId: draftedDate?._id || draftedDate?.date_id,
-            })
-          );
-          dispatch(
-            initialize("CreateStepTwo", {
-              education: draftedDate?.price,
-              enter__category: user?.categatoryId,
-              enter__aspiration: user?.aspirationId,
-            })
-          );
-          dispatch(
-            initialize("CreateStepThree", {
-              education: draftedDate?.date_length,
-              date_duration: draftedDate?.date_length,
-            })
-          );
-          dispatch(
-            initialize("CreateStepFour", {
-              date_description: draftedDate?.date_details,
-            })
-          );
-          setDraftDateLoading(false);
-          router.push("/create-date/date-event?drafted=true");
+        if (savedData.cityData) {
+          setSelectedCity(savedData.cityData);
         }
       }
     } catch (err) {
-      console.log(err);
-      setDraftDateLoading(false);
-      // dispatch(initialize("ChooseCity", ""));
-      dispatch(initialize("CreateStepOne", ""));
-      dispatch(initialize("CreateStepTwo", ""));
-      dispatch(initialize("CreateStepThree", ""));
-      dispatch(initialize("CreateStepFour", ""));
-      if (
-        err?.response?.status === 401 &&
-        err?.response?.data?.message === "Failed to authenticate token!"
-      ) {
-        setTimeout(() => {
-          logout(router, dispatch);
-        }, 100);
-      }
-      return err;
-    }
-  };
-
-  useEffect(() => {
-    const fetch = async () => {
-      const location = await fetchLocation();
-      if (location) {
-        const locationOption = location
-          ?.map(
-            (item) =>
-              item.isAvailable === 1 && {
-                label: item.name,
-                value: countriesCode[item.name],
-              }
-          )
-          ?.filter((item) => item);
-        setLocation(locationOption);
-      }
-    };
-    fetch();
-    if (user?.country && user?.location) {
-      const data = {
-        enter_country: {
-          label: user?.country,
-          value: countriesCode[user?.country],
-        },
-        enter_city: {
-          name: user?.location,
-          country: user?.country,
-          label: user?.location + ", " + user?.province?.toUpperCase(),
-          province: [{ short_code: user?.province?.toUpperCase() }],
-        },
-      };
-      props.initialize(data);
-    }
-    if (!router?.query.edit) {
-      fetchDraftedDate();
+      console.error("Error loading from localStorage:", err);
     }
   }, []);
 
-  const handleIntroProceed = async () => {
-    if (dontShowAgain) {
-      try {
-        const res = await apiRequest({
-          method: "POST",
-          url: "user/update-popup-preferences",
-          data: { create_date_popup_dismissed: true },
-        });
-        if (res?.data?.data?.user) {
-          dispatch({
-            type: AUTHENTICATE_UPDATE,
-            payload: res.data.data.user,
-          });
-        }
-      } catch (err) {
-        console.log("Failed to update popup preference", err);
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setCity(value);
+    setSelectedCity(null);
+
+    if (value.length >= 2) {
+      setLoading(true);
+      const filteredFallback = FALLBACK_CITIES.filter((c) =>
+        c.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 5);
+      if (filteredFallback.length) {
+        setSuggestions(filteredFallback.map((c) => ({ label: c, name: c })));
       }
+      fetchRealLocation(value, undefined, (places) => {
+        setSuggestions(places || []);
+        setShowSuggestions(true);
+        setLoading(false);
+      });
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
     }
-    setShowIntroModal(false);
   };
 
-  const handleLimitClose = () => {
-    setShowLimitModal(false);
-    router.back();
+  const handleSelectCity = (cityOption) => {
+    const displayLabel = cityOption?.label || cityOption?.name || "";
+    setCity(displayLabel);
+    setShowSuggestions(false);
+    setSuggestions([]);
+    setSelectedCity(cityOption);
+
+    try {
+      const existingData = localStorage.getItem("create_date_flow");
+      const parsedData = existingData ? JSON.parse(existingData) : {};
+      const updatedData = {
+        ...parsedData,
+        city: displayLabel,
+        cityData: cityOption,
+      };
+      localStorage.setItem("create_date_flow", JSON.stringify(updatedData));
+    } catch (err) {
+      console.error("Error saving to localStorage:", err);
+    }
   };
 
-  const handleIcon = () => {
-    setLoadingLive(true);
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        if (
-          position.coords.latitude !== undefined &&
-          position.coords.longitude !== undefined
-        ) {
-          const location = await fetchLiveLocation(
-            position.coords.latitude,
-            position.coords.longitude
-          );
-          const data = {
-            enter_country: {
-              label: location[0].country[0].text,
-              value: location[0].country[0].short_code,
-            },
-            enter_city: {
-              name: location[0].name,
-              country: location[0].country[0],
-              label:
-                location[0].name +
-                ", " +
-                location[0].province[0]?.short_code
-                  ?.split("-")[1]
-                  ?.toUpperCase(),
-              province: location[0]?.province,
-            },
-          };
-          props.initialize(data);
-          setLoadingLive(false);
-        }
-      },
-      (err) => setLoadingLive(false),
-      { enableHighAccuracy: true }
-    );
+  const handleClear = () => {
+    setCity("");
+    setSuggestions([]);
+    setShowSuggestions(false);
   };
 
-  const { handleSubmit, invalid, pristine, submitting, touched } = props;
-
-  const previousPage = () => {
-    router.back();
+  const handleNext = () => {
+    if (!city.trim()) {
+      alert("Please enter a city");
+      return;
+    }
+    if (!selectedCity) {
+      alert("Please select a city from the suggestions");
+      return;
+    }
+    router.push("/create-date/choose-date-type");
   };
 
-  if (draftDateLoading) {
-    return <Loader />;
-  } else {
-    return (
-      <div className="inner-page ">
-        {/* {width > 767 && <HeaderLoggedIn />} */}
-        <div className="inner-part-page">
-          <div className="create-date-wrap new-date">
-            <div className="create-date-shell">
-            {!confirmPopup ? (
-              <div className="auth-section choose-city new-city create-date-panel">
-                <form onSubmit={handleSubmit}>
-                  <CreateDateGateModal
-                    isOpen={showIntroModal}
-                    variant="intro"
-                    onClose={() => setShowIntroModal(false)}
-                    onProceed={handleIntroProceed}
-                    checked={dontShowAgain}
-                    onToggleChecked={() => setDontShowAgain(!dontShowAgain)}
-                  />
-                  <CreateDateGateModal
-                    isOpen={showLimitModal}
-                    variant="limit"
-                    onClose={handleLimitClose}
-                  />
-                  <CreateDateHeader
-                    activeStep={0}
-                    onBack={previousPage}
-                    onClose={toggle}
-                    showBack={true}
-                    showClose={true}
-                  />
-                  {!confirmPopup ? (
-                    <div className="create-date-content">
-                      <div className="inner_container">
-                        <div className="create-date-intro">
-                          <h2>Where does your adventure start?</h2>
-                          <div className="intro-subtitle">Pick your city.</div>
-                          <div className="intro-note">
-                            Want to be discoverable in multiple cities? Just
-                            create a separate date for each one.
-                          </div>
-                        </div>
-                      </div>
-                      <div className="content-section">
-                        {/* <p>Single post allows you to choose only one location. Hence, more posts will give you more exposure</p> */}
-                        {/* <p>Please select the location where you would like to be showcased.</p>
-                                  <p>Each post is showcased in one location <br /> of your choice. </p>
-                                  <p>Hence if you wish to have presence in multiple location, you will need several posts.</p> */}
-                      </div>
-                      <div className="location-field-wrap">
-                        <Field
-                          name="enter_country"
-                          type="text"
-                          component={Inputs.renderDropdown}
-                          placeholder="Enter Country"
-                          withIcon={true}
-                          options={locationOptions}
-                          iconClick={handleIcon}
-                          openMenuOnClick={false}
-                          loading={loadingLive}
-                        />
-                        <Field
-                          name="enter_city"
-                          type="text"
-                          component={Inputs.renderDropdown}
-                          options={places}
-                          placeholder="Enter City"
-                          withIcon={true}
-                          iconClick={handleIcon}
-                          openMenuOnClick={false}
-                          inputValue={inputValue}
-                          onInputChange={handleChange}
-                          isDisabled={!state?.enter_country?.value}
-                          menuIsOpen={inputValue && places.length}
-                          onChange={(value) => {
-                            setInputValue("");
-                            change("enter_city", value);
-                          }}
-                          loading={loadingLive}
-                          components={{
-                            Option: ({ children, ...rest }) => (
-                              <components.Option {...rest}>
-                                <>
-                                  <h6>{children.split(",")[0]}</h6>{" "}
-                                  <span>
-                                    {rest.data?.province[0]?.text},{" "}
-                                    {rest.data?.country[0]?.text}
-                                  </span>
-                                </>
-                              </components.Option>
-                            ),
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ) : null}
-                  <div className="bottom-mobile register-bottom choose-city-next-btn">
-                    <div className="secret-input type-submit next-prev">
-                      {!confirmPopup && (
-                        <Link
-                          href={
-                            router?.query.edit
-                              ? "/create-date/date-event?edit=true"
-                              : "/create-date/date-event"
-                          }
-                        >
-                          <button className="next" disabled={invalid}>
-                            {/* <span className="spin-loader-button"></span> */}
-                            Next <FiArrowRight />
-                          </button>
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </form>
-              </div>
-            ) : null}
-            </div>
+  return (
+    <div className="create-date-page">
+      <CreateDateNewHeader
+        activeStep={0}
+        onBack={() => router.push("/user/user-list")}
+        onClose={() => router.push("/user/user-list")}
+      />
+
+      <div className="create-date-content">
+        <h1 className="page-title">Where does your adventure start?</h1>
+        <p className="page-subtitle">Pick your city.</p>
+        <p className="page-note">
+          Want to be discoverable in multiple cities? Just create a separate
+          date for each one.
+        </p>
+
+        <div className="input-section">
+          <div className="input-wrapper">
+            <svg className="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2"/>
+              <line x1="12" y1="1" x2="12" y2="5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="1" y1="12" x2="5" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="19" y1="12" x2="23" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <input
+              type="text"
+              value={city}
+              onChange={handleInputChange}
+              placeholder="Enter your city"
+              className="city-input"
+              autoComplete="off"
+            />
+            {city && (
+              <button
+                className="clear-btn"
+                onClick={handleClear}
+                type="button"
+              >
+                <FiX size={18} />
+              </button>
+            )}
           </div>
+
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="suggestions-dropdown">
+              {suggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  className="suggestion-item"
+                  onClick={() => handleSelectCity(suggestion)}
+                  type="button"
+                >
+                  <FiMapPin size={16} />
+                  {suggestion?.label || suggestion?.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-        <Footer />
-        <ConfirmDate isOpen={confirmPopup} toggle={toggle} />
       </div>
-    );
-  }
-};
-export default reduxForm({
-  form: "ChooseCity", // <------ same form name
-  destroyOnUnmount: false, // <------ preserve form data
-  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
-  validate,
-})(withAuth(ChooseCity));
+
+      <div className="bottom-button-container">
+        <button
+          className={`next-button ${!selectedCity ? "disabled" : ""}`}
+          onClick={handleNext}
+          disabled={!selectedCity}
+        >
+          NEXT
+        </button>
+      </div>
+
+      <style jsx>{`
+        .create-date-page {
+          min-height: 100vh;
+          background: #000000;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .create-date-content {
+          flex: 1;
+          padding: 24px 16px;
+          overflow-y: auto;
+          padding-bottom: 120px;
+        }
+
+        .page-title {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 28px;
+          font-weight: 600;
+          color: #FFFFFF;
+          text-align: center;
+          margin: 0 0 12px 0;
+        }
+
+        .page-subtitle {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 16px;
+          font-weight: 400;
+          color: #CCCCCC;
+          text-align: center;
+          margin: 0 0 16px 0;
+        }
+
+        .page-note {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 14px;
+          font-weight: 400;
+          color: #888888;
+          text-align: center;
+          line-height: 1.5;
+          margin: 0 0 48px 0;
+          padding: 0 16px;
+        }
+
+        .input-section {
+          max-width: 500px;
+          margin: 0 auto;
+          position: relative;
+        }
+
+        .input-wrapper {
+          position: relative;
+        }
+
+        .input-icon {
+          position: absolute;
+          left: 18px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #FFFFFF;
+          z-index: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .city-input {
+          width: 100%;
+          padding: 18px 54px 18px 52px;
+          font-size: 16px;
+          background: transparent;
+          color: #FFFFFF;
+          border: 1px solid #333333;
+          border-radius: 12px;
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          transition: all 0.3s ease;
+        }
+
+        .city-input:focus {
+          outline: none;
+          border-color: #FF3B81;
+          box-shadow: 0 0 0 1px #FF3B81;
+        }
+
+        .city-input::placeholder {
+          color: #666666;
+        }
+
+        .clear-btn {
+          position: absolute;
+          right: 18px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: transparent;
+          border: none;
+          color: #888888;
+          cursor: pointer;
+          padding: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 2;
+          transition: all 0.2s ease;
+        }
+
+        .clear-btn:hover {
+          color: #FFFFFF;
+        }
+
+        .suggestions-dropdown {
+          position: absolute;
+          top: calc(100% + 4px);
+          left: 0;
+          right: 0;
+          background: #0A0A0A;
+          border: 1px solid #222222;
+          border-radius: 12px;
+          max-height: 250px;
+          overflow-y: auto;
+          z-index: 1000;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+        }
+
+        .suggestion-item {
+          width: 100%;
+          padding: 16px;
+          background: transparent;
+          border: none;
+          border-bottom: 1px solid #1A1A1A;
+          color: #CCCCCC;
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 15px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          text-align: left;
+          transition: all 0.2s ease;
+        }
+
+        .suggestion-item:last-child {
+          border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+          background: #111111;
+          color: #FFFFFF;
+        }
+
+        .bottom-button-container {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 16px;
+          background: #000000;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .next-button {
+          width: 100%;
+          max-width: 420px;
+          height: 52px;
+          background: #FF3B81;
+          border: none;
+          border-radius: 12px;
+          color: #FFFFFF;
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          padding: 0 32px;
+        }
+
+        .next-button:hover:not(.disabled) {
+          opacity: 0.9;
+        }
+
+        .next-button.disabled {
+          background: #1A1A1A;
+          color: #666666;
+          cursor: not-allowed;
+        }
+
+        @media (min-width: 768px) {
+          .create-date-content {
+            padding: 40px 32px;
+          }
+
+          .page-title {
+            font-size: 36px;
+          }
+
+          .page-subtitle {
+            font-size: 18px;
+          }
+
+          .page-note {
+            font-size: 15px;
+            padding: 0;
+          }
+
+          .city-input {
+            padding: 20px 50px 20px 50px;
+            font-size: 17px;
+          }
+
+          .bottom-button-container {
+            padding: 24px 32px;
+          }
+
+          .next-button {
+            height: 56px;
+            font-size: 18px;
+            max-width: 400px;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+export default ChooseCity;

@@ -1,47 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import CreateDateNewHeader from "@/core/CreateDateNewHeader";
+import { toast } from "react-toastify";
 
-const DURATION_OPTIONS = [
-  { 
-    label: "1-2 hours", 
-    value: "1-2 hours",
-    description: "A quick drink or coffee."
-  },
-  { 
-    label: "2-3 hours", 
-    value: "2-3 hours",
-    description: "Dinner and a relaxed evening."
-  },
-  { 
-    label: "3-4 hours", 
-    value: "3-4 hours",
-    description: "Dinner + drinks or a show."
-  },
-  { 
-    label: "Full evening (4+ hours)", 
-    value: "Full evening (4+ hours)",
-    description: "Let the night unfold beautifully."
-  },
-  { 
-    label: "Flexible – lets see where it take us", 
-    value: "Flexible – lets see where it take us",
-    description: ""
-  },
-];
-
-function CreateDuration() {
+function CreateDescription() {
   const router = useRouter();
-  const [selectedDuration, setSelectedDuration] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     try {
       const data = localStorage.getItem("create_date_flow");
       if (data) {
         const savedData = JSON.parse(data);
-        if (savedData.selectedDuration) {
-          setSelectedDuration(savedData.selectedDuration);
-        }
+        if (savedData.description) setDescription(savedData.description);
       }
     } catch (err) {
       console.error("Error loading from localStorage:", err);
@@ -49,61 +20,74 @@ function CreateDuration() {
   }, []);
 
   const handleNext = () => {
-    if (!selectedDuration) return;
+    if (!description.trim()) {
+      toast.error("Please describe your date");
+      return;
+    }
+
+    if (description.trim().length < 20) {
+      toast.error("Please provide at least 20 characters");
+      return;
+    }
 
     try {
       const existingData = localStorage.getItem("create_date_flow");
       const parsedData = existingData ? JSON.parse(existingData) : {};
       const updatedData = {
         ...parsedData,
-        selectedDuration,
+        description,
       };
       localStorage.setItem("create_date_flow", JSON.stringify(updatedData));
     } catch (err) {
       console.error("Error saving to localStorage:", err);
     }
 
-    router.push("/create-date/description");
+    router.push("/create-date/review");
   };
 
   return (
     <div className="create-date-page">
       <CreateDateNewHeader
-        activeStep={3}
-        onBack={() => router.push("/create-date/date-event")}
+        activeStep={4}
+        onBack={() => router.push("/create-date/duration")}
         onClose={() => router.push("/user/user-list")}
       />
 
       <div className="create-date-content">
-        <h1 className="page-title">How long do you want this date to last?</h1>
+        <h1 className="page-title">Make him want this date.</h1>
         <p className="page-subtitle">
-          Be upfront — great dates start with perfect timing.
+          Tell him why this night with you is unforgettable. Your vibe, your
+          energy, what he can expect.
         </p>
 
-        <div className="duration-grid">
-          {DURATION_OPTIONS.map((option) => {
-            const isSelected = selectedDuration === option.value;
-            return (
-              <button
-                key={option.value}
-                className={`duration-card ${isSelected ? "selected" : ""}`}
-                onClick={() => setSelectedDuration(option.value)}
-              >
-                <div className="duration-label">{option.label}</div>
-                {option.description && (
-                  <div className="duration-description">{option.description}</div>
-                )}
-              </button>
-            );
-          })}
+        <div className="form-section">
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="I love deep conversations over great wine... I'm playful, classy, and always up for an adventure. Expect laughter, real connection, and a night that feels effortless."
+            maxLength={500}
+            className="description-textarea"
+          />
+          <div className="character-count">
+            {description.length}/500 characters
+          </div>
+
+          <div className="tips-section">
+            <div className="tips-title">Pro tips:</div>
+            <ul className="tips-list">
+              <li>Keep it authentic and fun</li>
+              <li>Be specific about the vibe</li>
+              <li>Leave him wanting more</li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <div className="bottom-button-container">
         <button
-          className={`next-button ${!selectedDuration ? "disabled" : ""}`}
+          className={`next-button ${!description.trim() ? "disabled" : ""}`}
           onClick={handleNext}
-          disabled={!selectedDuration}
+          disabled={!description.trim()}
         >
           NEXT
         </button>
@@ -144,58 +128,72 @@ function CreateDuration() {
           margin: 0 0 32px 0;
         }
 
-        .duration-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 12px;
+        .form-section {
+          background: transparent;
+          border: none;
+          padding: 0;
         }
 
-        .duration-card {
+        .description-textarea {
+          width: 100%;
+          min-height: 220px;
+          padding: 20px;
+          font-size: 15px;
           background: transparent;
+          color: #FFFFFF;
           border: 1px solid #333333;
           border-radius: 16px;
-          padding: 24px 20px;
-          color: #FFFFFF;
+          resize: vertical;
           font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
             Roboto, sans-serif;
-          text-align: left;
-          cursor: pointer;
+          line-height: 1.6;
+          margin-bottom: 12px;
           transition: all 0.3s ease;
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
         }
 
-        .duration-card:hover {
+        .description-textarea:focus {
+          outline: none;
           border-color: #FF3B81;
-          transform: translateY(-2px);
+          box-shadow: 0 0 20px rgba(255, 59, 129, 0.15);
         }
 
-        .duration-card.selected {
-          background: rgba(255, 59, 129, 0.05);
-          border: 2px solid #FF3B81;
-          box-shadow: 0 0 20px rgba(255, 59, 129, 0.2);
+        .description-textarea::placeholder {
+          color: #666666;
         }
 
-        .duration-label {
-          font-size: 17px;
+        .character-count {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 12px;
+          color: #999999;
+          text-align: right;
+          margin-bottom: 24px;
+        }
+
+        .tips-section {
+          padding: 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+        }
+
+        .tips-title {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 14px;
           font-weight: 600;
           color: #FFFFFF;
+          margin-bottom: 8px;
         }
 
-        .duration-card.selected .duration-label {
-          color: #FFFFFF;
-        }
-
-        .duration-description {
-          font-size: 13px;
-          font-weight: 400;
-          color: #999999;
-          line-height: 1.4;
-        }
-
-        .duration-card.selected .duration-description {
-          color: #CCCCCC;
+        .tips-list {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif;
+          font-size: 14px;
+          color: #AAAAAA;
+          line-height: 1.8;
+          margin: 0;
+          padding-left: 20px;
         }
 
         .bottom-button-container {
@@ -251,8 +249,8 @@ function CreateDuration() {
             margin-bottom: 40px;
           }
 
-          .duration-grid {
-            gap: 16px;
+          .form-section {
+            padding: 0;
           }
 
           .bottom-button-container {
@@ -270,4 +268,4 @@ function CreateDuration() {
   );
 }
 
-export default CreateDuration;
+export default CreateDescription;

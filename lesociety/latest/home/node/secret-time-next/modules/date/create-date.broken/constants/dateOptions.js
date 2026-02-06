@@ -1,10 +1,10 @@
-import BrunchImg from "assets/img/Brunch Date.png";
-import EveningImg from "assets/img/Evening Date.png";
-import SportyImg from "assets/img/Get Sporty.png";
-import ClassImg from "assets/img/Take a class.png";
-import WineImg from "assets/img/Wine & Dine.png";
-import BottlesImg from "assets/img/Bottles & Dance.png";
-import EntertainmentImg from "assets/img/Entertainment  & Sports.png";
+import BrunchImg from "assets/new-create-date/24b5b1c3-4a44-4649-89f8-47bbdb4fae91-7.jpg";
+import EveningImg from "assets/new-create-date/24b5b1c3-4a44-4649-89f8-47bbdb4fae91-8.jpg";
+import SportyImg from "assets/new-create-date/24b5b1c3-4a44-4649-89f8-47bbdb4fae91-9.jpg";
+import ClassImg from "assets/new-create-date/24b5b1c3-4a44-4649-89f8-47bbdb4fae91-10.jpg";
+import WineImg from "assets/new-create-date/24b5b1c3-4a44-4649-89f8-47bbdb4fae91-11.jpg";
+import BottlesImg from "assets/new-create-date/24b5b1c3-4a44-4649-89f8-47bbdb4fae91-12.jpg";
+import EntertainmentImg from "assets/new-create-date/24b5b1c3-4a44-4649-89f8-47bbdb4fae91-6.jpg";
 import { CustomIcon } from "core/icon";
 
 /**

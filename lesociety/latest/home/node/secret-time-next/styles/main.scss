@@ -3730,31 +3730,17 @@ div[id="scrolldiv"] {
 
   .sidebar-ring {
     position: relative;
-    width: 72px;
-    height: 72px;
+    width: 80px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 72px;
+    flex: 0 0 80px;
 
-    svg {
-      width: 72px;
-      height: 72px;
-      transform: rotate(-90deg);
-    }
-
-    .ring-bg {
-      fill: none;
-      stroke: #2a2a2a;
-      stroke-width: 8;
-    }
-
-    .ring-progress {
-      fill: none;
-      stroke: url(#sidebar-ring-gradient);
-      stroke-width: 8;
-      stroke-linecap: round;
-      transition: stroke-dasharray 0.5s ease;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .sidebar-ring-value {
@@ -3762,6 +3748,7 @@ div[id="scrolldiv"] {
       font-size: 24px;
       font-weight: 700;
       color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     }
   }
 
