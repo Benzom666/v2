@@ -755,7 +755,7 @@ const Messages = (props) => {
 
       <div className="inner-part-page">
         <div className="">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit((e) => e.preventDefault())}>
             {/* <div className="pl-4 pr-4 message"> */}
             <div className="container message">
               <div className="row">
