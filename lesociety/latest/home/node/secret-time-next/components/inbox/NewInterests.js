@@ -27,7 +27,7 @@ const NewInterests = ({ interestCount = 0, activeDatesCount = 0 }) => {
           </InterestSubtext>
         </InterestCopy>
         <InterestRing>
-          <Image src={require('../../assets/ring-new.png')} alt="Interest Ring" width={80} height={80} />
+          <Image src={require('../../assets/bestring.png')} alt="Interest Ring" width={80} height={80} />
           <span className="ring-value">{interestCount}</span>
         </InterestRing>
       </InterestCard>

@@ -224,32 +224,14 @@ export default function SideBar({ isActive, count }) {
                     <div className="token-circle active">
                       <div className="token-label">Interested</div>
                       <div className="token-circle-inner">
-                        <svg viewBox="0 0 100 100" className="token-ring">
-                          <defs>
-                            <linearGradient id="token-gradient-interested" x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" stopColor="#f24462" />
-                              <stop offset="100%" stopColor="#4a90e2" />
-                            </linearGradient>
-                          </defs>
-                          <circle cx="50" cy="50" r="42" className="token-ring-bg" />
-                          <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '264 264', stroke: 'url(#token-gradient-interested)' }} />
-                        </svg>
+                        <Image src={require('../assets/bestring.png')} alt="Interested Ring" width={100} height={100} />
                         <div className="token-value">{interestedTokens}</div>
                       </div>
                     </div>
                     <div className="token-circle active">
                       <div className="token-label">Super Interested</div>
                       <div className="token-circle-inner">
-                        <svg viewBox="0 0 100 100" className="token-ring">
-                          <defs>
-                            <linearGradient id="token-gradient-super" x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" stopColor="#f24462" />
-                              <stop offset="100%" stopColor="#4a90e2" />
-                            </linearGradient>
-                          </defs>
-                          <circle cx="50" cy="50" r="42" className="token-ring-bg" />
-                          <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '264 264', stroke: 'url(#token-gradient-super)' }} />
-                        </svg>
+                        <Image src={require('../assets/bestring.png')} alt="Super Interested Ring" width={100} height={100} />
                         <div className="token-value">{superInterestedTokens}</div>
                       </div>
                     </div>
@@ -287,7 +269,7 @@ export default function SideBar({ isActive, count }) {
                   </div>
                 </div>
                 <div className="sidebar-ring">
-                  <Image src={require('../assets/ring-new.png')} alt="Chat Ring" width={80} height={80} />
+                  <Image src={require('../assets/bestring.png')} alt="Chat Ring" width={80} height={80} />
                   <div className="sidebar-ring-value">{remainingChats}</div>
                 </div>
               </div>
