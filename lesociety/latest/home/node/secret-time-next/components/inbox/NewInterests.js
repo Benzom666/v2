@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import bestringImg from '../../assets/bestring.png';
 
 const NewInterests = ({ interestCount = 0, activeDatesCount = 0 }) => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const NewInterests = ({ interestCount = 0, activeDatesCount = 0 }) => {
           </InterestSubtext>
         </InterestCopy>
         <InterestRing>
-          <Image src="/bestring.png" alt="Interest Ring" width={80} height={80} />
+          <Image src={bestringImg} alt="Interest Ring" width={80} height={80} />
           <span className="ring-value">{interestCount}</span>
         </InterestRing>
       </InterestCard>

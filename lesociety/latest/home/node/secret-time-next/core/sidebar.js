@@ -20,6 +20,7 @@ import { socket } from "pages/user/user-list";
 import PricingMenuModal from "./PricingMenuModal";
 import interestedLocked from "../assets/interested-locked.svg";
 import superInterestedLocked from "../assets/superinterested-locked.svg";
+import bestringImg from "../assets/bestring.png";
 
 export default function SideBar({ isActive, count }) {
   const [showPricingModal, setShowPricingModal] = useState(false);
@@ -224,14 +225,14 @@ export default function SideBar({ isActive, count }) {
                     <div className="token-circle active">
                       <div className="token-label">Interested</div>
                       <div className="token-circle-inner">
-                        <Image src="/bestring.png" alt="Interested Ring" width={100} height={100} />
+                        <Image src={bestringImg} alt="Interested Ring" width={100} height={100} />
                         <div className="token-value">{interestedTokens}</div>
                       </div>
                     </div>
                     <div className="token-circle active">
                       <div className="token-label">Super Interested</div>
                       <div className="token-circle-inner">
-                        <Image src="/bestring.png" alt="Super Interested Ring" width={100} height={100} />
+                        <Image src={bestringImg} alt="Super Interested Ring" width={100} height={100} />
                         <div className="token-value">{superInterestedTokens}</div>
                       </div>
                     </div>
@@ -269,7 +270,7 @@ export default function SideBar({ isActive, count }) {
                   </div>
                 </div>
                 <div className="sidebar-ring">
-                  <Image src="/bestring.png" alt="Chat Ring" width={80} height={80} />
+                  <Image src={bestringImg} alt="Chat Ring" width={80} height={80} />
                   <div className="sidebar-ring-value">{remainingChats}</div>
                 </div>
               </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import nochatImage from '../../assets/nochat.png';
+import bestringImg from '../../assets/bestring.png';
 import { useRouter } from 'next/router';
 
 const EmptyState = ({ gender = 'male', activeDatesCount = 0 }) => {
@@ -47,7 +48,7 @@ const EmptyState = ({ gender = 'male', activeDatesCount = 0 }) => {
               </InterestSubtext>
             </InterestCopy>
             <InterestRing>
-              <Image src="/bestring.png" alt="Interest Ring" width={80} height={80} />
+              <Image src={bestringImg} alt="Interest Ring" width={80} height={80} />
               <span className="ring-value">0</span>
             </InterestRing>
           </InterestBox>

@@ -767,7 +767,7 @@ const Messages = (props) => {
                     >
                       {user?.gender === "female" ? (
                         <TabList>
-                          <Tab>Conversations</Tab>
+                          <Tab>Active Conversations</Tab>
                           <Tab>
                             <UserCardListForMessage
                               conversations={conversations}
@@ -785,7 +785,7 @@ const Messages = (props) => {
                         </TabList>
                       ) : (
                         <TabList>
-                          <Tab>Conversations</Tab>
+                          <Tab>Active Conversations</Tab>
                         </TabList>
                       )}
                       <TabPanel>
