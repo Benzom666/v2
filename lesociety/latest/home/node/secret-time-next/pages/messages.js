@@ -761,34 +761,9 @@ const Messages = (props) => {
               <div className="row">
                 <div className="col-md-4 col-lg-3 p-0">
                   <div className="message_sidebar_wrap">
-                    <Tabs
-                      selectedIndex={selectedTabIndex}
-                      onSelect={tabIndexChange}
-                    >
-                      {user?.gender === "female" ? (
-                        <TabList>
-                          <Tab>Active Conversations</Tab>
-                          <Tab>
-                            <UserCardListForMessage
-                              conversations={conversations}
-                              setConversations={setConversations}
-                              getConversations={getConversations}
-                              user={user}
-                              setCurrentChat={setCurrentChat}
-                              tabIndexChange={tabIndexChange}
-                              selectedTabIndex={selectedTabIndex}
-                              socket={socket}
-                              toggleChat={toggleChat}
-                              mobile={mobile}
-                            />
-                          </Tab>
-                        </TabList>
-                      ) : (
-                        <TabList>
-                          <Tab>Active Conversations</Tab>
-                        </TabList>
-                      )}
-                      <TabPanel>
+                    <div className="inbox-header">
+                      <h2>Active Conversations</h2>
+                    </div>
                         <div className="user-list-wrap">
                           {user?.gender === "female" && (
                             <NewInterests
@@ -964,51 +939,6 @@ const Messages = (props) => {
                             )}
                           </ul>
                         </div>
-                      </TabPanel>
-                      <TabPanel>
-                        <div className="user-list-wrap">
-                          {user?.gender === "female" && (
-                            <NewInterests
-                              interestCount={requestedConversationLength}
-                              activeDatesCount={activeDatesCount}
-                            />
-                          )}
-                          {user?.gender === "male" && (
-                            <PendingRequests
-                              requests={conversations
-                                ?.filter((c) => c.status == 0)
-                                ?.map((c) => ({
-                                  id: c?._id,
-                                  profileImage: c?.user?.images?.[0],
-                                  userName: c?.user?.user_name,
-                                  isSuperInterested: c?.isSuperInterested,
-                                }))}
-                              ignoredCount={0}
-                              rejectedCount={0}
-                            />
-                          )}
-                          <ul>
-                            {loading
-                              ? ""
-                              : (conversations?.length == 0 ||
-                                  conversations.filter(
-                                    (c) =>
-                                      c.status == 0 &&
-                                      c.message?.sender_id !== user?._id
-                                  )?.length == 0) &&
-                                (mobile ? (
-                                  <div className="message-content-side">
-                                    {requestedConversationLength == 0 && (
-                                      <NoConversationShowView request />
-                                    )}
-                                  </div>
-                                ) : (
-                                  ""
-                                ))}
-                          </ul>
-                        </div>
-                      </TabPanel>
-                    </Tabs>
                   </div>
                 </div>
                 <div className="col-md-8 col-lg-9 p-0">

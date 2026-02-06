@@ -225,14 +225,14 @@ export default function SideBar({ isActive, count }) {
                     <div className="token-circle active">
                       <div className="token-label">Interested</div>
                       <div className="token-circle-inner">
-                        <Image src={bestringImg} alt="Interested Ring" width={100} height={100} />
+                        <img src="/images/bestring.png" alt="Interested Ring" style={{width: '100px', height: '100px'}} />
                         <div className="token-value">{interestedTokens}</div>
                       </div>
                     </div>
                     <div className="token-circle active">
                       <div className="token-label">Super Interested</div>
                       <div className="token-circle-inner">
-                        <Image src={bestringImg} alt="Super Interested Ring" width={100} height={100} />
+                        <img src="/images/bestring.png" alt="Super Interested Ring" style={{width: '100px', height: '100px'}} />
                         <div className="token-value">{superInterestedTokens}</div>
                       </div>
                     </div>
@@ -270,7 +270,7 @@ export default function SideBar({ isActive, count }) {
                   </div>
                 </div>
                 <div className="sidebar-ring">
-                  <Image src={bestringImg} alt="Chat Ring" width={80} height={80} />
+                  <img src="/images/bestring.png" alt="Chat Ring" style={{width: '80px', height: '80px'}} />
                   <div className="sidebar-ring-value">{remainingChats}</div>
                 </div>
               </div>
