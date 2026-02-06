@@ -1,1 +1,19 @@
-/*# sourceMappingURL=messages.css.map */
+/*# sourceMappingURL=messages.css.map *//* Inbox Section Title */
+.inbox-section-title {
+  font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 16px 20px;
+  margin: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ring text centering improvements */
+.sidebar-ring img,
+.token-circle-inner img,
+.InterestRing img {
+  display: block;
+}
