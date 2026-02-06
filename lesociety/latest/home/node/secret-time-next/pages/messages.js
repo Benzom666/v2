@@ -790,13 +790,13 @@ const Messages = (props) => {
                       )}
                       <TabPanel>
                         <div className="user-list-wrap">
-                          {mobile && user?.gender === "female" && (
+                          {user?.gender === "female" && (
                             <NewInterests
                               interestCount={requestedConversationLength}
                               activeDatesCount={activeDatesCount}
                             />
                           )}
-                          {mobile && user?.gender === "male" && (
+                          {user?.gender === "male" && (
                             <PendingRequests
                               requests={conversations
                                 ?.filter((c) => c.status == 0)

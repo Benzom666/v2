@@ -95,24 +95,31 @@ const InterestRing = styled.div`
   width: 80px;
   height: 80px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   img {
+    position: absolute;
     width: 100%;
     height: 100%;
     object-fit: contain;
+    top: 0;
+    left: 0;
   }
 
   .ring-value {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    line-height: 1;
   }
 `;
 
