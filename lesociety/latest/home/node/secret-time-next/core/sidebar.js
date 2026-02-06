@@ -225,14 +225,36 @@ export default function SideBar({ isActive, count }) {
                     <div className="token-circle active">
                       <div className="token-label">Interested</div>
                       <div className="token-circle-inner">
-                        <img src="/images/bestring.png" alt="Interested Ring" style={{width: '100px', height: '100px'}} />
+                        <img 
+                          src="/images/bestring.png" 
+                          alt="Interested Ring" 
+                          style={{
+                            width: '100px', 
+                            height: '100px',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            objectFit: 'contain'
+                          }} 
+                        />
                         <div className="token-value">{interestedTokens}</div>
                       </div>
                     </div>
                     <div className="token-circle active">
                       <div className="token-label">Super Interested</div>
                       <div className="token-circle-inner">
-                        <img src="/images/bestring.png" alt="Super Interested Ring" style={{width: '100px', height: '100px'}} />
+                        <img 
+                          src="/images/bestring.png" 
+                          alt="Super Interested Ring" 
+                          style={{
+                            width: '100px', 
+                            height: '100px',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            objectFit: 'contain'
+                          }} 
+                        />
                         <div className="token-value">{superInterestedTokens}</div>
                       </div>
                     </div>
