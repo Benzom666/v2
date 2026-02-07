@@ -765,14 +765,9 @@ const Messages = (props) => {
               <div className="row">
                 <div className="col-md-4 col-lg-3 p-0">
                   <div className="message_sidebar_wrap">
-                    <Tabs
-                      selectedIndex={selectedTabIndex}
-                      onSelect={tabIndexChange}
-                    >
-                      <TabList>
-                        <Tab>Active Conversations</Tab>
-                      </TabList>
-                      <TabPanel>
+                    <div className="inbox-header-single">
+                      <h2>Active Conversations</h2>
+                    </div>
                         <div className="user-list-wrap">
                           {user?.gender === "female" && (
                             <NewInterests
@@ -952,8 +947,6 @@ const Messages = (props) => {
                             )}
                           </ul>
                         </div>
-                      </TabPanel>
-                    </Tabs>
                   </div>
                 </div>
                 <div className="col-md-8 col-lg-9 p-0">
