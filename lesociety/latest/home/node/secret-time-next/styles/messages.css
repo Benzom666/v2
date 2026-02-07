@@ -219,33 +219,42 @@
   padding-top: 0 !important;
 }
 
-/* Show INBOX at top for desktop */
-.message_sidebar_wrap .react-tabs__tab-list {
-  padding: 16px 20px 12px;
-  margin: 0;
-  border-bottom: none;
-  text-align: center;
-  background: transparent;
+/* Show INBOX at top for desktop only */
+@media (min-width: 768px) {
+  .message_sidebar_wrap .react-tabs__tab-list {
+    padding: 16px 20px 12px;
+    margin: 0;
+    border-bottom: none;
+    text-align: center;
+    background: transparent;
+  }
+
+  .message_sidebar_wrap .react-tabs__tab-list::before {
+    content: 'INBOX';
+    display: block;
+    font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  /* Add red gradient line below INBOX on desktop */
+  .message_sidebar_wrap .react-tabs__tab-list::after {
+    content: '';
+    display: block;
+    width: 86px;
+    height: 2px;
+    margin: 0 auto;
+    background: linear-gradient(90deg, rgba(250, 120, 155, 0.01) 0%, #F02D4E 50%, rgba(242, 67, 98, 0.01) 100%);
+  }
 }
 
-.message_sidebar_wrap .react-tabs__tab-list::before {
-  content: 'INBOX';
-  display: block;
-  font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: #ffffff;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 8px;
-}
-
-/* Add red gradient line below INBOX on desktop */
-.message_sidebar_wrap .react-tabs__tab-list::after {
-  content: '';
-  display: block;
-  width: 86px;
-  height: 2px;
-  margin: 0 auto;
-  background: linear-gradient(90deg, rgba(250, 120, 155, 0.01) 0%, #F02D4E 50%, rgba(242, 67, 98, 0.01) 100%);
+/* Hide TabList on mobile - MessageMobileHeader shows INBOX */
+@media (max-width: 767px) {
+  .message_sidebar_wrap .react-tabs__tab-list {
+    display: none !important;
+  }
 }
