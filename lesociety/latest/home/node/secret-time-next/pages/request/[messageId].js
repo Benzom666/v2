@@ -31,8 +31,10 @@ const UserCardListForMessage = ({
   socket,
   toggleChat,
   mobile,
+  isOpen = false,
+  onClose = () => {},
 }) => {
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalIsOpen, setIsOpen] = React.useState(isOpen);
   const [dateDetailsIsOpen, setDateDetailsIsOpen] = React.useState(false);
   const [msgModal, setMsgModal] = React.useState(false);
   const [pageLoading, setPageLoading] = React.useState(true);
@@ -51,7 +53,13 @@ const UserCardListForMessage = ({
     setIsOpen(false);
     setPageLoading(false);
     tabIndexChange(0);
+    onClose();
   }
+  
+  // Sync external isOpen prop with internal state
+  React.useEffect(() => {
+    setIsOpen(isOpen);
+  }, [isOpen]);
 
   const postApprovedConversation = async (room_id, conversation) => {
     setCurrentChat(conversation);

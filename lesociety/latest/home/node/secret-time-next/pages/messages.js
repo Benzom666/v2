@@ -1222,7 +1222,7 @@ const Messages = (props) => {
           </form>
           
           {/* Requests Modal for Women */}
-          {user?.gender === "female" && showRequestsModal && (
+          {user?.gender === "female" && (
             <RequestsModal
               conversations={conversations}
               setConversations={setConversations}
@@ -1234,6 +1234,8 @@ const Messages = (props) => {
               socket={socket}
               toggleChat={toggleChat}
               mobile={mobile}
+              isOpen={showRequestsModal}
+              onClose={() => setShowRequestsModal(false)}
             />
           )}
         </div>
