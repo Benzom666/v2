@@ -1551,6 +1551,7 @@ function UserProfile({ preview, editHandle }) {
           </div>
         </div>
       </div>
+      </>
     );
   }
 }
