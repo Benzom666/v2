@@ -4,18 +4,24 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import bestringImg from '../../assets/bestring.png';
 
-const NewInterests = ({ interestCount = 0, activeDatesCount = 0 }) => {
+const NewInterests = ({ interestCount = 0, activeDatesCount = 0, onViewInterests }) => {
   const router = useRouter();
 
   const handleCreateDate = () => {
     router.push('/create-date/choose-city?showIntro=true');
   };
 
+  const handleViewInterests = () => {
+    if (interestCount > 0 && onViewInterests) {
+      onViewInterests();
+    }
+  };
+
   return (
     <Section>
       <SectionTitle>New Interests</SectionTitle>
       
-      <InterestCard>
+      <InterestCard onClick={handleViewInterests} clickable={interestCount > 0}>
         <InterestCopy>
           <InterestText>
             {interestCount === 0
@@ -27,7 +33,7 @@ const NewInterests = ({ interestCount = 0, activeDatesCount = 0 }) => {
             {activeDatesCount === 1 ? "is" : "are"} live on gallery
           </InterestSubtext>
         </InterestCopy>
-        <InterestRing>
+        <InterestRing clickable={interestCount > 0}>
           <img src="/images/bestring.png" alt="Interest Ring" />
           <span className="ring-value">{interestCount}</span>
         </InterestRing>
@@ -68,6 +74,16 @@ const InterestCard = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  cursor: ${props => props.clickable ? 'pointer' : 'default'};
+  transition: all 0.3s;
+
+  ${props => props.clickable && `
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+  `}
 `;
 
 const InterestCopy = styled.div`
@@ -99,6 +115,7 @@ const InterestRing = styled.div`
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  cursor: ${props => props.clickable ? 'pointer' : 'default'};
 
   img {
     position: absolute !important;

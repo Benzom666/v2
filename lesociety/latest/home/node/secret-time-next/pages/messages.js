@@ -774,6 +774,16 @@ const Messages = (props) => {
                             <NewInterests
                               interestCount={requestedConversationLength}
                               activeDatesCount={activeDatesCount}
+                              onViewInterests={() => {
+                                // Navigate to show interested men
+                                const firstRequest = conversations?.find((c) => c.status == 0 && c.message?.sender_id !== user?._id);
+                                if (firstRequest) {
+                                  setCurrentChat(firstRequest);
+                                  if (mobile) {
+                                    toggleChat();
+                                  }
+                                }
+                              }}
                             />
                           )}
                           {user?.gender === "male" && (
