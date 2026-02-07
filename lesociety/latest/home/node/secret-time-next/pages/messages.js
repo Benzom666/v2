@@ -775,13 +775,11 @@ const Messages = (props) => {
                               interestCount={requestedConversationLength}
                               activeDatesCount={activeDatesCount}
                               onViewInterests={() => {
-                                // Navigate to show interested men
+                                // Navigate to request view to show interested men
                                 const firstRequest = conversations?.find((c) => c.status == 0 && c.message?.sender_id !== user?._id);
                                 if (firstRequest) {
-                                  setCurrentChat(firstRequest);
-                                  if (mobile) {
-                                    toggleChat(firstRequest);
-                                  }
+                                  // Navigate to the request page with the chat room ID
+                                  router.push(`/request/${firstRequest._id}`);
                                 }
                               }}
                             />
