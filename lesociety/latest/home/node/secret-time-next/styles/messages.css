@@ -177,3 +177,21 @@
     transform: translate(-50%, -50%) !important;
   }
 }
+
+/* Active Conversations Header - Centered above chat list */
+.active-conversations-header {
+  text-align: center;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 16px;
+}
+
+.active-conversations-header h3 {
+  font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}

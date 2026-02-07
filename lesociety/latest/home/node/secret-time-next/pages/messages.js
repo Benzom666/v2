@@ -773,31 +773,34 @@ const Messages = (props) => {
                         <Tab>Active Conversations</Tab>
                       </TabList>
                       <TabPanel>
+                        {user?.gender === "female" && (
+                          <NewInterests
+                            interestCount={requestedConversationLength}
+                            activeDatesCount={activeDatesCount}
+                            onViewInterests={() => {
+                              // Open the requests modal slider
+                              setShowRequestsModal(true);
+                            }}
+                          />
+                        )}
+                        {user?.gender === "male" && (
+                          <PendingRequests
+                            requests={conversations
+                              ?.filter((c) => c.status == 0)
+                              ?.map((c) => ({
+                                id: c?._id,
+                                profileImage: c?.user?.images?.[0],
+                                userName: c?.user?.user_name,
+                                isSuperInterested: c?.isSuperInterested,
+                              }))}
+                            ignoredCount={0}
+                            rejectedCount={0}
+                          />
+                        )}
+                        <div className="active-conversations-header">
+                          <h3>Active Conversations</h3>
+                        </div>
                         <div className="user-list-wrap">
-                          {user?.gender === "female" && (
-                            <NewInterests
-                              interestCount={requestedConversationLength}
-                              activeDatesCount={activeDatesCount}
-                              onViewInterests={() => {
-                                // Open the requests modal slider
-                                setShowRequestsModal(true);
-                              }}
-                            />
-                          )}
-                          {user?.gender === "male" && (
-                            <PendingRequests
-                              requests={conversations
-                                ?.filter((c) => c.status == 0)
-                                ?.map((c) => ({
-                                  id: c?._id,
-                                  profileImage: c?.user?.images?.[0],
-                                  userName: c?.user?.user_name,
-                                  isSuperInterested: c?.isSuperInterested,
-                                }))}
-                              ignoredCount={0}
-                              rejectedCount={0}
-                            />
-                          )}
                           <ul>
                             {loading ? (
                               mobile ? (
