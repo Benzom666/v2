@@ -218,3 +218,8 @@
   border-top: none !important;
   padding-top: 0 !important;
 }
+
+/* Hide the desktop tab list completely - mobile header shows INBOX */
+.message_sidebar_wrap .react-tabs__tab-list {
+  display: none !important;
+}
