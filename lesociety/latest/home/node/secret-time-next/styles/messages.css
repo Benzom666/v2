@@ -182,7 +182,7 @@
 .active-conversations-header {
   text-align: center;
   padding: 0;
-  margin: 16px 0 0 0;
+  margin: 0;
   position: relative;
 }
 
@@ -207,12 +207,10 @@
   margin-top: 8px;
 }
 
-/* Hide the tab list since we have the header below */
-.message_sidebar_wrap .react-tabs__tab-list {
+/* Hide only the tabs, not the entire TabList */
+.message_sidebar_wrap .react-tabs__tab {
   display: none !important;
   visibility: hidden !important;
-  height: 0 !important;
-  overflow: hidden !important;
 }
 
 /* Remove top border from tab panel since tab list is hidden */
