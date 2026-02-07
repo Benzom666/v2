@@ -203,3 +203,13 @@
   z-index: 1;
   transform: translateY(-50%);
 }
+
+/* Hide the tab list since we have the header below */
+.message_sidebar_wrap .react-tabs__tab-list {
+  display: none;
+}
+
+/* Remove top border from tab panel since tab list is hidden */
+.message_sidebar_wrap .react-tabs__tab-panel {
+  border-top: none;
+}
