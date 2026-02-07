@@ -181,11 +181,11 @@
 /* Active Conversations Header - Centered above chat list */
 .active-conversations-header {
   text-align: center;
-  padding: 12px 20px;
-  margin-top: 16px;
-  margin-bottom: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0;
+  margin: 16px 0 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
+  height: 1px;
 }
 
 .active-conversations-header h3 {
@@ -195,21 +195,27 @@
   color: #888888;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin: 0 auto;
+  margin: 0;
   display: inline-block;
   background: #000;
-  padding: 0 12px;
-  position: relative;
-  z-index: 1;
-  transform: translateY(-50%);
+  padding: 0 16px;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
 }
 
 /* Hide the tab list since we have the header below */
 .message_sidebar_wrap .react-tabs__tab-list {
-  display: none;
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
 /* Remove top border from tab panel since tab list is hidden */
 .message_sidebar_wrap .react-tabs__tab-panel {
-  border-top: none;
+  border-top: none !important;
+  padding-top: 0 !important;
 }
