@@ -768,7 +768,7 @@ const Messages = (props) => {
                     <div className="inbox-header-single">
                       <h2>Active Conversations</h2>
                     </div>
-                        <div className="user-list-wrap">
+                    <div className="user-list-wrap">
                           {user?.gender === "female" && (
                             <NewInterests
                               interestCount={requestedConversationLength}
@@ -946,7 +946,7 @@ const Messages = (props) => {
                               ""
                             )}
                           </ul>
-                        </div>
+                    </div>
                   </div>
                 </div>
                 <div className="col-md-8 col-lg-9 p-0">
