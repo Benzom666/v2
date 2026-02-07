@@ -147,8 +147,9 @@ function LocationPopup({
     const fetch = async () => {
       const location = await fetchLocation();
       if (location) {
-        const locationOption = location
-          ?.map((item) => countriesCode[item.name])
+        const locationArray = Array.isArray(location) ? location : [location];
+        const locationOption = locationArray
+          .map((item) => countriesCode[item.name])
           .filter((item) => item !== undefined)
           .join();
         setCountry(locationOption);
