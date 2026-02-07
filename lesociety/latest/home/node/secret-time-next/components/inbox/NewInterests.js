@@ -132,17 +132,19 @@ const InterestRing = styled.div`
   }
 
   .ring-value {
-    position: relative !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
     z-index: 10 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
     font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
     font-size: 22px;
     font-weight: 700;
     color: #ffffff;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
     line-height: 1;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 `;
 
