@@ -66,7 +66,7 @@ function CreateReview() {
         category: dateData.selectedCategory,
         aspiration: dateData.selectedAspiration,
         price: dateData.selectedPrice,
-        duration: dateData.selectedDuration,
+        date_length: dateData.selectedDuration, // API expects date_length, not duration
         description: dateData.description,
         location: dateData.selectedCity || dateData.city || dateData.location,
         date_status: true,
