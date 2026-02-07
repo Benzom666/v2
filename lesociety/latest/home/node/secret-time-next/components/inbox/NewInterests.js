@@ -51,7 +51,7 @@ const NewInterests = ({ interestCount = 0, activeDatesCount = 0, onViewInterests
 export default NewInterests;
 
 const Section = styled.div`
-  padding: 16px 20px;
+  padding: 8px 20px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
@@ -60,9 +60,10 @@ const SectionTitle = styled.h3`
   font-size: 14px;
   font-weight: 500;
   color: #888888;
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  text-align: center;
 `;
 
 const InterestCard = styled.div`
