@@ -82,6 +82,8 @@ const RequestCircle = styled.div`
   position: relative;
   width: 64px;
   height: 64px;
+  min-width: 64px;
+  flex-shrink: 0;
   border-radius: 50%;
   border: 2px solid #F24462;
   overflow: hidden;
