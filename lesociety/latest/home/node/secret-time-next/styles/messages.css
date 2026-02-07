@@ -258,3 +258,15 @@
     display: none !important;
   }
 }
+
+/* Reduce gap between mobile header and New Interests */
+@media (max-width: 767px) {
+  .message-mobile-header {
+    margin-bottom: 0 !important;
+    padding-bottom: 8px !important;
+  }
+  
+  .message_sidebar_wrap .react-tabs__tab-panel {
+    padding-top: 0 !important;
+  }
+}

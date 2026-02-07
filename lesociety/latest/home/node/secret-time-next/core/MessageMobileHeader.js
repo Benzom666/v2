@@ -20,7 +20,7 @@ function MessageMobileHeader() {
           />
         </span>
         <span className="user-details">
-          <h3>INBOX</h3>
+          <h3 style={{fontWeight: 700}}>INBOX</h3>
         </span>
       </div>
 
