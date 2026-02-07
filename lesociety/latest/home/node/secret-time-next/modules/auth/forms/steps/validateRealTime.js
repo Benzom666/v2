@@ -125,15 +125,13 @@ export const fetchLocation = async () => {
     return res.data.data;
   } catch (err) {
     console.log(err);
-    const router = useRouter();
-    const dispatch = useDispatch();
+    // Note: Cannot use hooks inside catch block - handle auth errors at component level
     if (
       err?.response?.status === 401 &&
       err?.response?.data?.message === "Failed to authenticate token!"
     ) {
-      setTimeout(() => {
-        logout(router, dispatch);
-      }, 100);
+      // Auth error will be handled by the component calling this function
+      console.error("Authentication failed - token expired");
     }
     return err;
   }
