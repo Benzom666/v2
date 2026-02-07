@@ -780,7 +780,7 @@ const Messages = (props) => {
                                 if (firstRequest) {
                                   setCurrentChat(firstRequest);
                                   if (mobile) {
-                                    toggleChat();
+                                    toggleChat(firstRequest);
                                   }
                                 }
                               }}
