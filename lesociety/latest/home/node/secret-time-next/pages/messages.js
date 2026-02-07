@@ -24,6 +24,7 @@ import { apiRequest, dateCategory } from "utils/Utilities";
 import { format } from "timeago.js";
 
 import UserCardListForMessage from "./../core/UserCardListForMessage";
+import RequestsModal from "./request/[messageId]";
 import { useRouter } from "next/router";
 import useWindowSize from "utils/useWindowSize";
 // import { socket } from "./_app";
@@ -80,6 +81,9 @@ const Messages = (props) => {
   // for notification
   const [count, setCount] = useState(0);
   const [activeDatesCount, setActiveDatesCount] = useState(0);
+  
+  // Requests modal state for women
+  const [showRequestsModal, setShowRequestsModal] = useState(false);
   
   // Paywall integration for women
   const {
@@ -775,19 +779,8 @@ const Messages = (props) => {
                               interestCount={requestedConversationLength}
                               activeDatesCount={activeDatesCount}
                               onViewInterests={() => {
-                                // Show the first interested man in the main view
-                                console.log("NewInterests clicked!");
-                                console.log("All conversations:", conversations);
-                                const pendingRequests = conversations?.filter((c) => c.status == 0);
-                                console.log("Pending requests (status 0):", pendingRequests);
-                                const firstRequest = conversations?.find((c) => c.status == 0 && c.message?.sender_id !== user?._id);
-                                console.log("First request found:", firstRequest);
-                                if (firstRequest) {
-                                  console.log("Setting current chat to:", firstRequest);
-                                  setCurrentChat(firstRequest);
-                                } else {
-                                  console.log("No pending requests found!");
-                                }
+                                // Open the requests modal slider
+                                setShowRequestsModal(true);
                               }}
                             />
                           )}
@@ -1227,6 +1220,22 @@ const Messages = (props) => {
               </div>
             </div>
           </form>
+          
+          {/* Requests Modal for Women */}
+          {user?.gender === "female" && showRequestsModal && (
+            <RequestsModal
+              conversations={conversations}
+              setConversations={setConversations}
+              isDesktopView={!mobile}
+              getConversations={getConversations}
+              setCurrentChat={setCurrentChat}
+              tabIndexChange={tabIndexChange}
+              selectedTabIndex={selectedTabIndex}
+              socket={socket}
+              toggleChat={toggleChat}
+              mobile={mobile}
+            />
+          )}
         </div>
       </div>
     </div>
