@@ -7,6 +7,7 @@ import validate from "modules/auth/forms/validate/validate";
 import { IoIosSend, IoMdSearch } from "react-icons/io";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+import "../styles/messages.css";
 import Image from "next/image";
 import UserImg from "assets/img/userimg.jpg";
 import UserImg2 from "assets/img/profile.png";
