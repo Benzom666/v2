@@ -149,29 +149,33 @@ const InterestSubtext = styled.div`
 `;
 
 const InterestRing = styled.div`
-  position: relative;
-  width: 80px;
-  height: 80px;
+  position: relative !important;
+  width: 80px !important;
+  height: 80px !important;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 
   img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    top: 0;
-    left: 0;
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    top: 0 !important;
+    left: 0 !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: none !important;
   }
 
   .ring-value {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative !important;
+    z-index: 10 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     font-family: "Conv_Helvetica", "Helvetica", Arial, sans-serif;
     font-size: 22px;
     font-weight: 700;

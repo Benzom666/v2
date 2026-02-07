@@ -731,6 +731,7 @@ function CreateReview() {
         }
         `}</style>
       </div>
+    </div>
     </>
   );
 }

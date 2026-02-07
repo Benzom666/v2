@@ -264,32 +264,36 @@ function sideBarPopup({ isOpen, toggle, count }) {
                         <div className="token-circle active">
                           <div className="token-label">Interested</div>
                           <div className="token-circle-inner">
-                            <svg viewBox="0 0 100 100" className="token-ring">
-                              <defs>
-                                <linearGradient id="token-gradient-interested-popup" x1="0%" y1="0%" x2="100%" y2="100%">
-                                  <stop offset="0%" stopColor="#f24462" />
-                                  <stop offset="100%" stopColor="#4a90e2" />
-                                </linearGradient>
-                              </defs>
-                              <circle cx="50" cy="50" r="42" className="token-ring-bg" />
-                              <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '264 264', stroke: 'url(#token-gradient-interested-popup)' }} />
-                            </svg>
+                            <img
+                              src="/images/bestring.png"
+                              alt="Interested Ring"
+                              style={{
+                                width: '100px',
+                                height: '100px',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                objectFit: 'contain'
+                              }}
+                            />
                             <div className="token-value">{interestedTokens}</div>
                           </div>
                         </div>
                         <div className="token-circle active">
                           <div className="token-label">Super Interested</div>
                           <div className="token-circle-inner">
-                            <svg viewBox="0 0 100 100" className="token-ring">
-                              <defs>
-                                <linearGradient id="token-gradient-super-popup" x1="0%" y1="0%" x2="100%" y2="100%">
-                                  <stop offset="0%" stopColor="#f24462" />
-                                  <stop offset="100%" stopColor="#4a90e2" />
-                                </linearGradient>
-                              </defs>
-                              <circle cx="50" cy="50" r="42" className="token-ring-bg" />
-                              <circle cx="50" cy="50" r="42" className="token-ring-progress" style={{ strokeDasharray: '264 264', stroke: 'url(#token-gradient-super-popup)' }} />
-                            </svg>
+                            <img
+                              src="/images/bestring.png"
+                              alt="Super Interested Ring"
+                              style={{
+                                width: '100px',
+                                height: '100px',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                objectFit: 'contain'
+                              }}
+                            />
                             <div className="token-value">{superInterestedTokens}</div>
                           </div>
                         </div>
@@ -327,28 +331,18 @@ function sideBarPopup({ isOpen, toggle, count }) {
                       </div>
                     </div>
                     <div className="sidebar-ring">
-                      <svg viewBox="0 0 80 80" aria-hidden="true">
-                        <circle className="ring-bg" cx="40" cy="40" r="35" />
-                        <circle
-                          className="ring-progress"
-                          cx="40"
-                          cy="40"
-                          r="35"
-                          strokeDasharray={ringDash}
-                        />
-                        <defs>
-                          <linearGradient
-                            id="sidebar-ring-gradient"
-                            x1="0%"
-                            y1="0%"
-                            x2="100%"
-                            y2="0%"
-                          >
-                            <stop offset="0%" stopColor="#f24462" />
-                            <stop offset="100%" stopColor="#4a90e2" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
+                      <img
+                        src="/images/bestring.png"
+                        alt="Chat Ring"
+                        style={{
+                          width: '80px',
+                          height: '80px',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          objectFit: 'contain'
+                        }}
+                      />
                       <div className="sidebar-ring-value">{remainingChats}</div>
                     </div>
                   </div>
