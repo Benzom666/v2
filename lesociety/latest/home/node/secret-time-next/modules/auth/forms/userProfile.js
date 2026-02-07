@@ -1552,7 +1552,6 @@ function UserProfile({ preview, editHandle }) {
         </div>
       </div>
     );
-  }
 }
 
 export default reduxForm({
