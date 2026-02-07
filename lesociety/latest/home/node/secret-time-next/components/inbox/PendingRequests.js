@@ -48,8 +48,8 @@ const PendingRequests = ({ requests = [], ignoredCount = 0, rejectedCount = 0 })
 export default PendingRequests;
 
 const Section = styled.div`
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 20px 16px;
+  border-bottom: none;
 `;
 
 const SectionTitle = styled.h3`
@@ -57,16 +57,25 @@ const SectionTitle = styled.h3`
   font-size: 14px;
   font-weight: 500;
   color: #888888;
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  text-align: center;
 `;
 
 const RequestsRow = styled.div`
   display: flex;
   gap: 16px;
   margin-bottom: 16px;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const RequestCircle = styled.div`
