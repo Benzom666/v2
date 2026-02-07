@@ -776,9 +776,17 @@ const Messages = (props) => {
                               activeDatesCount={activeDatesCount}
                               onViewInterests={() => {
                                 // Show the first interested man in the main view
+                                console.log("NewInterests clicked!");
+                                console.log("All conversations:", conversations);
+                                const pendingRequests = conversations?.filter((c) => c.status == 0);
+                                console.log("Pending requests (status 0):", pendingRequests);
                                 const firstRequest = conversations?.find((c) => c.status == 0 && c.message?.sender_id !== user?._id);
+                                console.log("First request found:", firstRequest);
                                 if (firstRequest) {
+                                  console.log("Setting current chat to:", firstRequest);
                                   setCurrentChat(firstRequest);
+                                } else {
+                                  console.log("No pending requests found!");
                                 }
                               }}
                             />
