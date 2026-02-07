@@ -150,33 +150,8 @@ const UserCardListForMessage = ({
 
   return (
     <>
-      <div
-        onClick={openModal}
-        className={`${
-          conversations.filter(
-            (c) => c.status == 0 && c.message?.sender_id !== user?._id
-          )?.length === 0 &&
-          selectedTabIndex !== 1 &&
-          "request__header"
-        }`}
-      >
-        <span>
-          {
-            // conversations?.length > 0
-            //   ? conversations.filter(
-            //       (c) => c.status == 0 && c.message?.sender_id !== user?._id
-            //     )?.length > 0 &&
-            conversations.filter(
-              (c) => c.status == 0 && c.message?.sender_id !== user?._id
-            )?.length
-            // : ""
-          }
-        </span>{" "}
-        Requests
-      </div>
 
-      {!isDesktopView &&
-        conversations?.length > 0 &&
+      {conversations?.length > 0 &&
         conversations?.filter(
           (c) => c.status == 0 && c.message?.sender_id !== user?._id
         )?.length > 0 && (
